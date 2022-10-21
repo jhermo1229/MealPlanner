@@ -3,4 +3,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="signup">Signup</string>
     <string name="login">Login</string>
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
