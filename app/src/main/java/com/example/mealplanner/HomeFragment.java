@@ -3,6 +3,7 @@ package com.example.mealplanner;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,6 +22,7 @@ public class HomeFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     private Button signupBtn, loginBtn;
+    private View homeView;
 
 
     // TODO: Rename and change types of parameters
@@ -62,6 +64,18 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        homeView = inflater.inflate(R.layout.fragment_home, container, false);
+        signupBtn = homeView.findViewById(R.id.signupBtn);
+
+        signupBtn.setOnClickListener((personalDetailView) -> {
+            PersonalDetailsFragment personalFrag = new PersonalDetailsFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(PersonalDetailsFragment.TAG);
+            transaction.replace(R.id.homeFrame, personalFrag);
+
+            transaction.commit();
+        });
+
+        return homeView;
     }
 }
