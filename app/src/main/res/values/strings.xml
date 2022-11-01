@@ -9,6 +9,15 @@
     <string name="street">Street</string>
     <string name="city">City</string>
     <string name="province">Province</string>
+    <string name="postalCode">Postal Code</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="next">Next</string>
+    <string name="one">1</string>
+    <string name="two">2</string>
+    <string name="three">3</string>
+    <string name="four">4</string>
 
     <string-array name="province_canada">
         <item>AB</item>
@@ -22,4 +31,6 @@
         <item>SK</item>
         <item>YT</item>
     </string-array>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

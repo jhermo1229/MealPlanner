@@ -4,8 +4,11 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/button_change_color.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_home.xml" value="0.16893115942028986" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meals_delivery_rate.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_personal_details.xml" value="0.24615384615384617" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/spinner_item.xml" value="0.12604166666666666" />
       </map>
     </option>
   </component>
