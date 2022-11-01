@@ -1,12 +1,16 @@
 package com.example.mealplanner;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,6 +23,8 @@ public class MealsDeliveryRateFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
     public static String TAG = MealsDeliveryRateFragment.class.getName();
+    private Button oneBtn, twoBtn, threeBtn;
+    private View mealsDeliveryView;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -60,7 +66,32 @@ public class MealsDeliveryRateFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_meals_delivery_rate, container, false);
+        mealsDeliveryView = inflater.inflate(R.layout.fragment_meals_delivery_rate, container, false);
+        oneBtn = mealsDeliveryView.findViewById(R.id.oneButton);
+        twoBtn = mealsDeliveryView.findViewById(R.id.twoButton);
+        threeBtn = mealsDeliveryView.findViewById(R.id.threeButton);
+
+        oneBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            oneBtn.setBackgroundColor(Color.RED);
+            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        twoBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            twoBtn.setBackgroundColor(Color.RED);
+            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        threeBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            threeBtn.setBackgroundColor(Color.RED);
+            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        return mealsDeliveryView;
     }
 }

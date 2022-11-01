@@ -18,6 +18,7 @@
     <string name="two">2</string>
     <string name="three">3</string>
     <string name="four">4</string>
+    <string name="deliveryFrequency">Delivery Frequency (Per Week)</string>
 
     <string-array name="province_canada">
         <item>AB</item>
