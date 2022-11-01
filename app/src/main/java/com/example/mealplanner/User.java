@@ -12,6 +12,7 @@ public class User {
     private String phoneNumber;
     private String email;
     private String password;
+    private Integer deliveryFrequency;
 
 
     public String getFirstName() {
@@ -92,5 +93,13 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getDeliveryFrequency() {
+        return deliveryFrequency;
+    }
+
+    public void setDeliveryFrequency(Integer deliveryFrequency) {
+        this.deliveryFrequency = deliveryFrequency;
     }
 }
