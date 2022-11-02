@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,6 +50,17 @@ public class MealTypeFragment extends Fragment {
             bothBtn.setBackgroundColor(Color.RED);
             meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        nextBtn = mealTypeView.findViewById(R.id.nextButton);
+
+        nextBtn.setOnClickListener((mealsDeliveryView) -> {
+            PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(PaymentDetailsFragment.TAG);
+            transaction.replace(R.id.homeFrame, paymentDetailsFrag);
+
+            transaction.commit();
         });
 
         return mealTypeView;
