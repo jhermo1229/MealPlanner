@@ -6,7 +6,7 @@
     tools:context=".MealsDeliveryRateFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:gravity="center_vertical"
-            android:text="@string/deliveryFrequency"
+            android:text="@string/mealType"
             android:textColor="@color/purple_500"
             android:textStyle="bold" />
         <LinearLayout
@@ -28,9 +28,9 @@
 
             <Button
                 android:id="@+id/oneButton"
-                android:layout_width="100dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:text="@string/one"
+                android:text="@string/vegetable"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -40,7 +40,7 @@
                 android:id="@+id/twoButton"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="@string/two"
+                android:text="@string/meat"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -50,61 +50,13 @@
                 android:id="@+id/threeButton"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:text="@string/three"
+                android:text="@string/both"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="100dp"
                 tools:layout_editor_absoluteY="100dp" />
         </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:gravity="center_vertical"
-            android:text="@string/mealQuantity"
-            android:textColor="@color/purple_500"
-            android:textStyle="bold" />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="20dp">
-
-
-            <Button
-                android:id="@+id/onePersonButton"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="@string/one"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="100dp" />
-            <Button
-                android:id="@+id/twoPersonButton"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="@string/two"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="100dp" />
-            <Button
-                android:id="@+id/threePersonButton"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:text="@string/three"
-                android:textAlignment="center"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="100dp"
-                tools:layout_editor_absoluteY="100dp" />
-        </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"

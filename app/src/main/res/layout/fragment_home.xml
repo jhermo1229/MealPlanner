@@ -11,10 +11,11 @@
     android:orientation="vertical">
 
     <!-- TODO: NEED TO ADD LOGO HERE -->
-  <ImageView
+    <ImageView
         android:layout_width="300dp"
         android:layout_height="300dp"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:src="@drawable/logo" />
 
     <Button
         android:id="@+id/signupBtn"

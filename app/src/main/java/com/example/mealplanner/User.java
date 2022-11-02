@@ -13,6 +13,8 @@ public class User {
     private String email;
     private String password;
     private Integer deliveryFrequency;
+    private String mealType;
+    private Integer mealQuantity;
 
 
     public String getFirstName() {
@@ -101,5 +103,21 @@ public class User {
 
     public void setDeliveryFrequency(Integer deliveryFrequency) {
         this.deliveryFrequency = deliveryFrequency;
+    }
+
+    public String getMealType() {
+        return mealType;
+    }
+
+    public void setMealType(String mealType) {
+        this.mealType = mealType;
+    }
+
+    public Integer getMealQuantity() {
+        return mealQuantity;
+    }
+
+    public void setMealQuantity(Integer mealQuantity) {
+        this.mealQuantity = mealQuantity;
     }
 }

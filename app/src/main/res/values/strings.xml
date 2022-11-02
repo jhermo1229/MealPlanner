@@ -19,6 +19,11 @@
     <string name="three">3</string>
     <string name="four">4</string>
     <string name="deliveryFrequency">Delivery Frequency (Per Week)</string>
+    <string name="mealQuantity">Meal Quantity</string>
+    <string name="mealType">Meal Type</string>
+    <string name="vegetable">Vegetable</string>
+    <string name="meat">Meat</string>
+    <string name="both">Both</string>
 
     <string-array name="province_canada">
         <item>AB</item>

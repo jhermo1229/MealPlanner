@@ -12,56 +12,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link MealsDeliveryRateFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class MealsDeliveryRateFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
     public static String TAG = MealsDeliveryRateFragment.class.getName();
-    private Button oneBtn, twoBtn, threeBtn;
+    private Button oneBtn, twoBtn, threeBtn, onePersonBtn, twoPersonBtn, threePersonBtn, nextBtn;
     private View mealsDeliveryView;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public MealsDeliveryRateFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment MealsDeliveryRate.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static MealsDeliveryRateFragment newInstance(String param1, String param2) {
-        MealsDeliveryRateFragment fragment = new MealsDeliveryRateFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -90,6 +51,42 @@ public class MealsDeliveryRateFragment extends Fragment {
             threeBtn.setBackgroundColor(Color.RED);
             twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        onePersonBtn = mealsDeliveryView.findViewById(R.id.onePersonButton);
+        twoPersonBtn = mealsDeliveryView.findViewById(R.id.twoPersonButton);
+        threePersonBtn = mealsDeliveryView.findViewById(R.id.threePersonButton);
+
+        onePersonBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            onePersonBtn.setBackgroundColor(Color.RED);
+            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        twoPersonBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            twoPersonBtn.setBackgroundColor(Color.RED);
+            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        threePersonBtn.setOnClickListener((mealsDeliveryView) -> {
+
+            threePersonBtn.setBackgroundColor(Color.RED);
+            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+        });
+
+        nextBtn = mealsDeliveryView.findViewById(R.id.nextButton);
+
+        nextBtn.setOnClickListener((mealsDeliveryView) -> {
+            MealTypeFragment mealTypeFrag = new MealTypeFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(MealTypeFragment.TAG);
+            transaction.replace(R.id.homeFrame, mealTypeFrag);
+
+            transaction.commit();
         });
 
         return mealsDeliveryView;
