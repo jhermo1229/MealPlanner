@@ -28,6 +28,7 @@
     <string name="cardNumber">Card number</string>
     <string name="expiryDate">Expiry Date</string>
     <string name="securityCode">CVC</string>
+    <string name="addMealOrder">Add meal order</string>
 
     <string-array name="province_canada">
         <item>AB</item>
