@@ -1,11 +1,11 @@
 package com.example.mealplanner;
 
-import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,8 +19,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.logging.Logger;
-
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link PaymentDetailsFragment#newInstance} factory method to
@@ -30,6 +28,8 @@ public class PaymentDetailsFragment extends Fragment {
 
     public static final String TAG = PaymentDetailsFragment.class.getName();
     private AppUtils app;
+
+    private SharedViewModel sharedViewModel;
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -85,20 +85,11 @@ public class PaymentDetailsFragment extends Fragment {
         // creating a collection reference
         // for our Firebase Firetore database.
         app = new AppUtils();
-        CollectionReference dbCourses = db.collection("userCredentials");
         User user = new User();
-        UserDetails userDetails = new UserDetails();
-        userDetails.setFirstName("Jeffeeeeeeeeee");
-        user.setUserDetails(userDetails);
-        user.setEmail("jbhermo@yahoo.com");
-
-
-        user.setPassword(app.EncodeBase64("JOHNCENA"));
-
-        Log.d(">>>>>>>", user.getPassword());
-
-        String data = app.DecodeBase64(user.getPassword());
-        Log.d(">>>>>>>", data);
+        CollectionReference dbCourses = db.collection("userCredentials");
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        user.setEmail(sharedViewModel.getSelectedItem().getValue().getEmail());
+        Log.d(">>>>>>>>>>", user.getEmail());
         // below method is use to add data to Firebase Firestore.
         dbCourses.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

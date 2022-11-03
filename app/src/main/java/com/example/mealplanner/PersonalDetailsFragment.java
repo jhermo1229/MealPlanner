@@ -4,7 +4,9 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +23,8 @@ public class PersonalDetailsFragment extends Fragment {
     private View personalDetailsView;
     private String province[];
     private Button nextBtn;
+
+    private SharedViewModel sharedViewModel;
 
 
     public PersonalDetailsFragment() {
@@ -40,13 +44,23 @@ public class PersonalDetailsFragment extends Fragment {
         spinner.setAdapter(adapter);
 
 
+
+
+
         nextBtn = personalDetailsView.findViewById(R.id.nextButton);
 
         nextBtn.setOnClickListener((personalDetailView) -> {
+
+            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+                User user = new User();
+                user.setEmail("jbhermo@yahoo.com");
+                sharedViewModel.setSelectedItem(user);
+
             MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-            transaction.replace(R.id.homeFrame, mealsDeliveryFrag);
+            transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
 
             transaction.commit();
         });

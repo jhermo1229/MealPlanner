@@ -84,7 +84,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             MealTypeFragment mealTypeFrag = new MealTypeFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(MealTypeFragment.TAG);
-            transaction.replace(R.id.homeFrame, mealTypeFrag);
+            transaction.replace(R.id.signupHomeFrame, mealTypeFrag);
 
             transaction.commit();
         });

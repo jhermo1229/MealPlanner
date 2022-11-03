@@ -1,5 +1,6 @@
 package com.example.mealplanner;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -28,17 +29,19 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         homeView = inflater.inflate(R.layout.fragment_home, container, false);
-        signupBtn = homeView.findViewById(R.id.signupBtn);
-
-        signupBtn.setOnClickListener((personalDetailView) -> {
-            PersonalDetailsFragment personalFrag = new PersonalDetailsFragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(PersonalDetailsFragment.TAG);
-            transaction.replace(R.id.homeFrame, personalFrag);
-
-            transaction.commit();
-        });
+//        signupBtn = homeView.findViewById(R.id.signupBtn);
+//
+//        signupBtn.setOnClickListener((personalDetailView) -> {
+//
+//            PersonalDetailsFragment personalFrag = new PersonalDetailsFragment();
+//            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+//            transaction.addToBackStack(PersonalDetailsFragment.TAG);
+//            transaction.replace(R.id.homeFrame, personalFrag);
+//
+//            transaction.commit();
+//        });
 
         return homeView;
     }
+
 }

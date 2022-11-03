@@ -14,16 +14,6 @@ public class User {
     private UserPaymentDetails userPaymentDetails;
 
 
-    public String getPassword() {
-        byte[] decodedBytes = android.util.Base64.decode(password, android.util.Base64.DEFAULT);
-        return new String(decodedBytes);
-    }
-
-
-    public void setPassword(@NonNull String password) {
-        this.password = android.util.Base64.encodeToString(password.getBytes(), android.util.Base64.DEFAULT);
-    }
-
     public UserDetails getUserDetails() {
         return userDetails;
     }
@@ -54,5 +44,13 @@ public class User {
 
     public void setUserPaymentDetails(UserPaymentDetails userPaymentDetails) {
         this.userPaymentDetails = userPaymentDetails;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

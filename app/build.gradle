@@ -26,6 +26,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -39,6 +42,13 @@ dependencies {
     implementation 'com.firebaseui:firebase-ui-database:4.2.1'
     implementation 'com.google.firebase:firebase-database:16.0.5'
     implementation 'com.google.firebase:firebase-firestore:24.4.0'
+
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
+
+    // alternatively - just ViewModel
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.5.1"
+    implementation 'androidx.navigation:navigation-fragment:2.5.2'
+    implementation 'androidx.navigation:navigation-ui:2.5.2'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.3'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'

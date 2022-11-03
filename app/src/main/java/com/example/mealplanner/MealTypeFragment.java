@@ -58,7 +58,7 @@ public class MealTypeFragment extends Fragment {
             PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(PaymentDetailsFragment.TAG);
-            transaction.replace(R.id.homeFrame, paymentDetailsFrag);
+            transaction.replace(R.id.signupHomeFrame, paymentDetailsFrag);
 
             transaction.commit();
         });

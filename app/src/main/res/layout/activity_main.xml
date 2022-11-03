@@ -6,17 +6,33 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Fragment -->
-        <FrameLayout
-            android:id="@+id/homeFrame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
+        <!-- TODO: NEED TO ADD LOGO HERE -->
+        <ImageView
+            android:layout_width="300dp"
+            android:layout_height="300dp"
+            android:layout_gravity="center"
+            android:src="@drawable/logo" />
+
+        <Button
+            android:id="@+id/signupBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="sendMessage"
+            android:text="@string/signup" />
+
+        <Button
+            android:id="@+id/loginBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/login" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
