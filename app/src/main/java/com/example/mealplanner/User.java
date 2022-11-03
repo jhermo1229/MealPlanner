@@ -1,84 +1,35 @@
 package com.example.mealplanner;
 
+import androidx.annotation.NonNull;
+
+/**
+ * Main model for the user.
+ */
 public class User {
 
-    private String firstName;
-    private String lastName;
-    private String houseNumber;
-    private String street;
-    private String city;
-    private String province;
-    private String postalCode;
-    private String phoneNumber;
     private String email;
     private String password;
-    private Integer deliveryFrequency;
-    private String mealType;
-    private Integer mealQuantity;
+    private UserDetails userDetails;
+    private UserMealDetails userMealDetails;
+    private UserPaymentDetails userPaymentDetails;
 
 
-    public String getFirstName() {
-        return firstName;
+    public String getPassword() {
+        byte[] decodedBytes = android.util.Base64.decode(password, android.util.Base64.DEFAULT);
+        return new String(decodedBytes);
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+
+    public void setPassword(@NonNull String password) {
+        this.password = android.util.Base64.encodeToString(password.getBytes(), android.util.Base64.DEFAULT);
     }
 
-    public String getLastName() {
-        return lastName;
+    public UserDetails getUserDetails() {
+        return userDetails;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getHouseNumber() {
-        return houseNumber;
-    }
-
-    public void setHouseNumber(String houseNumber) {
-        this.houseNumber = houseNumber;
-    }
-
-    public String getStreet() {
-        return street;
-    }
-
-    public void setStreet(String street) {
-        this.street = street;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public String getProvince() {
-        return province;
-    }
-
-    public void setProvince(String province) {
-        this.province = province;
-    }
-
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 
     public String getEmail() {
@@ -89,35 +40,19 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
+    public UserMealDetails getUserMealDetails() {
+        return userMealDetails;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUserMealDetails(UserMealDetails userMealDetails) {
+        this.userMealDetails = userMealDetails;
     }
 
-    public Integer getDeliveryFrequency() {
-        return deliveryFrequency;
+    public UserPaymentDetails getUserPaymentDetails() {
+        return userPaymentDetails;
     }
 
-    public void setDeliveryFrequency(Integer deliveryFrequency) {
-        this.deliveryFrequency = deliveryFrequency;
-    }
-
-    public String getMealType() {
-        return mealType;
-    }
-
-    public void setMealType(String mealType) {
-        this.mealType = mealType;
-    }
-
-    public Integer getMealQuantity() {
-        return mealQuantity;
-    }
-
-    public void setMealQuantity(Integer mealQuantity) {
-        this.mealQuantity = mealQuantity;
+    public void setUserPaymentDetails(UserPaymentDetails userPaymentDetails) {
+        this.userPaymentDetails = userPaymentDetails;
     }
 }
