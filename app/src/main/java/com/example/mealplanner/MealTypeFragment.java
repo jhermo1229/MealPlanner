@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ public class MealTypeFragment extends Fragment {
     public static final String TAG = MealTypeFragment.class.getName();
     private Button vegetableBtn, meatBtn, bothBtn, nextBtn;
     private View mealTypeView;
+    private SharedViewModel sharedViewModel;
+    private UserMealDetails userMealDetails =new UserMealDetails();
 
     public MealTypeFragment() {
         // Required empty public constructor
@@ -30,10 +33,13 @@ public class MealTypeFragment extends Fragment {
         vegetableBtn = mealTypeView.findViewById(R.id.oneButton);
         meatBtn = mealTypeView.findViewById(R.id.twoButton);
         bothBtn = mealTypeView.findViewById(R.id.threeButton);
+        userMealDetails.setMealType("B");
+        bothBtn.setBackgroundColor(Color.RED);
 
         vegetableBtn.setOnClickListener((mealsDeliveryView) -> {
 
             vegetableBtn.setBackgroundColor(Color.RED);
+            userMealDetails.setMealType("V");
             meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
         });
@@ -41,6 +47,7 @@ public class MealTypeFragment extends Fragment {
         meatBtn.setOnClickListener((mealsDeliveryView) -> {
 
             meatBtn.setBackgroundColor(Color.RED);
+            userMealDetails.setMealType("M");
             vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
         });
@@ -48,6 +55,7 @@ public class MealTypeFragment extends Fragment {
         bothBtn.setOnClickListener((mealsDeliveryView) -> {
 
             bothBtn.setBackgroundColor(Color.RED);
+            userMealDetails.setMealType("B");
             meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
             vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
         });
@@ -56,6 +64,12 @@ public class MealTypeFragment extends Fragment {
 
         nextBtn.setOnClickListener((mealsDeliveryView) -> {
             PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
+
+            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+            sharedViewModel.getSelectedItem().observe(getActivity(), users -> {
+                users.getUserMealDetails().setMealType(userMealDetails.getMealType());
+            });
+
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(PaymentDetailsFragment.TAG);
             transaction.replace(R.id.signupHomeFrame, paymentDetailsFrag);

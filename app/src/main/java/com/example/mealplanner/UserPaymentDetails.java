@@ -5,10 +5,10 @@ package com.example.mealplanner;
  */
 public class UserPaymentDetails {
 
-    private Integer cardNumber;
+    private Double cardNumber;
     private Integer expiryDate;
-    private Integer securityCode;
-    private Address address;
+    private String securityCode;
+    private String nameOnCard;
 
     public Integer getExpiryDate() {
         return expiryDate;
@@ -18,27 +18,27 @@ public class UserPaymentDetails {
         this.expiryDate = expiryDate;
     }
 
-    public Integer getCardNumber() {
+    public Double getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Integer cardNumber) {
+    public void setCardNumber(Double cardNumber) {
         this.cardNumber = cardNumber;
     }
 
-    public Integer getSecurityCode() {
+    public String getSecurityCode() {
         return securityCode;
     }
 
-    public void setSecurityCode(Integer securityCode) {
+    public void setSecurityCode(String securityCode) {
         this.securityCode = securityCode;
     }
 
-    public Address getAddress() {
-        return address;
+    public String getNameOnCard() {
+        return nameOnCard;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setNameOnCard(String nameOnCard) {
+        this.nameOnCard = nameOnCard;
     }
 }

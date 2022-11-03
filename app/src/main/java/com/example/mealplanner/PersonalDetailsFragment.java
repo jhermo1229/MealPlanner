@@ -64,7 +64,6 @@ public class PersonalDetailsFragment extends Fragment {
             street = personalDetailsView.findViewById(R.id.street);
             city = personalDetailsView.findViewById(R.id.city);
 
-            Spinner provinceSpinner = personalDetailView.findViewById(R.id.province_spinner);
             String province = spinner.getSelectedItem().toString();
             postalCode = personalDetailsView.findViewById(R.id.postalCode);
             phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
