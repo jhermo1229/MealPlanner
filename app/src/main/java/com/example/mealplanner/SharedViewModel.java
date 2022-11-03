@@ -6,17 +6,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+/**
+ * View Model class to share User model to different fragments at SignupActivity
+ */
 public class SharedViewModel extends ViewModel {
 
+    //Create a live mutable data
     private final MutableLiveData<User> selectedItem = new MutableLiveData<>();
 
     public SharedViewModel() {
         Log.i("SharedViewModel", "ViewModel is created");
-    }
-
-    protected void onCleared() {
-        super.onCleared();
-        Log.i("SharedViewModel", "ViewModel is destroyed");
     }
 
     public LiveData<User> getSelectedItem() {

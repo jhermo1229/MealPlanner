@@ -89,7 +89,8 @@ public class PaymentDetailsFragment extends Fragment {
         CollectionReference dbCourses = db.collection("userCredentials");
         sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
         user.setEmail(sharedViewModel.getSelectedItem().getValue().getEmail());
-        Log.d(">>>>>>>>>>", user.getEmail());
+        user.setPassword(sharedViewModel.getSelectedItem().getValue().getPassword());
+        user.setUserDetails(sharedViewModel.getSelectedItem().getValue().getUserDetails());
         // below method is use to add data to Firebase Firestore.
         dbCourses.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
