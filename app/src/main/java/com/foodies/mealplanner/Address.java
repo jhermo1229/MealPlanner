@@ -1,4 +1,4 @@
-package com.example.mealplanner;
+package com.foodies.mealplanner;
 
 /**
  * Model class for address of user.

@@ -1,4 +1,4 @@
-package com.example.mealplanner;
+package com.foodies.mealplanner;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;

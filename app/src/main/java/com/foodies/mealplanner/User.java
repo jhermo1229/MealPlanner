@@ -1,6 +1,4 @@
-package com.example.mealplanner;
-
-import androidx.annotation.NonNull;
+package com.foodies.mealplanner;
 
 /**
  * Main model for the user.

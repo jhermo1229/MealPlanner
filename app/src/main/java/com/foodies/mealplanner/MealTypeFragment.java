@@ -1,4 +1,4 @@
-package com.example.mealplanner;
+package com.foodies.mealplanner;
 
 import android.graphics.Color;
 import android.os.Bundle;
