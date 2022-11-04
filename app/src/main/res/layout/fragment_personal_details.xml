@@ -25,13 +25,6 @@
                 android:layout_marginRight="30dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/firstName"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/firstName"
@@ -42,7 +35,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -53,13 +46,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/lastName"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/lastName"
@@ -70,7 +56,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -87,14 +73,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="30dp"
                 android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/houseNumber"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/houseNumber"
@@ -105,7 +83,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -116,13 +94,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/street"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/street"
@@ -133,7 +104,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -151,13 +122,6 @@
                 android:layout_marginRight="30dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/city"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/city"
@@ -168,7 +132,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -190,7 +154,7 @@
                 <Spinner
                     android:id="@+id/province_spinner"
                     android:layout_width="100dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="40dp"
                     android:background="@android:drawable/btn_dropdown"
                     android:spinnerMode="dropdown" />
 
@@ -209,14 +173,6 @@
                 android:layout_marginRight="30dp"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/postalCode"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/postalCode"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -226,7 +182,7 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -237,14 +193,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="150dp"
-                    android:layout_height="match_parent"
-                    android:gravity="center_vertical"
-                    android:text="@string/phoneNumber"
-                    android:textColor="@color/purple_500"
-                    android:textStyle="bold" />
-
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/phoneNumber"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -254,25 +202,25 @@
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
-                        android:layout_height="48dp"
+                        android:layout_height="55dp"
                         android:inputType="text" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/loginCred"
+            android:textColor="@color/purple_500"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="30dp"
             android:orientation="vertical">
-
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/email"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/email"
@@ -294,14 +242,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="@string/password"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold" />
-
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/password"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
@@ -311,9 +251,21 @@
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:inputType="text" />
+                    android:layout_height="55dp"
+                    android:inputType="textPassword" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/passwordCheckbox"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="@string/showPassword" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -326,7 +278,7 @@
             <Button
                 android:id="@+id/nextButton"
                 android:layout_width="300dp"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:text="@string/next"
                 android:textAlignment="center"
                 android:textColor="@color/white"

@@ -1,11 +1,15 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
@@ -34,6 +38,7 @@ public class PersonalDetailsFragment extends Fragment {
     private final Address address = new Address();
     private TextInputLayout firstName, lastName, houseNumber, street, city, postalCode,
             phoneNumber, email, password;
+    private CheckBox passwordChk;
     private View personalDetailsView;
     private String[] provinceList;
     private Button nextBtn;
@@ -58,6 +63,20 @@ public class PersonalDetailsFragment extends Fragment {
                 R.layout.spinner_item, provinceList);
         spinner.setAdapter(adapter);
 
+        password = personalDetailsView.findViewById(R.id.password);
+        passwordChk = personalDetailsView.findViewById(R.id.passwordCheckbox);
+
+        passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(!isChecked){
+                    password.getEditText().setTransformationMethod(PasswordTransformationMethod.getInstance());
+                }else{
+                    password.getEditText().setTransformationMethod(null);
+                }
+            }
+        });
+
         //Button for transferring to next fragment
         nextBtn = personalDetailsView.findViewById(R.id.nextButton);
 
@@ -79,6 +98,8 @@ public class PersonalDetailsFragment extends Fragment {
             email = personalDetailsView.findViewById(R.id.email);
             password = personalDetailsView.findViewById(R.id.password);
 
+
+
             isFieldChecked = checkAllFields();
 
 
@@ -98,8 +119,8 @@ if(isFieldChecked) {
     user.setUserDetails(userDetails);
     user.setEmail(email.getEditText().getText().toString());
 
-    //Encrypt password first before saving
-    String passwordEncode = appUtils.encodeBase64(password.getEditText().getText().toString());
+    String passwordEncode = password.getEditText().getText().toString();
+
     user.setPassword(passwordEncode);
 
     sharedViewModel.setSelectedItem(user);
