@@ -154,9 +154,9 @@
                 <Spinner
                     android:id="@+id/province_spinner"
                     android:layout_width="100dp"
-                    android:layout_height="40dp"
+                    android:layout_height="55dp"
                     android:background="@android:drawable/btn_dropdown"
-                    android:spinnerMode="dropdown" />
+                    android:spinnerMode="dropdown"/>
 
             </LinearLayout>
         </LinearLayout>

@@ -1,7 +1,6 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
-import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +16,11 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.viewmodel.SharedViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
@@ -56,6 +55,8 @@ public class PersonalDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         personalDetailsView = inflater.inflate(R.layout.fragment_personal_details, container, false);
+        //Button for transferring to next fragment
+        nextBtn = personalDetailsView.findViewById(R.id.nextButton);
         //Province Spinner
         Spinner spinner = personalDetailsView.findViewById(R.id.province_spinner);
         provinceList = getResources().getStringArray(R.array.province_canada);
@@ -63,91 +64,116 @@ public class PersonalDetailsFragment extends Fragment {
                 R.layout.spinner_item, provinceList);
         spinner.setAdapter(adapter);
 
+        //Get the value from XML counterpart
+        firstName = personalDetailsView.findViewById(R.id.firstName);
+        lastName = personalDetailsView.findViewById(R.id.lastName);
+        houseNumber = personalDetailsView.findViewById(R.id.houseNumber);
+        street = personalDetailsView.findViewById(R.id.street);
+        city = personalDetailsView.findViewById(R.id.city);
+
+        String province = spinner.getSelectedItem().toString();
+        postalCode = personalDetailsView.findViewById(R.id.postalCode);
+        phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
+        email = personalDetailsView.findViewById(R.id.email);
+
         password = personalDetailsView.findViewById(R.id.password);
         passwordChk = personalDetailsView.findViewById(R.id.passwordCheckbox);
+
 
         passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
-                if(!isChecked){
+                if (!isChecked) {
                     password.getEditText().setTransformationMethod(PasswordTransformationMethod.getInstance());
-                }else{
+                } else {
                     password.getEditText().setTransformationMethod(null);
                 }
             }
         });
 
-        //Button for transferring to next fragment
-        nextBtn = personalDetailsView.findViewById(R.id.nextButton);
-
         nextBtn.setOnClickListener((personalDetailView) -> {
 
-            //Set sharemodel to share User data to different fragments
-            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-
-            //Get the value from XML counterpart
-            firstName = personalDetailsView.findViewById(R.id.firstName);
-            lastName = personalDetailsView.findViewById(R.id.lastName);
-            houseNumber = personalDetailsView.findViewById(R.id.houseNumber);
-            street = personalDetailsView.findViewById(R.id.street);
-            city = personalDetailsView.findViewById(R.id.city);
-
-            String province = spinner.getSelectedItem().toString();
-            postalCode = personalDetailsView.findViewById(R.id.postalCode);
-            phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
-            email = personalDetailsView.findViewById(R.id.email);
-            password = personalDetailsView.findViewById(R.id.password);
-
-
-
+            //check first all required fields
             isFieldChecked = checkAllFields();
 
+            if (isFieldChecked) {
 
-if(isFieldChecked) {
-    userDetails.setFirstName(firstName.getEditText().getText().toString());
-    userDetails.setLastName(lastName.getEditText().getText().toString());
-    userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
+                //Set sharemodel to share User data to different fragments
+                sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-    address.setHouseNumber(houseNumber.getEditText().getText().toString());
-    address.setStreet(street.getEditText().getText().toString());
-    address.setCity(city.getEditText().getText().toString());
-    address.setProvince(province);
-    address.setPostalCode(postalCode.getEditText().getText().toString());
+                userDetails.setFirstName(firstName.getEditText().getText().toString());
+                userDetails.setLastName(lastName.getEditText().getText().toString());
+                userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
 
-    userDetails.setAddress(address);
+                address.setHouseNumber(houseNumber.getEditText().getText().toString());
+                address.setStreet(street.getEditText().getText().toString());
+                address.setCity(city.getEditText().getText().toString());
+                address.setProvince(province);
+                address.setPostalCode(postalCode.getEditText().getText().toString());
 
-    user.setUserDetails(userDetails);
-    user.setEmail(email.getEditText().getText().toString());
+                userDetails.setAddress(address);
 
-    String passwordEncode = password.getEditText().getText().toString();
+                user.setUserDetails(userDetails);
 
-    user.setPassword(passwordEncode);
+                String emailInput = email.getEditText().getText().toString();
+                boolean validEmail = isValidEmail(emailInput);
 
-    sharedViewModel.setSelectedItem(user);
+                if(!validEmail){
+                    email.setError("Incorrect Email Format");
+                }else{
+                    user.setEmail(emailInput);
 
-    MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
-    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-    transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-    transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+                    String passwordEncode = password.getEditText().getText().toString();
 
-    transaction.commit();
-}
+                    user.setPassword(passwordEncode);
+
+                    sharedViewModel.setSelectedItem(user);
+
+                    MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
+                    transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+
+                    transaction.commit();
+                }
+
+            }
         });
 
         return personalDetailsView;
     }
 
-    private boolean checkAllFields(){
+    /**
+     * Check all required fields if value is present
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFields() {
 
-        if(email.getEditText().length() == 0){
-            email.setError("This field is required");
-            return false;
-        }
+        if (validateFieldIfEmpty(firstName)) return false;
+        if (validateFieldIfEmpty(lastName)) return false;
+        if (validateFieldIfEmpty(houseNumber)) return false;
+        if (validateFieldIfEmpty(street)) return false;
+        if (validateFieldIfEmpty(city)) return false;
+        if (validateFieldIfEmpty(postalCode)) return false;
+        if (validateFieldIfEmpty(phoneNumber)) return false;
+        if (validateFieldIfEmpty(email)) return false;
+        if (validateFieldIfEmpty(password)) return false;
         return true;
+    }
+
+    private boolean validateFieldIfEmpty(TextInputLayout inputLayout) {
+        if (inputLayout.getEditText().length() == 0) {
+            inputLayout.setError("Required");
+            return true;
+        }else{
+            inputLayout.setError(null);
+        }
+        return false;
     }
 
     /**
      * Checker for email format
+     *
      * @param email
      * @return true if matches
      */
