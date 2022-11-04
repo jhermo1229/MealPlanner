@@ -20,6 +20,8 @@ import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.util.AppUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
+import java.util.regex.Pattern;
+
 /**
  * Fragment class for personal details
  */
@@ -36,6 +38,7 @@ public class PersonalDetailsFragment extends Fragment {
     private String[] provinceList;
     private Button nextBtn;
     private SharedViewModel sharedViewModel;
+    private boolean isFieldChecked = false;
 
 
     public PersonalDetailsFragment() {
@@ -76,35 +79,60 @@ public class PersonalDetailsFragment extends Fragment {
             email = personalDetailsView.findViewById(R.id.email);
             password = personalDetailsView.findViewById(R.id.password);
 
-            userDetails.setFirstName(firstName.getEditText().getText().toString());
-            userDetails.setLastName(lastName.getEditText().getText().toString());
-            userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
+            isFieldChecked = checkAllFields();
 
-            address.setHouseNumber(houseNumber.getEditText().getText().toString());
-            address.setStreet(street.getEditText().getText().toString());
-            address.setCity(city.getEditText().getText().toString());
-            address.setProvince(province);
-            address.setPostalCode(postalCode.getEditText().getText().toString());
 
-            userDetails.setAddress(address);
+if(isFieldChecked) {
+    userDetails.setFirstName(firstName.getEditText().getText().toString());
+    userDetails.setLastName(lastName.getEditText().getText().toString());
+    userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
 
-            user.setUserDetails(userDetails);
-            user.setEmail(email.getEditText().getText().toString());
+    address.setHouseNumber(houseNumber.getEditText().getText().toString());
+    address.setStreet(street.getEditText().getText().toString());
+    address.setCity(city.getEditText().getText().toString());
+    address.setProvince(province);
+    address.setPostalCode(postalCode.getEditText().getText().toString());
 
-            //Encrypt password first before saving
-            String passwordEncode = appUtils.encodeBase64(password.getEditText().getText().toString());
-            user.setPassword(passwordEncode);
+    userDetails.setAddress(address);
 
-            sharedViewModel.setSelectedItem(user);
+    user.setUserDetails(userDetails);
+    user.setEmail(email.getEditText().getText().toString());
 
-            MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-            transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+    //Encrypt password first before saving
+    String passwordEncode = appUtils.encodeBase64(password.getEditText().getText().toString());
+    user.setPassword(passwordEncode);
 
-            transaction.commit();
+    sharedViewModel.setSelectedItem(user);
+
+    MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
+    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+    transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
+    transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+
+    transaction.commit();
+}
         });
 
         return personalDetailsView;
+    }
+
+    private boolean checkAllFields(){
+
+        if(email.getEditText().length() == 0){
+            email.setError("This field is required");
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Checker for email format
+     * @param email
+     * @return true if matches
+     */
+    private boolean isValidEmail(String email) {
+        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
+                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
+        return Pattern.compile(regexPattern).matcher(email).matches();
     }
 }

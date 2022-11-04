@@ -11,6 +11,7 @@
         android:theme="@style/Theme.MealPlanner">
         <activity
             android:name=".ui.SignupActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"
