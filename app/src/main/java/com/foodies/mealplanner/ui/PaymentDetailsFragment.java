@@ -1,4 +1,4 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.ui;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -14,6 +14,11 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.model.UserPaymentDetails;
+import com.foodies.mealplanner.util.AppUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textfield.TextInputLayout;

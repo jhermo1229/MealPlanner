@@ -1,9 +1,11 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
+
+import com.foodies.mealplanner.R;
 
 public class SignupActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +12,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.model.Address;
+import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.model.UserDetails;
+import com.foodies.mealplanner.util.AppUtils;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**

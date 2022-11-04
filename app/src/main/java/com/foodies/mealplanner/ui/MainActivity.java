@@ -1,4 +1,4 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
+
+import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.model.User;
 
 public class MainActivity extends AppCompatActivity {
 

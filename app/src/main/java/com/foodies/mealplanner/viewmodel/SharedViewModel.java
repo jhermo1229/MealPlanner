@@ -1,10 +1,12 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.viewmodel;
 
 import android.util.Log;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.foodies.mealplanner.model.User;
 
 /**
  * View Model class to share User model to different fragments at SignupActivity

@@ -1,4 +1,4 @@
-package com.foodies.mealplanner;
+package com.foodies.mealplanner.model;
 
 /**
  * Model class for address of user.
