@@ -20,6 +20,7 @@ import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.validations.PersonalDetailsValidator;
 import com.foodies.mealplanner.viewmodel.SharedViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -43,6 +44,7 @@ public class PersonalDetailsFragment extends Fragment {
     private Button nextBtn;
     private SharedViewModel sharedViewModel;
     private boolean isFieldChecked = false;
+    private PersonalDetailsValidator personalDetailsValidator = new PersonalDetailsValidator();
 
 
     public PersonalDetailsFragment() {
@@ -116,11 +118,11 @@ public class PersonalDetailsFragment extends Fragment {
                 user.setUserDetails(userDetails);
 
                 String emailInput = email.getEditText().getText().toString();
-                boolean validEmail = isValidEmail(emailInput);
+                boolean validEmail = personalDetailsValidator.isValidEmail(emailInput);
 
-                if(!validEmail){
+                if (!validEmail) {
                     email.setError("Incorrect Email Format");
-                }else{
+                } else {
                     user.setEmail(emailInput);
 
                     String passwordEncode = password.getEditText().getText().toString();
@@ -145,6 +147,7 @@ public class PersonalDetailsFragment extends Fragment {
 
     /**
      * Check all required fields if value is present
+     *
      * @return boolean, true if all valid
      */
     private boolean checkAllFields() {
@@ -157,29 +160,18 @@ public class PersonalDetailsFragment extends Fragment {
         if (validateFieldIfEmpty(postalCode)) return false;
         if (validateFieldIfEmpty(phoneNumber)) return false;
         if (validateFieldIfEmpty(email)) return false;
-        if (validateFieldIfEmpty(password)) return false;
-        return true;
+        return !validateFieldIfEmpty(password);
     }
 
     private boolean validateFieldIfEmpty(TextInputLayout inputLayout) {
         if (inputLayout.getEditText().length() == 0) {
             inputLayout.setError("Required");
             return true;
-        }else{
+        } else {
             inputLayout.setError(null);
         }
         return false;
     }
 
-    /**
-     * Checker for email format
-     *
-     * @param email
-     * @return true if matches
-     */
-    private boolean isValidEmail(String email) {
-        String regexPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@"
-                + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-        return Pattern.compile(regexPattern).matcher(email).matches();
-    }
+
 }
