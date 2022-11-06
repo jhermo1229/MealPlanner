@@ -3,18 +3,18 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="signup">Signup</string>
     <string name="login">Login</string>
-<!--    <string name="firstName">First Name</string>-->
-<!--    <string name="lastName">Last Name</string>-->
-<!--    <string name="houseNumber">House Number</string>-->
-<!--    <string name="street">Street</string>-->
-<!--    <string name="city">City</string>-->
+    <!--    <string name="firstName">First Name</string>-->
+    <!--    <string name="lastName">Last Name</string>-->
+    <!--    <string name="houseNumber">House Number</string>-->
+    <!--    <string name="street">Street</string>-->
+    <!--    <string name="city">City</string>-->
     <string name="province">Province</string>
     <string name="loginCred">Login Credentials</string>
     <string name="showPassword">Show Password</string>
-<!--    <string name="postalCode">Postal Code</string>-->
-<!--    <string name="phoneNumber">Phone Number</string>-->
-<!--    <string name="email">Email</string>-->
-<!--    <string name="password">Password</string>-->
+    <!--    <string name="postalCode">Postal Code</string>-->
+    <!--    <string name="phoneNumber">Phone Number</string>-->
+    <!--    <string name="email">Email</string>-->
+    <!--    <string name="password">Password</string>-->
     <string name="next">Next</string>
     <string name="one">1</string>
     <string name="two">2</string>

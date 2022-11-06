@@ -31,17 +31,16 @@ public class MainActivity extends AppCompatActivity {
         sharedViewModel.setSelectedItem(user);
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
-//        //Created a fragment which will be used as home page
-//        homeFrame = findViewById(R.id.homeFrame);
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        transaction.replace(R.id.homeFrame, new HomeFragment());
-//        transaction.commit();
     }
 
 
-    public void sendMessage(View view) {
+    public void signupActivity(View view) {
         Intent intent = new Intent(this, SignupActivity.class);
+        startActivity(intent);
+    }
+
+    public void loginActivity(View view) {
+        Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 }
