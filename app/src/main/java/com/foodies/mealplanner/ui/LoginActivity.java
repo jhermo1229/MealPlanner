@@ -19,7 +19,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //replace the frame layout with new fragment
         Log.d("LoginActivity", "transition to fragment");
-        transaction.replace(R.id.loginHomeFrame, new UserProfileFragment());
+        transaction.replace(R.id.loginHomeFrame, new LoginHomeFragment());
         transaction.commit();
     }
 }
