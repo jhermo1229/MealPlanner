@@ -3,7 +3,7 @@ package com.foodies.mealplanner;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import com.foodies.mealplanner.validations.PersonalDetailsValidator;
+import com.foodies.mealplanner.validations.FieldValidator;
 
 import org.junit.Test;
 
@@ -12,7 +12,7 @@ import org.junit.Test;
  */
 public class PersonalDetailUnitTest {
 
-    PersonalDetailsValidator personalDetailsValidator = new PersonalDetailsValidator();
+    FieldValidator personalDetailsValidator = new FieldValidator();
 
     @Test
     public void emailValidator_CorrectSimpleEmail_True() {

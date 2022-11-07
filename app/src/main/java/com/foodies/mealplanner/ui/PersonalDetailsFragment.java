@@ -1,7 +1,6 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,11 +21,9 @@ import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.repository.DatabaseHelper;
 import com.foodies.mealplanner.util.AppUtils;
-import com.foodies.mealplanner.validations.PersonalDetailsValidator;
+import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SharedViewModel;
 import com.google.android.material.textfield.TextInputLayout;
-
-import java.util.regex.Pattern;
 
 /**
  * Fragment class for personal details
@@ -46,7 +43,7 @@ public class PersonalDetailsFragment extends Fragment {
     private Button nextBtn;
     private SharedViewModel sharedViewModel;
     private boolean isFieldChecked = false;
-    private PersonalDetailsValidator personalDetailsValidator = new PersonalDetailsValidator();
+    private FieldValidator fieldValidator = new FieldValidator();
     private DatabaseHelper db = new DatabaseHelper();
 
 
@@ -121,7 +118,7 @@ public class PersonalDetailsFragment extends Fragment {
                 user.setUserDetails(userDetails);
 
                 String emailInput = email.getEditText().getText().toString();
-                boolean validEmail = personalDetailsValidator.isValidEmail(emailInput);
+                boolean validEmail = fieldValidator.isValidEmail(emailInput);
 
                 if (!validEmail) {
                     email.setError("Incorrect Email Format");
@@ -163,25 +160,15 @@ public class PersonalDetailsFragment extends Fragment {
      */
     private boolean checkAllFields() {
 
-        if (validateFieldIfEmpty(firstName)) return false;
-        if (validateFieldIfEmpty(lastName)) return false;
-        if (validateFieldIfEmpty(houseNumber)) return false;
-        if (validateFieldIfEmpty(street)) return false;
-        if (validateFieldIfEmpty(city)) return false;
-        if (validateFieldIfEmpty(postalCode)) return false;
-        if (validateFieldIfEmpty(phoneNumber)) return false;
-        if (validateFieldIfEmpty(email)) return false;
-        return !validateFieldIfEmpty(password);
-    }
-
-    private boolean validateFieldIfEmpty(TextInputLayout inputLayout) {
-        if (inputLayout.getEditText().length() == 0) {
-            inputLayout.setError("Required");
-            return true;
-        } else {
-            inputLayout.setError(null);
-        }
-        return false;
+        if (fieldValidator.validateFieldIfEmpty(firstName)) return false;
+        if (fieldValidator.validateFieldIfEmpty(lastName)) return false;
+        if (fieldValidator.validateFieldIfEmpty(houseNumber)) return false;
+        if (fieldValidator.validateFieldIfEmpty(street)) return false;
+        if (fieldValidator.validateFieldIfEmpty(city)) return false;
+        if (fieldValidator.validateFieldIfEmpty(postalCode)) return false;
+        if (fieldValidator.validateFieldIfEmpty(phoneNumber)) return false;
+        if (fieldValidator.validateFieldIfEmpty(email)) return false;
+        return !fieldValidator.validateFieldIfEmpty(password);
     }
 
 

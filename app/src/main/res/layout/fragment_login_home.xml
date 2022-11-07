@@ -25,7 +25,7 @@
             android:orientation="vertical">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/email"
+                android:id="@+id/emailLogin"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
@@ -46,7 +46,7 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/password"
+                    android:id="@+id/passwordLogin"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="300dp"
                     android:layout_height="wrap_content"
@@ -66,7 +66,7 @@
                     android:orientation="horizontal">
 
                     <CheckBox
-                        android:id="@+id/passwordCheckbox"
+                        android:id="@+id/passwordLoginCheckbox"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:text="@string/showPassword" />

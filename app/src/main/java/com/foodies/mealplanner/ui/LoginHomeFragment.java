@@ -1,18 +1,19 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.validations.FieldValidator;
+import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Main page of Meal Planner
@@ -20,10 +21,12 @@ import com.foodies.mealplanner.repository.DatabaseHelper;
  */
 public class LoginHomeFragment extends Fragment {
 
-    private Button loginBtn;
-    private View homeView;
-    private User user = new User();
     private final DatabaseHelper db = new DatabaseHelper();
+    private Button loginBtn;
+    private View homeLoginView;
+    private final User user = new User();
+    private TextInputLayout email, password;
+    private FieldValidator fieldValidator = new FieldValidator();
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -33,23 +36,37 @@ public class LoginHomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        homeView = inflater.inflate(R.layout.fragment_login_home, container, false);
-        loginBtn = homeView.findViewById(R.id.loginUserProfileBtn);
+        homeLoginView = inflater.inflate(R.layout.fragment_login_home, container, false);
+        loginBtn = homeLoginView.findViewById(R.id.loginUserProfileBtn);
+        email = homeLoginView.findViewById(R.id.emailLogin);
+        password = homeLoginView.findViewById(R.id.passwordLogin);
 
         loginBtn.setOnClickListener((personalDetailView) -> {
 
-db.getCustomer(user);
+            //todo: Add validation for email and password then add data to viewmodel
 
+            if(checkAllFields()){
 
-            UserProfileFragment userFrag = new UserProfileFragment();
-            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-            transaction.addToBackStack(PersonalDetailsFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, userFrag);
+                UserProfileFragment userFrag = new UserProfileFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                transaction.replace(R.id.loginHomeFrame, userFrag);
 
-            transaction.commit();
+                transaction.commit();
+            }
         });
 
-        return homeView;
+        return homeLoginView;
     }
+    /**
+     * Check all required fields if value is present
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFields() {
+        if (fieldValidator.validateFieldIfEmpty(email)) return false;
+        return !fieldValidator.validateFieldIfEmpty(password);
+    }
+
 
 }
