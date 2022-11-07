@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.repository.DatabaseHelper;
 
 /**
  * Main page of Meal Planner
@@ -20,6 +22,8 @@ public class LoginHomeFragment extends Fragment {
 
     private Button loginBtn;
     private View homeView;
+    private User user = new User();
+    private final DatabaseHelper db = new DatabaseHelper();
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -33,6 +37,9 @@ public class LoginHomeFragment extends Fragment {
         loginBtn = homeView.findViewById(R.id.loginUserProfileBtn);
 
         loginBtn.setOnClickListener((personalDetailView) -> {
+
+db.getCustomer(user);
+
 
             UserProfileFragment userFrag = new UserProfileFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

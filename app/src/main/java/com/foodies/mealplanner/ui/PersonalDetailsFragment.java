@@ -1,6 +1,7 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
+import com.foodies.mealplanner.repository.DatabaseHelper;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.PersonalDetailsValidator;
 import com.foodies.mealplanner.viewmodel.SharedViewModel;
@@ -45,6 +47,7 @@ public class PersonalDetailsFragment extends Fragment {
     private SharedViewModel sharedViewModel;
     private boolean isFieldChecked = false;
     private PersonalDetailsValidator personalDetailsValidator = new PersonalDetailsValidator();
+    private DatabaseHelper db = new DatabaseHelper();
 
 
     public PersonalDetailsFragment() {
@@ -122,21 +125,29 @@ public class PersonalDetailsFragment extends Fragment {
 
                 if (!validEmail) {
                     email.setError("Incorrect Email Format");
+
                 } else {
+
                     user.setEmail(emailInput);
 
-                    String passwordEncode = password.getEditText().getText().toString();
+                    //Check if email is already existing
+                    if(db.getCustomer(user) == null) {
 
-                    user.setPassword(passwordEncode);
+                        String passwordEncode = password.getEditText().getText().toString();
 
-                    sharedViewModel.setSelectedItem(user);
+                        user.setPassword(passwordEncode);
 
-                    MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-                    transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+                        sharedViewModel.setSelectedItem(user);
 
-                    transaction.commit();
+                        MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
+                        transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+
+                        transaction.commit();
+                    } else{
+                        email.setError("Email already existing");
+                    }
                 }
 
             }

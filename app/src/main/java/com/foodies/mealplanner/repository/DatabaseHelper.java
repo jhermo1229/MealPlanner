@@ -15,6 +15,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
@@ -26,12 +27,19 @@ public class DatabaseHelper {
     public static final String USER_CREDENTIALS = "userCredentials";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+
+    /**
+     * Add customer in firebase database
+     *
+     * @param user
+     * @param activity
+     */
     public void addCustomerUser(User user, Activity activity) {
 
         CollectionReference dbCourses = db.collection(USER_CREDENTIALS);
-        dbCourses.add(user).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        dbCourses.document(user.getEmail()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
-            public void onSuccess(@NonNull @org.jetbrains.annotations.NotNull DocumentReference documentReference) {
+            public void onSuccess(Void aVoid) {
 
                 Log.i("Database", "Successful adding user");
 
@@ -56,4 +64,25 @@ public class DatabaseHelper {
             }
         });
     }
+
+    /**
+     * Get customer in firebase account
+     *
+     * @param user
+     */
+    public User getCustomer(User user) {
+
+        final User[] userList = {new User()};
+
+        DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                userList[0] = documentSnapshot.toObject(User.class);
+            }
+        });
+        return userList[0];
+    }
+
+
 }
