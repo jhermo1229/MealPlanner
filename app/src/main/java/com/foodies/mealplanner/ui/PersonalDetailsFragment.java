@@ -128,7 +128,7 @@ public class PersonalDetailsFragment extends Fragment {
                     user.setEmail(emailInput);
 
                     //Check if email is already existing
-                    if(db.getCustomer(user) == null) {
+                    if(db.getEmailIfExisting(user)) {
 
                         String passwordEncode = password.getEditText().getText().toString();
 

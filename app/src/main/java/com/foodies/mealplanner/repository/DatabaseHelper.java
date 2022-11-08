@@ -66,10 +66,24 @@ public class DatabaseHelper {
     }
 
     /**
-     * Get customer in firebase account
+     * Check if email is existing in firebase account
      *
      * @param user
      */
+    public boolean getEmailIfExisting(User user) {
+
+        final boolean[] isExist = {false};
+
+        DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                isExist[0] = documentSnapshot.exists();
+            }
+        });
+        return isExist[0];
+    }
+
     public User getCustomer(User user) {
 
         final User[] userList = {new User()};
@@ -81,7 +95,12 @@ public class DatabaseHelper {
                 userList[0] = documentSnapshot.toObject(User.class);
             }
         });
-        return userList[0];
+
+        if (userList[0] != null && user.getPassword().equals(userList[0].getPassword())) {
+            return userList[0];
+        } else {
+            return null;
+        }
     }
 
 

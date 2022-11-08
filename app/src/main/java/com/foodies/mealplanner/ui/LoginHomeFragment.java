@@ -22,11 +22,11 @@ import com.google.android.material.textfield.TextInputLayout;
 public class LoginHomeFragment extends Fragment {
 
     private final DatabaseHelper db = new DatabaseHelper();
+    private final User user = new User();
     private Button loginBtn;
     private View homeLoginView;
-    private final User user = new User();
     private TextInputLayout email, password;
-    private FieldValidator fieldValidator = new FieldValidator();
+    private final FieldValidator fieldValidator = new FieldValidator();
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -45,19 +45,30 @@ public class LoginHomeFragment extends Fragment {
 
             //todo: Add validation for email and password then add data to viewmodel
 
-            if(checkAllFields()){
 
-                UserProfileFragment userFrag = new UserProfileFragment();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                transaction.replace(R.id.loginHomeFrame, userFrag);
+            if (checkAllFields()) {
+                User userParam = new User();
+                userParam.setEmail(email.getEditText().getText().toString());
+                userParam.setPassword(password.getEditText().getText().toString());
 
-                transaction.commit();
+                if(checkEmailAndPass(userParam)) {
+
+                    UserProfileFragment userFrag = new UserProfileFragment();
+                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                    transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                    transaction.replace(R.id.loginHomeFrame, userFrag);
+
+                    transaction.commit();
+                }else{
+                    email.setError("Email and password does not match");
+                    password.setError("Email and password does not match");
+                }
             }
         });
 
         return homeLoginView;
     }
+
     /**
      * Check all required fields if value is present
      *
@@ -66,6 +77,13 @@ public class LoginHomeFragment extends Fragment {
     private boolean checkAllFields() {
         if (fieldValidator.validateFieldIfEmpty(email)) return false;
         return !fieldValidator.validateFieldIfEmpty(password);
+    }
+
+    private boolean checkEmailAndPass(User user) {
+
+        user = db.getCustomer(user);
+        return user != null;
+
     }
 
 
