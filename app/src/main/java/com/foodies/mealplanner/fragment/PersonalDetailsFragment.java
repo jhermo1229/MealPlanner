@@ -1,6 +1,7 @@
 package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -84,6 +85,7 @@ public class PersonalDetailsFragment extends Fragment {
         String province = spinner.getSelectedItem().toString();
         postalCode = personalDetailsView.findViewById(R.id.postalCode);
         phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
+        phoneNumber.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(10) });
         email = personalDetailsView.findViewById(R.id.email);
 
         password = personalDetailsView.findViewById(R.id.password);
