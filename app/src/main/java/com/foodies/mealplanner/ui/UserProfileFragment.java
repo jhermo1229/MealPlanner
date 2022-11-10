@@ -1,14 +1,18 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
+
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.viewmodel.SharedViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,6 +25,10 @@ public class UserProfileFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private SharedViewModel sharedViewModel;
+    private User user = new User();
+    private TextView nameTxt;
+    private View userProfileView;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -61,6 +69,15 @@ public class UserProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_profile, container, false);
+        userProfileView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+
+        sharedViewModel.getSelectedItem().observe(getActivity(), users -> {
+            user = users;
+        });
+
+        nameTxt = userProfileView.findViewById(R.id.nameTxt);
+        nameTxt.setText(user.getUserDetails().getFirstName());
+        return userProfileView;
     }
 }

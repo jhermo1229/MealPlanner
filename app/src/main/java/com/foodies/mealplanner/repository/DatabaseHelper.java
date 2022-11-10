@@ -11,12 +11,18 @@ import androidx.annotation.NonNull;
 
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.ui.MainActivity;
+import com.foodies.mealplanner.ui.MyCallBack;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Database handler for meal planner.
@@ -84,24 +90,33 @@ public class DatabaseHelper {
         return isExist[0];
     }
 
-    public User getCustomer(User user) {
-
-        final User[] userList = {new User()};
+    /**
+     * Callback function to return query.
+     * Uses Callback interface as firestore cloud is asynchronous
+     * @param myCallBack
+     * @param user
+     */
+    public void readData(MyCallBack myCallBack, User user){
 
         DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                userList[0] = documentSnapshot.toObject(User.class);
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User user = document.toObject(User.class);
+                        myCallBack.onCallBack(user);
+                        Log.d("DATABASE", "DocumentSnapshot data: " + document.getData());
+                    } else {
+                        Log.d("DATABASE", "No such document");
+                    }
+                } else {
+                    Log.d("DATABASE", "get failed with ", task.getException());
+                }
             }
         });
 
-        if (userList[0] != null && user.getPassword().equals(userList[0].getPassword())) {
-            return userList[0];
-        } else {
-            return null;
-        }
     }
-
 
 }
