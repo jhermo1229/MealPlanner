@@ -204,7 +204,7 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="number" />
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
