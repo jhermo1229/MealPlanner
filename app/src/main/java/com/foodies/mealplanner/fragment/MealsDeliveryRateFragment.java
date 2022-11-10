@@ -46,24 +46,24 @@ public class MealsDeliveryRateFragment extends Fragment {
         oneBtn.setOnClickListener((mealsDeliveryView) -> {
 
             oneBtn.setBackgroundColor(Color.RED);
-            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         twoBtn.setOnClickListener((mealsDeliveryView) -> {
 
             twoBtn.setBackgroundColor(Color.RED);
             userMealDetails.setDeliveryFrequency(2);
-            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         threeBtn.setOnClickListener((mealsDeliveryView) -> {
 
             threeBtn.setBackgroundColor(Color.RED);
             userMealDetails.setDeliveryFrequency(3);
-            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            twoBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            oneBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         onePersonBtn = mealsDeliveryView.findViewById(R.id.onePersonButton);
@@ -76,24 +76,24 @@ public class MealsDeliveryRateFragment extends Fragment {
 
             onePersonBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealQuantity(1);
-            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         twoPersonBtn.setOnClickListener((mealsDeliveryView) -> {
 
             twoPersonBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealQuantity(2);
-            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         threePersonBtn.setOnClickListener((mealsDeliveryView) -> {
 
             threePersonBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealQuantity(3);
-            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            twoPersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         nextBtn = mealsDeliveryView.findViewById(R.id.nextButton);

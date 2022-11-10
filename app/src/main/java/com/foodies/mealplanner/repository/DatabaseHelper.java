@@ -82,6 +82,7 @@ public class DatabaseHelper {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 isExist[0] = documentSnapshot.exists();
+                Log.d("EMAIL", "exist: "+ documentSnapshot.exists());
             }
         });
         return isExist[0];

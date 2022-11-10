@@ -30,7 +30,7 @@ class PersonalDetailFragmentTest {
     fun test_isPersonalDetailsFragmentLaunched() {
 
         init()
-        //Test if fragment is launched
+        //Test if fragment is launched/Navigation Test
         onView(withId(R.id.personalDetailsFrag)).check(matches(isDisplayed()))
     }
 

@@ -44,24 +44,24 @@ public class MealTypeFragment extends Fragment {
 
             vegetableBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealType("V");
-            meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         meatBtn.setOnClickListener((mealsDeliveryView) -> {
 
             meatBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealType("M");
-            vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         bothBtn.setOnClickListener((mealsDeliveryView) -> {
 
             bothBtn.setBackgroundColor(Color.RED);
             userMealDetails.setMealType("B");
-            meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
-            vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.purple_500));
+            meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
+            vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
         nextBtn = mealTypeView.findViewById(R.id.nextButton);
