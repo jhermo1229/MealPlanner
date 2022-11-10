@@ -12,6 +12,7 @@ import android.widget.CompoundButton;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -49,6 +50,13 @@ public class PersonalDetailsFragment extends Fragment {
 
     public PersonalDetailsFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        FragmentFactory persona = getActivity().getSupportFragmentManager().getFragmentFactory();
+        super.onCreate(savedInstanceState);
+
     }
 
 

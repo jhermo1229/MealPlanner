@@ -60,6 +60,7 @@ dependencies {
     def androidx_test = "1.5.0"
     androidTestImplementation "androidx.test:runner:$androidx_test"
     androidTestImplementation "androidx.test:core:$androidx_test"
+    androidTestImplementation "androidx.fragment:fragment-testing:$androidx_test"
     //androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
 
 }
