@@ -1,4 +1,4 @@
-package com.foodies.mealplanner.ui;
+package com.foodies.mealplanner.fragment;
 
 import com.foodies.mealplanner.model.User;
 

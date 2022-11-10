@@ -10,8 +10,8 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.ui.MainActivity;
-import com.foodies.mealplanner.ui.MyCallBack;
+import com.foodies.mealplanner.activity.MainActivity;
+import com.foodies.mealplanner.fragment.MyCallBack;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,9 +20,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Database handler for meal planner.

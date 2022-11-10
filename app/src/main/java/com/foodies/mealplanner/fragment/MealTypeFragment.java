@@ -1,4 +1,4 @@
-package com.foodies.mealplanner.ui;
+package com.foodies.mealplanner.fragment;
 
 import android.graphics.Color;
 import android.os.Bundle;

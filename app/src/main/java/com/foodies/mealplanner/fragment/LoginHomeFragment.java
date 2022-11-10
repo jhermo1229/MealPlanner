@@ -1,4 +1,4 @@
-package com.foodies.mealplanner.ui;
+package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;

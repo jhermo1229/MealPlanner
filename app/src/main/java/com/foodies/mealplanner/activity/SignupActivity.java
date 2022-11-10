@@ -1,25 +1,24 @@
-package com.foodies.mealplanner.ui;
+package com.foodies.mealplanner.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.fragment.PersonalDetailsFragment;
 
-public class LoginActivity extends AppCompatActivity {
+public class SignupActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_signup);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         //replace the frame layout with new fragment
-        Log.d("LoginActivity", "transition to fragment");
-        transaction.replace(R.id.loginHomeFrame, new LoginHomeFragment());
+        transaction.replace(R.id.signupHomeFrame, new PersonalDetailsFragment());
         transaction.commit();
     }
 }

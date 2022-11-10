@@ -1,4 +1,4 @@
-package com.foodies.mealplanner.ui;
+package com.foodies.mealplanner.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
