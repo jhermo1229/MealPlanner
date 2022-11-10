@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/main"
     tools:context=".activity.MainActivity">
 
     <!-- TODO: Update blank fragment layout -->
@@ -16,6 +17,7 @@
             android:layout_width="300dp"
             android:layout_height="300dp"
             android:layout_gravity="center"
+            android:id="@+id/mainLogo"
             android:src="@drawable/logo" />
 
         <Button
