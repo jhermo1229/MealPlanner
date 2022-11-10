@@ -1,11 +1,14 @@
 package com.foodies.mealplanner.ui;
 
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -20,6 +23,7 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Main page of Meal Planner
@@ -29,10 +33,10 @@ public class LoginHomeFragment extends Fragment {
 
     private final DatabaseHelper db = new DatabaseHelper();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private final User user = new User();
     List<User> userList = new ArrayList<>();
     private Button loginBtn;
     private View homeLoginView;
+    private CheckBox passwordChk;
     private TextInputLayout email, password;
     private SharedViewModel sharedViewModel;
 
@@ -48,39 +52,45 @@ public class LoginHomeFragment extends Fragment {
         loginBtn = homeLoginView.findViewById(R.id.loginUserProfileBtn);
         email = homeLoginView.findViewById(R.id.emailLogin);
         password = homeLoginView.findViewById(R.id.passwordLogin);
+        passwordChk = homeLoginView.findViewById(R.id.passwordLoginCheckbox);
+
+        passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (!isChecked) {
+                    password.getEditText().setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    password.getEditText().setTransformationMethod(null);
+                }
+            }
+        });
 
         loginBtn.setOnClickListener((personalDetailView) -> {
 
-            //todo: Add validation for email and password then add data to viewmodel
-
-
             if (checkAllFields()) {
                 User userParam = new User();
-                userParam.setEmail(email.getEditText().getText().toString());
-                userParam.setPassword(password.getEditText().getText().toString());
+                userParam.setEmail(Objects.requireNonNull(email.getEditText()).getText().toString());
+                userParam.setPassword(Objects.requireNonNull(password.getEditText()).getText().toString());
 
-                db.readData(new MyCallBack() {
-                    @Override
-                    public void onCallBack(User user) {
-                        userList.add(user);
-                        Log.d("RECALL", userList.get(0).getEmail());
+                db.readData(user -> {
+                    userList.add(user);
+                    Log.d("RECALL", userList.get(0).getEmail());
 
-                        if (!userList.isEmpty()) {
+                    if (!userList.isEmpty()) {
 
-                            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-                            sharedViewModel.setSelectedItem(userList.get(0));
+                        sharedViewModel.setSelectedItem(userList.get(0));
 
-                            UserProfileFragment userFrag = new UserProfileFragment();
-                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                            transaction.replace(R.id.loginHomeFrame, userFrag);
+                        UserProfileFragment userFrag = new UserProfileFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                        transaction.replace(R.id.loginHomeFrame, userFrag);
 
-                            transaction.commit();
-                        } else {
-                            email.setError("Email and password does not match");
-                            password.setError("Email and password does not match");
-                        }
+                        transaction.commit();
+                    } else {
+                        email.setError("Email and password does not match");
+                        password.setError("Email and password does not match");
                     }
                 }, userParam);
 
