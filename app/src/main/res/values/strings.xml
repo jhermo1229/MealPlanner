@@ -28,7 +28,7 @@
     <string name="both">Both</string>
     <string name="nameOnCard">Name on card</string>
     <string name="cardNumber">Card number</string>
-    <string name="expiryDate">Expiry Date(MMDD)</string>
+    <string name="expiryDate">Expiry Date(MMYY)</string>
     <string name="securityCode">CVC</string>
     <string name="addMealOrder">Add meal order</string>
 
