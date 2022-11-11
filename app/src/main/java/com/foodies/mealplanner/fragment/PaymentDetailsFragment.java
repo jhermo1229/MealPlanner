@@ -50,6 +50,7 @@ public class PaymentDetailsFragment extends Fragment {
         expiryDate = paymentDetailsView.findViewById(R.id.expiryDate);
         expiryDate.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(4) });
         securityCode = paymentDetailsView.findViewById(R.id.securityCode);
+        securityCode.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(3) });
         saveButton = paymentDetailsView.findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener((personalDetailView) -> {
