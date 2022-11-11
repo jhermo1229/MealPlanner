@@ -2,7 +2,6 @@ package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -73,29 +72,35 @@ public class LoginHomeFragment extends Fragment {
                 userParam.setPassword(Objects.requireNonNull(password.getEditText()).getText().toString());
 
                 db.readData(user -> {
-                    userList.add(user);
-                    Log.d("RECALL", userList.get(0).getEmail());
+                    if (user != null) {
+                        userList.add(user);
+                    }
 
                     if (!userList.isEmpty()) {
 
-                        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                        if (checkEmailAndPasswordMatch(userList.get(0).getPassword(), userParam.getPassword())) {
 
-                        sharedViewModel.setSelectedItem(userList.get(0));
+                            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
 
-                        UserProfileFragment userFrag = new UserProfileFragment();
-                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                        transaction.replace(R.id.loginHomeFrame, userFrag);
+                            sharedViewModel.setSelectedItem(userList.get(0));
 
-                        transaction.commit();
+                            UserProfileFragment userFrag = new UserProfileFragment();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                            transaction.replace(R.id.loginHomeFrame, userFrag);
+
+                            transaction.commit();
+                        } else {
+                            password.setError("Please check password");
+                        }
                     } else {
-                        email.setError("Email and password does not match");
-                        password.setError("Email and password does not match");
+                        email.setError("Email does not exist");
                     }
                 }, userParam);
 
 
             }
+
         });
 
         return homeLoginView;
@@ -109,6 +114,16 @@ public class LoginHomeFragment extends Fragment {
     private boolean checkAllFields() {
         if (fieldValidator.validateFieldIfEmpty(email)) return false;
         return !fieldValidator.validateFieldIfEmpty(password);
+    }
+
+    /**
+     * Check if email and password match
+     *
+     * @return boolean, true if valid
+     */
+    private boolean checkEmailAndPasswordMatch(String password, String paramPassword) {
+
+        return password.equals(paramPassword);
     }
 }
 

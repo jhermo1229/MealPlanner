@@ -37,7 +37,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/firstNameEditText"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -58,7 +59,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/lastNameEditText"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
@@ -278,7 +280,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/nextButton"
+                android:id="@+id/personalNextButton"
                 android:layout_width="300dp"
                 android:layout_height="55dp"
                 android:text="@string/next"

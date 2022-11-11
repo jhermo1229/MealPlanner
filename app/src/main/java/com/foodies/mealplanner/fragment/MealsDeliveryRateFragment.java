@@ -96,7 +96,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             onePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
-        nextBtn = mealsDeliveryView.findViewById(R.id.nextButton);
+        nextBtn = mealsDeliveryView.findViewById(R.id.personalNextButton);
 
         nextBtn.setOnClickListener((mealsDeliveryView) -> {
             MealTypeFragment mealTypeFrag = new MealTypeFragment();

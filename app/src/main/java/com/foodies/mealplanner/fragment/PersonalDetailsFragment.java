@@ -67,7 +67,7 @@ public class PersonalDetailsFragment extends Fragment {
 
         personalDetailsView = inflater.inflate(R.layout.fragment_personal_details, container, false);
         //Button for transferring to next fragment
-        nextBtn = personalDetailsView.findViewById(R.id.nextButton);
+        nextBtn = personalDetailsView.findViewById(R.id.personalNextButton);
         //Province Spinner
         Spinner spinner = personalDetailsView.findViewById(R.id.province_spinner);
         provinceList = getResources().getStringArray(R.array.province_canada);

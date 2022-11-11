@@ -64,7 +64,7 @@
             android:gravity="center"
             android:layout_marginBottom="20dp">
             <Button
-                android:id="@+id/nextButton"
+                android:id="@+id/personalNextButton"
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:text="@string/next"

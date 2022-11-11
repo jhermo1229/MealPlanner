@@ -108,6 +108,7 @@ public class DatabaseHelper {
                         Log.d("DATABASE", "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d("DATABASE", "No such document");
+                        myCallBack.onCallBack(null);
                     }
                 } else {
                     Log.d("DATABASE", "get failed with ", task.getException());
