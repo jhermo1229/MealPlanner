@@ -47,6 +47,7 @@ public class PaymentDetailsFragment extends Fragment {
         paymentDetailsView = inflater.inflate(R.layout.fragment_payment, container, false);
         nameOnCard = paymentDetailsView.findViewById(R.id.nameOnCard);
         cardNumber = paymentDetailsView.findViewById(R.id.cardNumber);
+        cardNumber.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(16) });
         expiryDate = paymentDetailsView.findViewById(R.id.expiryDate);
         expiryDate.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(4) });
         securityCode = paymentDetailsView.findViewById(R.id.securityCode);
