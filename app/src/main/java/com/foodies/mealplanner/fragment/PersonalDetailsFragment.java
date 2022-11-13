@@ -32,6 +32,10 @@ import com.google.android.material.textfield.TextInputLayout;
  */
 public class PersonalDetailsFragment extends Fragment {
 
+    public static final String EMAIL_ALREADY_EXISTING = "Email already existing";
+    public static final String INVALID_PHONE_NUMBER = "Invalid phone number";
+    public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
+    public static final int TEN = 10;
     public static String TAG = PersonalDetailsFragment.class.getName();
     private final AppUtils appUtils = new AppUtils();
     private final UserDetails userDetails = new UserDetails();
@@ -48,7 +52,6 @@ public class PersonalDetailsFragment extends Fragment {
     private FieldValidator fieldValidator = new FieldValidator();
     private DatabaseHelper db = new DatabaseHelper();
 
-
     public PersonalDetailsFragment() {
         // Required empty public constructor
     }
@@ -57,9 +60,7 @@ public class PersonalDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         FragmentFactory persona = getActivity().getSupportFragmentManager().getFragmentFactory();
         super.onCreate(savedInstanceState);
-
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,11 +70,13 @@ public class PersonalDetailsFragment extends Fragment {
         //Button for transferring to next fragment
         nextBtn = personalDetailsView.findViewById(R.id.personalNextButton);
         //Province Spinner
-        Spinner spinner = personalDetailsView.findViewById(R.id.province_spinner);
+        Spinner provinceSpinner = personalDetailsView.findViewById(R.id.province_spinner);
         provinceList = getResources().getStringArray(R.array.province_canada);
+
+        //Set adapter of spinner
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.spinner_item, provinceList);
-        spinner.setAdapter(adapter);
+        provinceSpinner.setAdapter(adapter);
 
         //Get the value from XML counterpart
         firstName = personalDetailsView.findViewById(R.id.firstName);
@@ -81,17 +84,14 @@ public class PersonalDetailsFragment extends Fragment {
         houseNumber = personalDetailsView.findViewById(R.id.houseNumber);
         street = personalDetailsView.findViewById(R.id.street);
         city = personalDetailsView.findViewById(R.id.city);
-
-        String province = spinner.getSelectedItem().toString();
         postalCode = personalDetailsView.findViewById(R.id.postalCode);
         phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
-        phoneNumber.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(10) });
+        phoneNumber.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(TEN) });
         email = personalDetailsView.findViewById(R.id.email);
-
         password = personalDetailsView.findViewById(R.id.password);
         passwordChk = personalDetailsView.findViewById(R.id.passwordCheckbox);
 
-
+        //Show password or not show
         passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -104,7 +104,6 @@ public class PersonalDetailsFragment extends Fragment {
         });
 
         nextBtn.setOnClickListener((personalDetailView) -> {
-
             //check first all required fields
             isFieldChecked = checkAllFields();
 
@@ -116,44 +115,40 @@ public class PersonalDetailsFragment extends Fragment {
                 userDetails.setFirstName(firstName.getEditText().getText().toString());
                 userDetails.setLastName(lastName.getEditText().getText().toString());
                 userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
-
                 address.setHouseNumber(houseNumber.getEditText().getText().toString());
                 address.setStreet(street.getEditText().getText().toString());
                 address.setCity(city.getEditText().getText().toString());
+                String province = provinceSpinner.getSelectedItem().toString();
                 address.setProvince(province);
                 address.setPostalCode(postalCode.getEditText().getText().toString());
-
                 userDetails.setAddress(address);
-
                 user.setUserDetails(userDetails);
-
                 String emailInput = email.getEditText().getText().toString();
+                boolean isInputLess = fieldValidator.validateIfInputIsLess(TEN, userDetails.getPhoneNumber().length());
                 boolean validEmail = fieldValidator.isValidEmail(emailInput);
 
-                if (!validEmail) {
-                    email.setError("Incorrect Email Format");
-
+                //Check if phone number is exactly 10 digits
+                if(!isInputLess){
+                    phoneNumber.setError(INVALID_PHONE_NUMBER);
+                }else if (!validEmail) {
+                    email.setError(INCORRECT_EMAIL_FORMAT);
                 } else {
-
                     user.setEmail(emailInput);
 
-                    //Check if email is already existing
+                    //Check if email is already existing in database
                     if(!db.getEmailIfExisting(user)) {
-
                         String passwordEncode = password.getEditText().getText().toString();
-
                         user.setPassword(passwordEncode);
 
+                        //Add object to view model
                         sharedViewModel.setSelectedItem(user);
-
                         MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
                         transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
-
                         transaction.commit();
                     } else{
-                        email.setError("Email already existing");
+                        email.setError(EMAIL_ALREADY_EXISTING);
                     }
                 }
 

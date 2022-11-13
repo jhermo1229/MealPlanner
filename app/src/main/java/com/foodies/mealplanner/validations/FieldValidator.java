@@ -32,4 +32,14 @@ public class FieldValidator {
         }
         return false;
     }
+
+    /**
+     * Check if input is not less than what is required.
+     * @param requiredNoInput - required number of input.
+     * @param numberOfInput - input by user.
+     * @return boolean
+     */
+    public boolean validateIfInputIsLess(int requiredNoInput, int numberOfInput) {
+        return requiredNoInput == numberOfInput;
+    }
 }
