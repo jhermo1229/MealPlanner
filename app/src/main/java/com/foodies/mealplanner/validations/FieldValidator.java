@@ -1,5 +1,7 @@
 package com.foodies.mealplanner.validations;
 
+import android.text.TextUtils;
+
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.regex.Pattern;
@@ -23,14 +25,8 @@ public class FieldValidator {
      *
      * @return boolean, true if all valid
      */
-    public boolean validateFieldIfEmpty(TextInputLayout inputLayout) {
-        if (inputLayout.getEditText().length() == 0) {
-            inputLayout.setError("Required");
-            return true;
-        } else {
-            inputLayout.setError(null);
-        }
-        return false;
+    public boolean validateFieldIfEmpty(Integer inputLength) {
+        return inputLength == 0;
     }
 
     /**
@@ -40,6 +36,6 @@ public class FieldValidator {
      * @return boolean
      */
     public boolean validateIfInputIsLess(int requiredNoInput, int numberOfInput) {
-        return requiredNoInput == numberOfInput;
+        return requiredNoInput > numberOfInput;
     }
 }

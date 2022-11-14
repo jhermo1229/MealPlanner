@@ -88,9 +88,11 @@ public class PaymentDetailsFragment extends Fragment {
      */
     private boolean checkAllFields() {
 
-        if (fieldValidator.validateFieldIfEmpty(nameOnCard)) return false;
-        if (fieldValidator.validateFieldIfEmpty(cardNumber)) return false;
-        if (fieldValidator.validateFieldIfEmpty(expiryDate)) return false;
-        return !fieldValidator.validateFieldIfEmpty(securityCode);
+//        if (fieldValidator.validateFieldIfEmpty(nameOnCard)) return false;
+//        if (fieldValidator.validateFieldIfEmpty(cardNumber)) return false;
+//        if (fieldValidator.validateFieldIfEmpty(expiryDate)) return false;
+//        return !fieldValidator.validateFieldIfEmpty(securityCode);
+
+        return true;
     }
 }

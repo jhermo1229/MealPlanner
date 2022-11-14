@@ -112,8 +112,10 @@ public class LoginHomeFragment extends Fragment {
      * @return boolean, true if all valid
      */
     private boolean checkAllFields() {
-        if (fieldValidator.validateFieldIfEmpty(email)) return false;
-        return !fieldValidator.validateFieldIfEmpty(password);
+//        if (fieldValidator.validateFieldIfEmpty(email)) return false;
+//        return !fieldValidator.validateFieldIfEmpty(password);
+
+        return true;
     }
 
     /**

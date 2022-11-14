@@ -78,12 +78,17 @@ public class DatabaseHelper {
         final boolean[] isExist = {false};
 
         DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                isExist[0] = documentSnapshot.exists();
-                Log.d("EMAIL", "exist: "+ documentSnapshot.exists());
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    isExist[0] = document.exists();
+                    Log.d("EMAIL", "exist: " + document.exists());
+                }
             }
+
         });
         return isExist[0];
     }
