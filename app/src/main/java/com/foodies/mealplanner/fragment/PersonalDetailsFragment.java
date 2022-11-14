@@ -34,7 +34,7 @@ import java.util.List;
 public class PersonalDetailsFragment extends Fragment {
 
     public static final String EMAIL_ALREADY_EXISTING = "Email already existing";
-    public static final String INVALID_PHONE_NUMBER = "Invalid length";
+    public static final String INVALID_LENGTH = "Invalid length";
     public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
     public static final int TEN = 10;
     public static final String REQUIRED_ERROR = "Required";
@@ -123,33 +123,33 @@ public class PersonalDetailsFragment extends Fragment {
                 userDetails.setAddress(address);
                 user.setUserDetails(userDetails);
                 user.setEmail(email.getEditText().getText().toString());
+                user.setPassword(password.getEditText().getText().toString());
 
-                //Check if email is already existing in database
+                //Check if email is already existing in database. Since firebase is asynchronous,
+                //it will check only the email if database process is complete.
                 List<User> userList = new ArrayList<>();
-                db.readData(user -> {
-                    if (user != null) {
-                        userList.add(user);
+                db.readData(userCheck -> {
+                    if (userCheck != null) {
+                        userList.add(userCheck);
+                    }
+
+                    if (userList.isEmpty()) {
+                        //Add object to view model
+                        sharedViewModel.setSelectedItem(user);
+                        MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
+                        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
+                        transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+                        transaction.commit();
+                    } else {
+                        email.setError(EMAIL_ALREADY_EXISTING);
                     }
                 }, user);
-
-                if (!userList.isEmpty()) {
-                    user.setPassword(password.getEditText().getText().toString());
-
-                    //Add object to view model
-                    sharedViewModel.setSelectedItem(user);
-                    MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
-                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-                    transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
-                    transaction.commit();
-                }else{
-                    email.setError(EMAIL_ALREADY_EXISTING);
-                }
-        }
-    });
+            }
+        });
 
         return personalDetailsView;
-}
+    }
 
     /**
      * Check all required fields if value is present
@@ -197,8 +197,9 @@ public class PersonalDetailsFragment extends Fragment {
             allValid = false;
         }
 
-        if (fieldValidator.validateIfInputIsLess(TEN, phoneNumber.getEditText().length())) {
-            phoneNumber.setError(INVALID_PHONE_NUMBER);
+        //Check first if it has a value then check the length. So that error message wont overlap
+        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumber.getEditText().length())) {
+            phoneNumber.setError(INVALID_LENGTH);
             allValid = false;
         }
 
@@ -213,10 +214,12 @@ public class PersonalDetailsFragment extends Fragment {
             allValid = false;
         }
 
-        if (!fieldValidator.isValidEmail(email.getEditText().getText().toString())) {
+        //Check first if it has a value then check the format. So that error message wont overlap
+        if (allValid && !fieldValidator.isValidEmail(email.getEditText().getText().toString())) {
             email.setError(INCORRECT_EMAIL_FORMAT);
             allValid = false;
         }
+
         return allValid;
     }
 

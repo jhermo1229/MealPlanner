@@ -25,15 +25,17 @@ import com.google.android.material.textfield.TextInputLayout;
 public class PaymentDetailsFragment extends Fragment {
 
     public static final String TAG = PaymentDetailsFragment.class.getName();
+    public static final String REQUIRED = "Required";
+    public static final String INVALID_LENGTH = "Invalid length";
     private final DatabaseHelper db = new DatabaseHelper();
     private final AppUtils appUtils = new AppUtils();
     private final UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
     private final User user = new User();
+    private final FieldValidator fieldValidator = new FieldValidator();
     private SharedViewModel sharedViewModel;
     private View paymentDetailsView;
     private TextInputLayout nameOnCard, cardNumber, expiryDate, securityCode;
     private Button saveButton;
-    private final FieldValidator fieldValidator = new FieldValidator();
     private boolean isFieldChecked = false;
 
 
@@ -47,11 +49,11 @@ public class PaymentDetailsFragment extends Fragment {
         paymentDetailsView = inflater.inflate(R.layout.fragment_payment, container, false);
         nameOnCard = paymentDetailsView.findViewById(R.id.nameOnCard);
         cardNumber = paymentDetailsView.findViewById(R.id.cardNumber);
-        cardNumber.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(16) });
+        cardNumber.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
         expiryDate = paymentDetailsView.findViewById(R.id.expiryDate);
-        expiryDate.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(4) });
+        expiryDate.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
         securityCode = paymentDetailsView.findViewById(R.id.securityCode);
-        securityCode.getEditText().setFilters(new InputFilter[]{ new InputFilter.LengthFilter(3) });
+        securityCode.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         saveButton = paymentDetailsView.findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener((personalDetailView) -> {
@@ -60,13 +62,13 @@ public class PaymentDetailsFragment extends Fragment {
             isFieldChecked = checkAllFields();
 
             if (isFieldChecked) {
-
                 userPaymentDetails.setNameOnCard(nameOnCard.getEditText().getText().toString());
                 userPaymentDetails.setCardNumber(Double.valueOf(cardNumber.getEditText().getText().toString()));
                 userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDate.getEditText().getText().toString()));
                 String securityCodeEncrypt = appUtils.encodeBase64(securityCode.getEditText().getText().toString());
                 userPaymentDetails.setSecurityCode(securityCodeEncrypt);
 
+                //Get all values from view model and add payment details
                 sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
                 user.setEmail(sharedViewModel.getSelectedItem().getValue().getEmail());
                 user.setPassword(sharedViewModel.getSelectedItem().getValue().getPassword());
@@ -74,6 +76,7 @@ public class PaymentDetailsFragment extends Fragment {
                 user.setUserMealDetails(sharedViewModel.getSelectedItem().getValue().getUserMealDetails());
                 user.setUserPaymentDetails(userPaymentDetails);
 
+                //Save all details to database
                 db.addCustomerUser(user, getActivity());
             }
         });
@@ -88,11 +91,56 @@ public class PaymentDetailsFragment extends Fragment {
      */
     private boolean checkAllFields() {
 
-//        if (fieldValidator.validateFieldIfEmpty(nameOnCard)) return false;
-//        if (fieldValidator.validateFieldIfEmpty(cardNumber)) return false;
-//        if (fieldValidator.validateFieldIfEmpty(expiryDate)) return false;
-//        return !fieldValidator.validateFieldIfEmpty(securityCode);
+        boolean isAllValid = true;
+        errorReset();
 
-        return true;
+        if (fieldValidator.validateFieldIfEmpty(nameOnCard.getEditText().length())) {
+            nameOnCard.setError(REQUIRED);
+            isAllValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(cardNumber.getEditText().length())) {
+            cardNumber.setError(REQUIRED);
+            isAllValid = false;
+        }
+
+
+        if (isAllValid && fieldValidator.validateIfInputIsLess(16, cardNumber.getEditText().length())) {
+            cardNumber.setError(INVALID_LENGTH);
+            isAllValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(expiryDate.getEditText().length())) {
+            expiryDate.setError(REQUIRED);
+            isAllValid = false;
+        }
+
+
+        if (isAllValid && fieldValidator.validateIfInputIsLess(4, expiryDate.getEditText().length())) {
+            expiryDate.setError(INVALID_LENGTH);
+            isAllValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(securityCode.getEditText().length())) {
+            securityCode.setError(REQUIRED);
+            isAllValid = false;
+        }
+
+        if (isAllValid && fieldValidator.validateIfInputIsLess(3, securityCode.getEditText().length())) {
+            securityCode.setError(INVALID_LENGTH);
+            isAllValid = false;
+        }
+
+        return isAllValid;
+    }
+
+    /**
+     * Reset error messages
+     */
+    private void errorReset() {
+        nameOnCard.setError(null);
+        cardNumber.setError(null);
+        expiryDate.setError(null);
+        securityCode.setError(null);
     }
 }

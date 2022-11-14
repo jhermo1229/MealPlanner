@@ -17,10 +17,15 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.viewmodel.SharedViewModel;
 import com.foodies.mealplanner.model.UserMealDetails;
 
-
+/**
+ * Fragment for meal type
+ */
 public class MealTypeFragment extends Fragment {
 
     public static final String TAG = MealTypeFragment.class.getName();
+    public static final String BOTH = "B";
+    public static final String VEGETABLE = "V";
+    public static final String MEAT = "M";
     private Button vegetableBtn, meatBtn, bothBtn, nextBtn;
     private View mealTypeView;
     private SharedViewModel sharedViewModel;
@@ -37,29 +42,37 @@ public class MealTypeFragment extends Fragment {
         vegetableBtn = mealTypeView.findViewById(R.id.oneButton);
         meatBtn = mealTypeView.findViewById(R.id.twoButton);
         bothBtn = mealTypeView.findViewById(R.id.threeButton);
-        userMealDetails.setMealType("B");
+
+        //Set values of button to default
+        userMealDetails.setMealType(BOTH);
         bothBtn.setBackgroundColor(Color.RED);
 
+        //if button is clicked set button to red and set other button to default color
+        //set meal to VEGETABLE
         vegetableBtn.setOnClickListener((mealsDeliveryView) -> {
 
             vegetableBtn.setBackgroundColor(Color.RED);
-            userMealDetails.setMealType("V");
+            userMealDetails.setMealType(VEGETABLE);
             meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //if button is clicked set button to red and set other button to default color
+        //set meal to MEAT
         meatBtn.setOnClickListener((mealsDeliveryView) -> {
 
             meatBtn.setBackgroundColor(Color.RED);
-            userMealDetails.setMealType("M");
+            userMealDetails.setMealType(MEAT);
             vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //if button is clicked set button to red and set other button to default color
+        //set meal to BOTH (MEAT AND VEGETABLE)
         bothBtn.setOnClickListener((mealsDeliveryView) -> {
 
             bothBtn.setBackgroundColor(Color.RED);
-            userMealDetails.setMealType("B");
+            userMealDetails.setMealType(BOTH);
             meatBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
             vegetableBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });

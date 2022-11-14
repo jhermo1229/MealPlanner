@@ -30,6 +30,9 @@ import java.util.Objects;
  */
 public class LoginHomeFragment extends Fragment {
 
+    public static final String REQUIRED = "Required";
+    public static final String PLEASE_CHECK_PASSWORD = "Please check password";
+    public static final String EMAIL_DOES_NOT_EXIST = "Email does not exist";
     private final DatabaseHelper db = new DatabaseHelper();
     private final FieldValidator fieldValidator = new FieldValidator();
     List<User> userList = new ArrayList<>();
@@ -38,6 +41,7 @@ public class LoginHomeFragment extends Fragment {
     private CheckBox passwordChk;
     private TextInputLayout email, password;
     private SharedViewModel sharedViewModel;
+    public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -53,6 +57,7 @@ public class LoginHomeFragment extends Fragment {
         password = homeLoginView.findViewById(R.id.passwordLogin);
         passwordChk = homeLoginView.findViewById(R.id.passwordLoginCheckbox);
 
+        //Show password if checked
         passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -91,11 +96,12 @@ public class LoginHomeFragment extends Fragment {
 
                             transaction.commit();
                         } else {
-                            password.setError("Please check password");
+                            password.setError(PLEASE_CHECK_PASSWORD);
                         }
                     } else {
-                        email.setError("Email does not exist");
+                        email.setError(EMAIL_DOES_NOT_EXIST);
                     }
+
                 }, userParam);
 
 
@@ -112,10 +118,33 @@ public class LoginHomeFragment extends Fragment {
      * @return boolean, true if all valid
      */
     private boolean checkAllFields() {
-//        if (fieldValidator.validateFieldIfEmpty(email)) return false;
-//        return !fieldValidator.validateFieldIfEmpty(password);
 
-        return true;
+        boolean allValid = true;
+        errorReset();
+
+        if (fieldValidator.validateFieldIfEmpty(email.getEditText().length())) {
+            email.setError(REQUIRED);
+            allValid = false;
+        }
+        if(fieldValidator.validateFieldIfEmpty(password.getEditText().length())){
+            password.setError(REQUIRED);
+            allValid = false;
+        }
+
+        if(!fieldValidator.isValidEmail(email.getEditText().getText().toString())){
+            email.setError(INCORRECT_EMAIL_FORMAT);
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
+     * Reset error message
+     */
+    private void errorReset(){
+        email.setError(null);
+        password.setError(null);
     }
 
     /**
