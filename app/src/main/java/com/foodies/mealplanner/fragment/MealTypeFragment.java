@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.foodies.mealplanner.model.UserMealDetails;
 
 /**
@@ -28,7 +28,7 @@ public class MealTypeFragment extends Fragment {
     public static final String MEAT = "M";
     private Button vegetableBtn, meatBtn, bothBtn, nextBtn;
     private View mealTypeView;
-    private SharedViewModel sharedViewModel;
+    private SignupViewModel signupViewModel;
     private UserMealDetails userMealDetails =new UserMealDetails();
 
     public MealTypeFragment() {
@@ -82,8 +82,8 @@ public class MealTypeFragment extends Fragment {
         nextBtn.setOnClickListener((mealsDeliveryView) -> {
             PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
 
-            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-            sharedViewModel.getSelectedItem().observe(getActivity(), users -> {
+            signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+            signupViewModel.getSelectedItem().observe(getActivity(), users -> {
                 users.getUserMealDetails().setMealType(userMealDetails.getMealType());
             });
 

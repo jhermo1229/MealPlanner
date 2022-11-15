@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.foodies.mealplanner.model.UserMealDetails;
 
 /**
@@ -28,7 +28,7 @@ public class MealsDeliveryRateFragment extends Fragment {
     public static String TAG = MealsDeliveryRateFragment.class.getName();
     private Button oneBtn, twoBtn, threeBtn, onePersonBtn, twoPersonBtn, threePersonBtn, nextBtn;
     private View mealsDeliveryView;
-    private SharedViewModel sharedViewModel;
+    private SignupViewModel signupViewModel;
     private UserMealDetails userMealDetails =new UserMealDetails();
 
     public MealsDeliveryRateFragment() {
@@ -54,7 +54,7 @@ public class MealsDeliveryRateFragment extends Fragment {
         //set the buttons value to default
         setDefaultValues();
 
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
         //if button is clicked set button to red and set other button to default color
         //set delivery frequency to button number
@@ -124,7 +124,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             MealTypeFragment mealTypeFrag = new MealTypeFragment();
 
             //Add new data to sharedViewModel
-            sharedViewModel.getSelectedItem().observe(getActivity(), users -> {
+            signupViewModel.getSelectedItem().observe(getActivity(), users -> {
                 users.setUserMealDetails(userMealDetails);
             });
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

@@ -21,8 +21,9 @@ import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -50,8 +51,9 @@ public class PersonalDetailsFragment extends Fragment {
     private View personalDetailsView;
     private String[] provinceList;
     private Button nextBtn;
-    private SharedViewModel sharedViewModel;
+    private SignupViewModel signupViewModel;
     private boolean isFieldChecked = false;
+    private final AppUtils appUtils = new AppUtils();
 
     public PersonalDetailsFragment() {
         // Required empty public constructor
@@ -109,7 +111,7 @@ public class PersonalDetailsFragment extends Fragment {
 
             if (isFieldChecked) {
                 //Set sharemodel to share User data to different fragments
-                sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
                 userDetails.setFirstName(firstName.getEditText().getText().toString());
                 userDetails.setLastName(lastName.getEditText().getText().toString());
@@ -123,7 +125,10 @@ public class PersonalDetailsFragment extends Fragment {
                 userDetails.setAddress(address);
                 user.setUserDetails(userDetails);
                 user.setEmail(email.getEditText().getText().toString());
-                user.setPassword(password.getEditText().getText().toString());
+
+                //Encrypt password
+                String passwordCodeEncrypt = appUtils.encodeBase64(password.getEditText().getText().toString());
+                user.setPassword(passwordCodeEncrypt);;
 
                 //Check if email is already existing in database. Since firebase is asynchronous,
                 //it will check only the email if database process is complete.
@@ -135,7 +140,7 @@ public class PersonalDetailsFragment extends Fragment {
 
                     if (userList.isEmpty()) {
                         //Add object to view model
-                        sharedViewModel.setSelectedItem(user);
+                        signupViewModel.setSelectedItem(user);
                         MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.addToBackStack(MealsDeliveryRateFragment.TAG);

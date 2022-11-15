@@ -10,7 +10,7 @@ import org.junit.Test;
 /**
  * Unit testing of personal details fields
  */
-public class PersonalDetailUnitTest {
+public class FieldValidatorTest {
 
     FieldValidator personalDetailsValidator = new FieldValidator();
 
@@ -47,5 +47,15 @@ public class PersonalDetailUnitTest {
     @Test
     public void emailValidator_NullEmail_False() {
         assertFalse(personalDetailsValidator.isValidEmail(null));
+    }
+
+    @Test
+    public void check_Field_If_Empty_False(){
+        assertFalse(personalDetailsValidator.validateFieldIfEmpty(1));
+    }
+
+    @Test
+    public void check_Field_If_Input_Is_Less_True(){
+        assertTrue(personalDetailsValidator.validateIfInputIsLess(10, 9));
     }
 }

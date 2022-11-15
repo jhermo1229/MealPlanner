@@ -11,20 +11,20 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link UserProfileFragment#newInstance} factory method to
+ * Use the {@link CustomerProfileFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class UserProfileFragment extends Fragment {
+public class CustomerProfileFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private SharedViewModel sharedViewModel;
+    private SignupViewModel signupViewModel;
     private User user = new User();
     private TextView nameTxt;
     private View userProfileView;
@@ -33,7 +33,7 @@ public class UserProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public UserProfileFragment() {
+    public CustomerProfileFragment() {
         // Required empty public constructor
     }
 
@@ -46,8 +46,8 @@ public class UserProfileFragment extends Fragment {
      * @return A new instance of fragment UserProfileFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static UserProfileFragment newInstance(String param1, String param2) {
-        UserProfileFragment fragment = new UserProfileFragment();
+    public static CustomerProfileFragment newInstance(String param1, String param2) {
+        CustomerProfileFragment fragment = new CustomerProfileFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,9 +69,9 @@ public class UserProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         userProfileView = inflater.inflate(R.layout.fragment_user_profile, container, false);
-        sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+        signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-        sharedViewModel.getSelectedItem().observe(getActivity(), users -> {
+        signupViewModel.getSelectedItem().observe(getActivity(), users -> {
             user = users;
         });
 

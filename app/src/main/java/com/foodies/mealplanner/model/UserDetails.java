@@ -42,4 +42,5 @@ public class UserDetails {
     public void setAddress(Address address) {
         this.address = address;
     }
+
 }

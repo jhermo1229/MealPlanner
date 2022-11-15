@@ -16,8 +16,10 @@ import androidx.lifecycle.ViewModelProvider;
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
@@ -33,15 +35,17 @@ public class LoginHomeFragment extends Fragment {
     public static final String REQUIRED = "Required";
     public static final String PLEASE_CHECK_PASSWORD = "Please check password";
     public static final String EMAIL_DOES_NOT_EXIST = "Email does not exist";
+    public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
     private final DatabaseHelper db = new DatabaseHelper();
     private final FieldValidator fieldValidator = new FieldValidator();
+    private final AppUtils appUtils = new AppUtils();
     List<User> userList = new ArrayList<>();
     private Button loginBtn;
     private View homeLoginView;
     private CheckBox passwordChk;
     private TextInputLayout email, password;
-    private SharedViewModel sharedViewModel;
-    public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
+    private SignupViewModel signupViewModel;
+    private AdminProfileViewModel adminViewModel;
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -82,19 +86,32 @@ public class LoginHomeFragment extends Fragment {
                     }
 
                     if (!userList.isEmpty()) {
+                        String passwordDecode = appUtils.decodeBase64(userList.get(0).getPassword());
+                        if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
-                        if (checkEmailAndPasswordMatch(userList.get(0).getPassword(), userParam.getPassword())) {
+                            if(userList.get(0).getUserType().equals("C")) {
+                                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-                            sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
+                                signupViewModel.setSelectedItem(userList.get(0));
 
-                            sharedViewModel.setSelectedItem(userList.get(0));
+                                CustomerProfileFragment userFrag = new CustomerProfileFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                                transaction.replace(R.id.loginHomeFrame, userFrag);
 
-                            UserProfileFragment userFrag = new UserProfileFragment();
-                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                            transaction.replace(R.id.loginHomeFrame, userFrag);
+                                transaction.commit();
+                            } else if(userList.get(0).getUserType().equals("A")){
+                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
 
-                            transaction.commit();
+                                adminViewModel.setSelectedItem(userList.get(0));
+
+                                    AdminProfileFragment adminFrag = new AdminProfileFragment();
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                                    transaction.replace(R.id.loginHomeFrame, adminFrag);
+
+                                    transaction.commit();
+                                }
                         } else {
                             password.setError(PLEASE_CHECK_PASSWORD);
                         }
@@ -103,10 +120,7 @@ public class LoginHomeFragment extends Fragment {
                     }
 
                 }, userParam);
-
-
             }
-
         });
 
         return homeLoginView;
@@ -126,12 +140,12 @@ public class LoginHomeFragment extends Fragment {
             email.setError(REQUIRED);
             allValid = false;
         }
-        if(fieldValidator.validateFieldIfEmpty(password.getEditText().length())){
+        if (fieldValidator.validateFieldIfEmpty(password.getEditText().length())) {
             password.setError(REQUIRED);
             allValid = false;
         }
 
-        if(!fieldValidator.isValidEmail(email.getEditText().getText().toString())){
+        if (!fieldValidator.isValidEmail(email.getEditText().getText().toString())) {
             email.setError(INCORRECT_EMAIL_FORMAT);
             allValid = false;
         }
@@ -142,7 +156,7 @@ public class LoginHomeFragment extends Fragment {
     /**
      * Reset error message
      */
-    private void errorReset(){
+    private void errorReset() {
         email.setError(null);
         password.setError(null);
     }

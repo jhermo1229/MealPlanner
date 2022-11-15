@@ -11,25 +11,15 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.foodies.mealplanner.model.User;
 
 public class MainActivity extends AppCompatActivity {
-
-    private FrameLayout homeFrame;
-    private SharedViewModel sharedViewModel;
-    private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //Initialize view model once
-        sharedViewModel = new ViewModelProvider(this).get(SharedViewModel.class);
-        Log.i("Main Activity", "View Model Initialized");
-        sharedViewModel.setSelectedItem(user);
-
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
     }
 

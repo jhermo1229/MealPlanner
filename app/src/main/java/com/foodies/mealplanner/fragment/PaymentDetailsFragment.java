@@ -16,7 +16,7 @@ import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.DatabaseHelper;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.SharedViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 /**
@@ -27,12 +27,14 @@ public class PaymentDetailsFragment extends Fragment {
     public static final String TAG = PaymentDetailsFragment.class.getName();
     public static final String REQUIRED = "Required";
     public static final String INVALID_LENGTH = "Invalid length";
+    public static final String CUSTOMER = "C";
+    public static final String ACTIVE = "A";
     private final DatabaseHelper db = new DatabaseHelper();
     private final AppUtils appUtils = new AppUtils();
     private final UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
     private final User user = new User();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private SharedViewModel sharedViewModel;
+    private SignupViewModel signupViewModel;
     private View paymentDetailsView;
     private TextInputLayout nameOnCard, cardNumber, expiryDate, securityCode;
     private Button saveButton;
@@ -69,12 +71,14 @@ public class PaymentDetailsFragment extends Fragment {
                 userPaymentDetails.setSecurityCode(securityCodeEncrypt);
 
                 //Get all values from view model and add payment details
-                sharedViewModel = new ViewModelProvider(requireActivity()).get(SharedViewModel.class);
-                user.setEmail(sharedViewModel.getSelectedItem().getValue().getEmail());
-                user.setPassword(sharedViewModel.getSelectedItem().getValue().getPassword());
-                user.setUserDetails(sharedViewModel.getSelectedItem().getValue().getUserDetails());
-                user.setUserMealDetails(sharedViewModel.getSelectedItem().getValue().getUserMealDetails());
+                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+                user.setEmail(signupViewModel.getSelectedItem().getValue().getEmail());
+                user.setPassword(signupViewModel.getSelectedItem().getValue().getPassword());
+                user.setUserDetails(signupViewModel.getSelectedItem().getValue().getUserDetails());
+                user.setUserMealDetails(signupViewModel.getSelectedItem().getValue().getUserMealDetails());
                 user.setUserPaymentDetails(userPaymentDetails);
+                user.setUserType(CUSTOMER);
+                user.setStatus(ACTIVE);
 
                 //Save all details to database
                 db.addCustomerUser(user, getActivity());

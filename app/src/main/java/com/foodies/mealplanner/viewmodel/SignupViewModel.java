@@ -11,13 +11,13 @@ import com.foodies.mealplanner.model.User;
 /**
  * View Model class to share User model to different fragments at SignupActivity
  */
-public class SharedViewModel extends ViewModel {
+public class SignupViewModel extends ViewModel {
 
     //Create a live mutable data
     private final MutableLiveData<User> selectedItem = new MutableLiveData<>();
 
-    public SharedViewModel() {
-        Log.i("SharedViewModel", "ViewModel is created");
+    public SignupViewModel() {
+        Log.i("SignupViewModel", "SignupViewModel is created");
     }
 
     public LiveData<User> getSelectedItem() {
