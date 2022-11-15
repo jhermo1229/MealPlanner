@@ -9,9 +9,10 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 
+import com.foodies.mealplanner.fragment.UserListCallBack;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.activity.MainActivity;
-import com.foodies.mealplanner.fragment.MyCallBack;
+import com.foodies.mealplanner.fragment.UserCallBack;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,6 +21,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Database handler for meal planner.
@@ -68,38 +74,14 @@ public class DatabaseHelper {
         });
     }
 
-    /**
-     * Check if email is existing in firebase account
-     *
-     * @param user
-     */
-    public boolean getEmailIfExisting(User user) {
-
-        final boolean[] isExist = {false};
-
-        DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    isExist[0] = document.exists();
-                    Log.d("EMAIL", "exist: " + document.exists());
-                }
-            }
-
-        });
-        return isExist[0];
-    }
 
     /**
      * Callback function to return query.
      * Uses Callback interface as firestore cloud is asynchronous
-     * @param myCallBack
+     * @param userCallBack
      * @param user
      */
-    public void readData(MyCallBack myCallBack, User user){
+    public void getUser(UserCallBack userCallBack, User user){
 
         DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -109,11 +91,11 @@ public class DatabaseHelper {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         User user = document.toObject(User.class);
-                        myCallBack.onCallBack(user);
+                        userCallBack.onCallBack(user);
                         Log.d("DATABASE", "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d("DATABASE", "No such document");
-                        myCallBack.onCallBack(null);
+                        userCallBack.onCallBack(null);
                     }
                 } else {
                     Log.d("DATABASE", "get failed with ", task.getException());
@@ -121,6 +103,24 @@ public class DatabaseHelper {
             }
         });
 
+    }
+
+    public void getAllUsers(UserListCallBack userListCallBack){
+
+        List<User> userList = new ArrayList<>();
+        db.collection("userCredentials").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    for(QueryDocumentSnapshot document : task.getResult()){
+                        userList.add(document.toObject(User.class));
+                    }
+                    userListCallBack.onCallBack(userList);
+                }else{
+                    Log.d("DATABASE", "Error retrieving all users");
+                }
+            }
+        });
     }
 
 }

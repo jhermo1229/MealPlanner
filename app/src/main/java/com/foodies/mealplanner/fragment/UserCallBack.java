@@ -5,6 +5,7 @@ import com.foodies.mealplanner.model.User;
 /**
  * Call interface for querying user login
  */
-public interface MyCallBack {
+public interface UserCallBack {
     void onCallBack(User user);
+
 }

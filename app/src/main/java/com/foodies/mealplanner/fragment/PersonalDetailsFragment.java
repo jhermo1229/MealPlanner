@@ -133,7 +133,7 @@ public class PersonalDetailsFragment extends Fragment {
                 //Check if email is already existing in database. Since firebase is asynchronous,
                 //it will check only the email if database process is complete.
                 List<User> userList = new ArrayList<>();
-                db.readData(userCheck -> {
+                db.getUser(userCheck -> {
                     if (userCheck != null) {
                         userList.add(userCheck);
                     }

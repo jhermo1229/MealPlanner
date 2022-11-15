@@ -80,7 +80,7 @@ public class LoginHomeFragment extends Fragment {
                 userParam.setEmail(Objects.requireNonNull(email.getEditText()).getText().toString());
                 userParam.setPassword(Objects.requireNonNull(password.getEditText()).getText().toString());
 
-                db.readData(user -> {
+                db.getUser(user -> {
                     if (user != null) {
                         userList.add(user);
                     }
