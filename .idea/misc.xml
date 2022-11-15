@@ -6,9 +6,14 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_login.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_signup.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_users_view.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_usersview.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/admin_profile_fragment.xml" value="0.12" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/bg_spinner.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/button_change_color.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/content_signup.xml" value="0.782258064516129" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/content_usersview.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_first.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_home.xml" value="0.16893115942028986" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_login_home.xml" value="0.12760416666666666" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_type.xml" value="0.12239583333333333" />
@@ -17,7 +22,9 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_personal_details.xml" value="0.24615384615384617" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_signup_home.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_user_profile.xml" value="0.3190104166666667" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_users_list.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/spinner_item.xml" value="0.12604166666666666" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/users_listview.xml" value="0.1" />
       </map>
     </option>
   </component>

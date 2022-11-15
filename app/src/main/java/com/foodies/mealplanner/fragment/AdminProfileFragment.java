@@ -1,5 +1,6 @@
 package com.foodies.mealplanner.fragment;
 
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
@@ -12,16 +13,20 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.DatabaseHelper;
 import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
+import com.foodies.mealplanner.viewmodel.SignupViewModel;
 
 public class AdminProfileFragment extends Fragment {
 
     private AdminProfileViewModel mViewModel;
-    private final DatabaseHelper db = new DatabaseHelper();
+    private View adminProfileFragmentView;
+    private Button usersButton;
 
     public static AdminProfileFragment newInstance() {
         return new AdminProfileFragment();
@@ -31,13 +36,20 @@ public class AdminProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-        db.getAllUsers(userList -> {
-            for(User user : userList) {
-                Log.d("USERSSSSS", user.getEmail());
-            }
+
+        adminProfileFragmentView = inflater.inflate(R.layout.admin_profile_fragment, container, false);
+        usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
+        usersButton.setOnClickListener((adminProfileFragmentView)->{
+            UsersListFragment adminFrag = new UsersListFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(UsersListFragment.TAG);
+            transaction.replace(R.id.loginHomeFrame, adminFrag);
+
+            transaction.commit();
             });
 
-        return inflater.inflate(R.layout.admin_profile_fragment, container, false);
+
+        return adminProfileFragmentView;
     }
 
 

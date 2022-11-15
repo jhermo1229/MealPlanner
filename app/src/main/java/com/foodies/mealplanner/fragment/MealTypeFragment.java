@@ -79,7 +79,7 @@ public class MealTypeFragment extends Fragment {
 
         nextBtn = mealTypeView.findViewById(R.id.personalNextButton);
 
-        nextBtn.setOnClickListener((mealsDeliveryView) -> {
+        nextBtn.setOnClickListener((mealTypeView) -> {
             PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
 
             signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);

@@ -58,7 +58,7 @@ public class PaymentDetailsFragment extends Fragment {
         securityCode.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         saveButton = paymentDetailsView.findViewById(R.id.saveButton);
 
-        saveButton.setOnClickListener((personalDetailView) -> {
+        saveButton.setOnClickListener((paymentDetailsView) -> {
 
             //check first all required fields
             isFieldChecked = checkAllFields();
