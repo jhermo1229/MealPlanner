@@ -1,6 +1,7 @@
 package com.foodies.mealplanner.activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
