@@ -23,6 +23,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,6 +120,31 @@ public class DatabaseHelper {
                 }else{
                     Log.d("DATABASE", "Error retrieving all users");
                 }
+            }
+        });
+    }
+
+    public void updateUser(User user, Activity activity){
+        // Get a new write batch
+        WriteBatch batch = db.batch();
+
+        DocumentReference ref = db.collection("userCredentials").document(user.getEmail());
+        batch.update(ref, "userDetails.firstName", user.getUserDetails().getFirstName());
+        batch.update(ref, "userDetails.lastName", user.getUserDetails().getLastName());
+
+        // Commit the batch
+        batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                Log.i("DATABASE UPDATE", "Successfully updated");
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                final EditText text = new EditText(activity);
+                builder.setTitle("Meal Planner").setMessage("Successfully Created Meal Order").setView(text);
+                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface di, int ii) {}
+                });
+                builder.create().show();
             }
         });
     }
