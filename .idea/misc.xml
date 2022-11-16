@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/drawable/rounded_edittext.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_login.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_signup.xml" value="0.1" />
@@ -22,13 +23,14 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_payment.xml" value="0.2" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_personal_details.xml" value="0.24615384615384617" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_signup_home.xml" value="0.1" />
-        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_user_profile.xml" value="0.3190104166666667" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_user_profile.xml" value="0.24183006535947713" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_user_update_profile.xml" value="0.176" />
-        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_users_list.xml" value="0.2" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_users_list.xml" value="0.136" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/recycler_item_layout.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/recycler_layout.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/rounded_edittext.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/spinner_item.xml" value="0.12604166666666666" />
-        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/users_listview.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/users_listview.xml" value="0.2" />
       </map>
     </option>
   </component>

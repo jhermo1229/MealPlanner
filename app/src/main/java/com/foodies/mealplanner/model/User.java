@@ -3,7 +3,7 @@ package com.foodies.mealplanner.model;
 /**
  * Main model for the user.
  */
-public class User {
+public class User implements  Comparable<User>{
 
     private String email;
     private String password;
@@ -69,5 +69,10 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    @Override
+    public int compareTo(User user) {
+        return 0;
     }
 }

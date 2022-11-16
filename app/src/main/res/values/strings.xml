@@ -49,6 +49,12 @@
         <item>A</item>
         <item>I</item>
     </string-array>
+
+    <string-array name="sort">
+        <item>Sort by</item>
+        <item>Name (A-Z)</item>
+        <item>Name (Z-A)</item>
+    </string-array>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_signup">SignupActivity</string>

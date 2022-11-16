@@ -1,7 +1,6 @@
 package com.foodies.mealplanner.fragment;
 
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 
@@ -9,18 +8,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.repository.DatabaseHelper;
 import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
-import com.foodies.mealplanner.viewmodel.SignupViewModel;
 
 public class AdminProfileFragment extends Fragment {
 
@@ -37,7 +31,7 @@ public class AdminProfileFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
 
-        adminProfileFragmentView = inflater.inflate(R.layout.admin_profile_fragment, container, false);
+        adminProfileFragmentView = inflater.inflate(R.layout.fragment_admin_profile, container, false);
         usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
         usersButton.setOnClickListener((adminProfileFragmentView)->{
             UsersListFragment adminFrag = new UsersListFragment();

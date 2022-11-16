@@ -3,11 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:layout_marginRight="13dp">
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:id="@+id/mainLogo"
+        android:src="@drawable/fui_ic_anonymous_white_24dp" />
     <TextView
         android:id="@+id/userView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textColor="@color/white" />
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold"/>
+    </LinearLayout>
 
 </RelativeLayout>

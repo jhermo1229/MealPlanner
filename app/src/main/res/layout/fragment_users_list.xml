@@ -5,25 +5,53 @@
     android:layout_height="match_parent"
     tools:context=".fragment.UsersListFragment">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:id="@+id/mainLogo"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="40dp"/>
+        <EditText
+            android:id="@+id/searchFilter"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext"
+            android:paddingLeft="10dp"/>
+
+        <Spinner
+            android:id="@+id/sortingSpinner"
+            android:layout_width="100dp"
+            android:layout_height="55dp"
+            android:spinnerMode="dialog"
+            android:popupBackground="@android:color/transparent"
+            android:background="@android:color/transparent"
+            android:layout_gravity="right"/>
+
         <ListView
             android:id="@+id/userListView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:divider="@color/material_blue_grey_800"
-            android:dividerHeight="1dp"
+            android:dividerHeight="4dp"
             android:footerDividersEnabled="false" />
+    </LinearLayout>
 
     <!--    <EditText-->
     <!--        android:layout_width="match_parent"-->
     <!--        android:layout_height="wrap_content" />-->
-<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent">-->
+    <!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="match_parent">-->
 
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/recycler_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            />-->
-<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+    <!--        <androidx.recyclerview.widget.RecyclerView-->
+    <!--            android:id="@+id/recycler_view"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="match_parent"-->
+    <!--            />-->
+    <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 </FrameLayout>
