@@ -53,6 +53,12 @@
         <item>I</item>
     </string-array>
 
+    <string-array name="mealTypeList">
+        <item>Meat</item>
+        <item>Vegetable</item>
+        <item>Both</item>
+    </string-array>
+
     <string-array name="sort">
         <item>Sort by</item>
         <item>Name (A-Z)</item>

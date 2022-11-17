@@ -111,7 +111,7 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="350dp"
             android:layout_height="55dp"
-            android:inputType="text"
+            android:inputType="numberDecimal"
             android:id="@+id/mealPriceEditText"/>
         </com.google.android.material.textfield.TextInputLayout>
 
