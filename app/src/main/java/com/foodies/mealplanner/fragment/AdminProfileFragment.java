@@ -34,10 +34,10 @@ public class AdminProfileFragment extends Fragment {
         adminProfileFragmentView = inflater.inflate(R.layout.fragment_admin_profile, container, false);
         usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
         usersButton.setOnClickListener((adminProfileFragmentView)->{
-            UsersListFragment adminFrag = new UsersListFragment();
+            UsersListFragment userListFrag = new UsersListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(UsersListFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, adminFrag);
+            transaction.replace(R.id.loginHomeFrame, userListFrag);
 
             transaction.commit();
             });

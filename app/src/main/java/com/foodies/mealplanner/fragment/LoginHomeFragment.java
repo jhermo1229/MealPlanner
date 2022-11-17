@@ -39,7 +39,7 @@ public class LoginHomeFragment extends Fragment {
     private final DatabaseHelper db = new DatabaseHelper();
     private final FieldValidator fieldValidator = new FieldValidator();
     private final AppUtils appUtils = new AppUtils();
-    List<User> userList = new ArrayList<>();
+//    List<User> userList = new ArrayList<>();
     private Button loginBtn;
     private View homeLoginView;
     private CheckBox passwordChk;
@@ -82,28 +82,28 @@ public class LoginHomeFragment extends Fragment {
 
                 db.getUser(user -> {
                     if (user != null) {
-                        userList.add(user);
-                    }
+//                        userList.add(user);
 
-                    if (!userList.isEmpty()) {
-                        String passwordDecode = appUtils.decodeBase64(userList.get(0).getPassword());
-                        if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
-                            if(userList.get(0).getUserType().equals("C")) {
-                                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+                        if (user != null) {
+                            String passwordDecode = appUtils.decodeBase64(user.getPassword());
+                            if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
-                                signupViewModel.setSelectedItem(userList.get(0));
+                                if (user.getUserType().equals("C")) {
+                                    signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-                                CustomerProfileFragment userFrag = new CustomerProfileFragment();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                                transaction.replace(R.id.loginHomeFrame, userFrag);
+                                    signupViewModel.setSelectedItem(user);
 
-                                transaction.commit();
-                            } else if(userList.get(0).getUserType().equals("A")){
-                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
+                                    CustomerProfileFragment userFrag = new CustomerProfileFragment();
+                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                    transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                                    transaction.replace(R.id.loginHomeFrame, userFrag);
 
-                                adminViewModel.setSelectedItem(userList.get(0));
+                                    transaction.commit();
+                                } else if (user.getUserType().equals("A")) {
+                                    adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
+
+                                    adminViewModel.setSelectedItem(user);
 
                                     AdminProfileFragment adminFrag = new AdminProfileFragment();
                                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -112,13 +112,13 @@ public class LoginHomeFragment extends Fragment {
 
                                     transaction.commit();
                                 }
+                            } else {
+                                password.setError(PLEASE_CHECK_PASSWORD);
+                            }
                         } else {
-                            password.setError(PLEASE_CHECK_PASSWORD);
+                            email.setError(EMAIL_DOES_NOT_EXIST);
                         }
-                    } else {
-                        email.setError(EMAIL_DOES_NOT_EXIST);
                     }
-
                 }, userParam);
             }
         });

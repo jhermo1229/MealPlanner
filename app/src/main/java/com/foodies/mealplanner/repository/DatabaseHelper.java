@@ -124,13 +124,30 @@ public class DatabaseHelper {
         });
     }
 
+    /**
+     * Update user profile by batch process in firestore
+     * @param user
+     * @param activity
+     */
     public void updateUser(User user, Activity activity){
         // Get a new write batch
         WriteBatch batch = db.batch();
 
         DocumentReference ref = db.collection("userCredentials").document(user.getEmail());
+        batch.update(ref, "email", user.getEmail());
+        Log.d("DATABASE", user.getPassword());
+        batch.update(ref, "password", user.getPassword());
+        batch.update(ref, "status", user.getStatus());
+        batch.update(ref, "userType", user.getUserType());
         batch.update(ref, "userDetails.firstName", user.getUserDetails().getFirstName());
         batch.update(ref, "userDetails.lastName", user.getUserDetails().getLastName());
+        batch.update(ref, "userDetails.phoneNumber", user.getUserDetails().getPhoneNumber());
+
+        batch.update(ref, "userDetails.address.houseNumber", user.getUserDetails().getAddress().getHouseNumber());
+        batch.update(ref, "userDetails.address.street", user.getUserDetails().getAddress().getStreet());
+        batch.update(ref, "userDetails.address.city", user.getUserDetails().getAddress().getCity());
+        batch.update(ref, "userDetails.address.province", user.getUserDetails().getAddress().getProvince());
+        batch.update(ref, "userDetails.address.postalCode", user.getUserDetails().getAddress().getPostalCode());
 
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -140,7 +157,7 @@ public class DatabaseHelper {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 final EditText text = new EditText(activity);
-                builder.setTitle("Meal Planner").setMessage("Successfully Created Meal Order").setView(text);
+                builder.setTitle("Meal Planner").setMessage("Successfully updated user").setView(text);
                 builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface di, int ii) {}
                 });

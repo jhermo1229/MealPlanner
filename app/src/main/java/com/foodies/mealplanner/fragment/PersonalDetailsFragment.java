@@ -52,7 +52,6 @@ public class PersonalDetailsFragment extends Fragment {
     private String[] provinceList;
     private Button nextBtn;
     private SignupViewModel signupViewModel;
-    private boolean isFieldChecked = false;
     private final AppUtils appUtils = new AppUtils();
 
     public PersonalDetailsFragment() {
@@ -107,9 +106,8 @@ public class PersonalDetailsFragment extends Fragment {
 
         nextBtn.setOnClickListener((personalDetailView) -> {
             //check first all required fields
-            isFieldChecked = checkAllFields();
 
-            if (isFieldChecked) {
+            if (checkAllFields()) {
                 //Set sharemodel to share User data to different fragments
                 signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
