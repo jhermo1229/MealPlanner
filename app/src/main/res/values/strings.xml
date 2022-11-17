@@ -32,6 +32,8 @@
     <string name="securityCode">CVC</string>
     <string name="addMealOrder">Add meal order</string>
     <string name="users">Users</string>
+    <string name="meals">Meals</string>
+    <string name="type">Meal type: </string>
 
     <string-array name="province_canada">
         <item>AB</item>

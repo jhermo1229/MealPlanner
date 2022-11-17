@@ -18,9 +18,10 @@ import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 
 public class AdminProfileFragment extends Fragment {
 
+    public static final String TAG = AdminProfileFragment.class.getName();
     private AdminProfileViewModel mViewModel;
     private View adminProfileFragmentView;
-    private Button usersButton;
+    private Button usersButton, mealsButton;
 
     public static AdminProfileFragment newInstance() {
         return new AdminProfileFragment();
@@ -41,6 +42,17 @@ public class AdminProfileFragment extends Fragment {
 
             transaction.commit();
             });
+
+        mealsButton = adminProfileFragmentView.findViewById(R.id.mealsBtn);
+        mealsButton.setOnClickListener((adminProfileFragmentView)->{
+            MealProfileFragment mealProfileFragment = new MealProfileFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(AdminProfileFragment.TAG);
+            transaction.replace(R.id.loginHomeFrame, mealProfileFragment);
+
+            transaction.commit();
+
+        });
 
 
         return adminProfileFragmentView;
