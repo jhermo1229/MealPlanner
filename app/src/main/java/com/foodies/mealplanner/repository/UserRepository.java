@@ -29,10 +29,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Database handler for meal planner.
+ * User repository for meal planner.
  * Uses firebase -> cloud firestore
  */
-public class DatabaseHelper {
+public class UserRepository {
 
     public static final String USER_CREDENTIALS = "userCredentials";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();

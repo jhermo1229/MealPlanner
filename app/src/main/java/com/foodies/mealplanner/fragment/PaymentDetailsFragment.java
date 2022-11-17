@@ -13,7 +13,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserPaymentDetails;
-import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
@@ -29,7 +29,7 @@ public class PaymentDetailsFragment extends Fragment {
     public static final String INVALID_LENGTH = "Invalid length";
     public static final String CUSTOMER = "C";
     public static final String ACTIVE = "A";
-    private final DatabaseHelper db = new DatabaseHelper();
+    private final UserRepository db = new UserRepository();
     private final AppUtils appUtils = new AppUtils();
     private final UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
     private final User user = new User();

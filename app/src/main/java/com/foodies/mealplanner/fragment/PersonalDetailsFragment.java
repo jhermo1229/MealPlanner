@@ -20,7 +20,7 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
-import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
@@ -44,7 +44,7 @@ public class PersonalDetailsFragment extends Fragment {
     private final User user = new User();
     private final Address address = new Address();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private final DatabaseHelper db = new DatabaseHelper();
+    private final UserRepository db = new UserRepository();
     private TextInputLayout firstName, lastName, houseNumber, street, city, postalCode,
             phoneNumber, email, password;
     private CheckBox passwordChk;

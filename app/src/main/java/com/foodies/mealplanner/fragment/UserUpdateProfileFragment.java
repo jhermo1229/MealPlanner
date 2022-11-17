@@ -21,7 +21,7 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
-import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.UserUpdateViewModel;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,7 +34,7 @@ public class UserUpdateProfileFragment extends Fragment {
     private static final String REQUIRED_ERROR = "Required";
     private static final String INVALID_LENGTH = "Invalid length";
     private static final int TEN = 10;
-    private final DatabaseHelper db = new DatabaseHelper();
+    private final UserRepository db = new UserRepository();
     private final User user = new User();
     private final FieldValidator fieldValidator = new FieldValidator();
     private UserUpdateViewModel userUpdateViewModel;

@@ -15,15 +15,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.repository.DatabaseHelper;
+import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -36,7 +34,7 @@ public class LoginHomeFragment extends Fragment {
     public static final String PLEASE_CHECK_PASSWORD = "Please check password";
     public static final String EMAIL_DOES_NOT_EXIST = "Email does not exist";
     public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
-    private final DatabaseHelper db = new DatabaseHelper();
+    private final UserRepository db = new UserRepository();
     private final FieldValidator fieldValidator = new FieldValidator();
     private final AppUtils appUtils = new AppUtils();
 //    List<User> userList = new ArrayList<>();

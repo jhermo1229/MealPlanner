@@ -1,6 +1,5 @@
 package com.foodies.mealplanner.fragment;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -22,8 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.repository.DatabaseHelper;
-import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
+import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.viewmodel.UserUpdateViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
@@ -38,7 +35,7 @@ import java.util.List;
 public class UsersListFragment extends Fragment {
 
     public static final String TAG = UsersListFragment.class.getName();
-    private final DatabaseHelper db = new DatabaseHelper();
+    private final UserRepository db = new UserRepository();
     private View usersListFragmentView;
     private UserUpdateViewModel userUpdateViewModel;
     private String[] sortArray;
