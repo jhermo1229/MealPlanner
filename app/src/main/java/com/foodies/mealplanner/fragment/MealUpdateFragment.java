@@ -221,7 +221,6 @@ public class MealUpdateFragment extends Fragment {
     }
 
     private void setFieldEnabled(){
-        mealNameTxt.setEnabled(true);
         mealDescriptionTxt.setEnabled(true);
         mealIngredientTxt.setEnabled(true);
         mealPriceTxt.setEnabled(true);
