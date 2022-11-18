@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragment.MealProfileFragment">
+    tools:context=".fragment.MealAddFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -31,7 +31,7 @@
                 android:layout_width="350dp"
                 android:layout_height="55dp"
                 android:inputType="text"
-                android:id="@+id/mealNameEditText"/>
+                android:id="@+id/mealNameUpdateEditText"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -51,7 +51,7 @@
                 android:maxLines="4"
                 android:minLines="1"
                 android:scrollbars="vertical"
-                android:id="@+id/mealDescEditText"/>
+                android:id="@+id/mealDescUpdateEditText"/>
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -70,34 +70,34 @@
                 android:maxLines="4"
                 android:minLines="1"
                 android:scrollbars="vertical"
-                android:id="@+id/mealIngrEditText"/>
+                android:id="@+id/mealIngrUpdateEditText"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-    <LinearLayout
-        android:layout_width="350dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="horizontal"
-        android:layout_gravity="center"
-        android:gravity="left"
-        android:layout_marginBottom="20dp">
+        <LinearLayout
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center"
+            android:gravity="left"
+            android:layout_marginBottom="20dp">
 
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/mealType"
-            android:textColor="@color/purple_500"
-            android:textStyle="bold" />
+            <TextView
+                android:layout_width="100dp"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/mealType"
+                android:textColor="@color/purple_500"
+                android:textStyle="bold" />
 
-        <Spinner
-            android:id="@+id/mealType"
-            android:layout_width="100dp"
-            android:layout_height="55dp"
-            android:background="@android:drawable/btn_dropdown"
-            android:gravity="center"
-            android:spinnerMode="dropdown"/>
-    </LinearLayout>
+            <Spinner
+                android:id="@+id/mealTypeUpdate"
+                android:layout_width="170dp"
+                android:layout_height="55dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:gravity="center"
+                android:spinnerMode="dropdown"/>
+        </LinearLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/mealPrice"
@@ -108,14 +108,14 @@
             android:hint="Price"
             android:layout_marginBottom="20dp">
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="350dp"
-            android:layout_height="55dp"
-            android:inputType="numberDecimal"
-            android:id="@+id/mealPriceEditText"/>
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="350dp"
+                android:layout_height="55dp"
+                android:inputType="numberDecimal"
+                android:id="@+id/mealPriceUpdateEditText"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="20dp"
@@ -123,23 +123,41 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/okButtonMealAdd"
+                android:id="@+id/okButtonMealUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
                 android:text="Ok"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginLeft="100dp"
+                android:layout_alignParentLeft="true"
+                android:visibility="invisible"/>
+
             <Button
-                android:id="@+id/cancelButtonMealAdd"
+                android:id="@+id/cancelButtonMealUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
                 android:text="Cancel"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:textStyle="bold"
+                android:layout_marginRight="100dp"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/updateMealButton"
+                android:layout_width="300dp"
+                android:layout_height="55dp"
+                android:text="@string/update"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_centerHorizontal="true"
+                android:visibility="visible"/>
+
+        </RelativeLayout>
 
     </LinearLayout>
 

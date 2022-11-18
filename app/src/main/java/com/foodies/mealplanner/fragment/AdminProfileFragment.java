@@ -45,10 +45,10 @@ public class AdminProfileFragment extends Fragment {
 
         mealsButton = adminProfileFragmentView.findViewById(R.id.mealsBtn);
         mealsButton.setOnClickListener((adminProfileFragmentView)->{
-            MealProfileFragment mealProfileFragment = new MealProfileFragment();
+            MealListFragment mealListFragment = new MealListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(AdminProfileFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, mealProfileFragment);
+            transaction.replace(R.id.loginHomeFrame, mealListFragment);
 
             transaction.commit();
 

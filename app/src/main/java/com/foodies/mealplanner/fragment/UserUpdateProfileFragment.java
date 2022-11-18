@@ -170,14 +170,12 @@ public class UserUpdateProfileFragment extends Fragment {
      * @return
      */
     @NonNull
-    private AdapterView.OnItemSelectedListener spinnerWatcher(int a) {
+    private AdapterView.OnItemSelectedListener spinnerWatcher(int spinnerPosition) {
         return new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (a != i) {
+                if (spinnerPosition != i) {
                     isFieldChanged = true;
-                    Log.d("SPINNER LISTENER", ":::::" + a);
-                    Log.d("SPINNER LISTENER", ":::::" + i);
                 }
             }
 

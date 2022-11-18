@@ -29,7 +29,6 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 
 public class UsersListFragment extends Fragment {
@@ -41,6 +40,8 @@ public class UsersListFragment extends Fragment {
     private String[] sortArray;
     EditText searchFilter;
     TextView userCount;
+    Spinner sortSpinner;
+    ListView userListView;
 
     public UsersListFragment() {
         // Required empty public constructor
@@ -63,68 +64,67 @@ public class UsersListFragment extends Fragment {
         userCount = usersListFragmentView.findViewById(R.id.userCount);
 
         searchFilter = usersListFragmentView.findViewById(R.id.searchFilter);
-        List<User> users = new ArrayList<>();
+//        List<User> users = new ArrayList<>();
         ArrayList<String> fullName = new ArrayList<>();
-        Spinner sort = usersListFragmentView.findViewById(R.id.sortingSpinner);
+        sortSpinner = usersListFragmentView.findViewById(R.id.sortingSpinner);
         sortArray = getResources().getStringArray(R.array.sort);
 
         //Set adapter of spinner
-        ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(getActivity(),
+        ArrayAdapter<String> sortAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.spinner_item, sortArray);
-        sort.setAdapter(adapter1);
+        sortSpinner.setAdapter(sortAdapter);
 
-        ListView list = usersListFragmentView.findViewById(R.id.userListView);
+        userListView = usersListFragmentView.findViewById(R.id.userListView);
         db.getAllUsers(userList -> {
-            users.addAll(userList);
+//            users.addAll(userList);
             for (User user : userList) {
 
                 fullName.add(user.getUserDetails().getFirstName() + " " + user.getUserDetails().getLastName());
                 Log.d("USERS", user.getUserDetails().getFirstName() + " " + user.getUserDetails().getLastName());
             }
 
-            userCount.setText("Users(" + users.size() + ")");
-            sort.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            userCount.setText("Users(" + userList.size() + ")");
+            sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     if(i == 1){
                         Collections.sort(fullName, Comparator.comparing(String::toLowerCase));
-                        Collections.sort(users, Comparator.comparing(o -> o.getUserDetails().getFirstName().toLowerCase()));
+                        Collections.sort(userList, Comparator.comparing(o -> o.getUserDetails().getFirstName().toLowerCase()));
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
-                        list.setAdapter(adapter);
-                        extracted(adapter);
-                        sort.setSelection(0);
+                        userListView.setAdapter(adapter);
+                        textChangeListener(adapter);
+                        sortSpinner.setSelection(0);
                     }else if(i == 2){
                         Collections.sort(fullName, (o1, o2) -> o2.toLowerCase()
                                 .compareTo(o1.toLowerCase()));
-                        Collections.sort(users, (o1, o2) -> o2.getUserDetails().getFirstName().toLowerCase()
+                        Collections.sort(userList, (o1, o2) -> o2.getUserDetails().getFirstName().toLowerCase()
                                 .compareTo(o1.getUserDetails().getFirstName().toLowerCase()));
 
                         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
-                        list.setAdapter(adapter);
-                        extracted(adapter);
-                        sort.setSelection(0);
+                        userListView.setAdapter(adapter);
+                        textChangeListener(adapter);
+                        sortSpinner.setSelection(0);
                     }
                 }
 
                 public void onNothingSelected(AdapterView<?> adapterView) {
-                    sort.setSelection(0);
+                    sortSpinner.setSelection(0);
                     return;
                 }
 
             });
 
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
-            list.setAdapter(adapter);
-            extracted(adapter);
+            userListView.setAdapter(adapter);
+            textChangeListener(adapter);
 
-            list.setClickable(true);
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            userListView.setClickable(true);
+            userListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    User user = users.get(i);
-                    Log.i("ON CLICK LIST", user.getEmail());
+                    User user = userList.get(i);
                     userUpdateViewModel.setSelectedItem(user);
 
                     UserUpdateProfileFragment userUpdateProfileFragment = new UserUpdateProfileFragment();
@@ -141,7 +141,7 @@ public class UsersListFragment extends Fragment {
     /**
      * @param adapter
      */
-    private void extracted(ArrayAdapter<String> adapter) {
+    private void textChangeListener(ArrayAdapter<String> adapter) {
         searchFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {

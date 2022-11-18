@@ -6,13 +6,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.foodies.mealplanner.fragment.UserListCallBack;
+import com.foodies.mealplanner.Interface.UserListCallBack;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.activity.MainActivity;
-import com.foodies.mealplanner.fragment.UserCallBack;
+import com.foodies.mealplanner.Interface.UserCallBack;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -153,15 +154,10 @@ public class UserRepository {
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
-                Log.i("DATABASE UPDATE", "Successfully updated");
+                Log.i("USER DATABASE UPDATE", "Successfully updated");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                final EditText text = new EditText(activity);
-                builder.setTitle("Meal Planner").setMessage("Successfully updated user").setView(text);
-                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface di, int ii) {}
-                });
-                builder.create().show();
+                Toast toast=Toast.makeText(activity.getApplicationContext(), "Successfully updated user",Toast.LENGTH_SHORT);
+                toast.show();
             }
         });
     }
