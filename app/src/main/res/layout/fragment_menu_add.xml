@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.MenuAddFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:id="@+id/mainLogo"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="40dp"/>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/menuName"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:hint="Menu Name">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_width="270dp"
+            android:layout_height="55dp"
+            android:id="@+id/menuNameEditText"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/meatMenu"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="270dp"
+            android:layout_height="75dp"
+            android:layout_marginRight="20dp"
+            android:hint="Meat Menu">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="270dp"
+                android:layout_height="55dp"
+                android:id="@+id/meatMenuEditText"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/addMeatBtn"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/add"
+            android:textAlignment="center"
+            android:textColor="@color/white"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/vegetableMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="270dp"
+                android:layout_height="75dp"
+                android:layout_marginRight="20dp"
+                android:hint="Vegetable Menu">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="270dp"
+                    android:layout_height="55dp"
+                    android:id="@+id/vegetableMenuEditText"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/addVegetableBtn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/bothMenu"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="270dp"
+                android:layout_height="75dp"
+                android:layout_marginRight="20dp"
+                android:hint="Both Menu">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="270dp"
+                    android:layout_height="55dp"
+                    android:id="@+id/bothMenuEditText"/>
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:id="@+id/addBothBtn"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="@string/add"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/okButtonMenuAdd"
+                android:layout_width="100dp"
+                android:layout_height="55dp"
+                android:text="Ok"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:layout_marginRight="20dp"/>
+            <Button
+                android:id="@+id/cancelButtonMenuAdd"
+                android:layout_width="100dp"
+                android:layout_height="55dp"
+                android:text="Cancel"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</FrameLayout>

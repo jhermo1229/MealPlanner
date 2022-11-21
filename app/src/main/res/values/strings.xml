@@ -36,6 +36,10 @@
     <string name="type">Meal type: </string>
     <string name="addMeal">Add meal</string>
     <string name="update">Update</string>
+    <string name="menu">Menus</string>
+    <string name="addMenu">Add menu</string>
+    <string name="menuName">Menu name</string>
+    <string name="add">Add</string>
 
     <string-array name="province_canada">
         <item>AB</item>

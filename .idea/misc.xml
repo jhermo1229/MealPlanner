@@ -14,6 +14,7 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/button_change_color.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/content_signup.xml" value="0.782258064516129" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/content_usersview.xml" value="0.1" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_add_update_menu.xml" value="0.18795289855072464" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_admin_profile.xml" value="0.136" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_blank.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_first.xml" value="0.1" />
@@ -24,6 +25,8 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_type.xml" value="0.12239583333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_update.xml" value="0.1421875" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meals_delivery_rate.xml" value="0.12708333333333333" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_menu_add.xml" value="0.2" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_menu_list.xml" value="0.18795289855072464" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_payment.xml" value="0.2" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_personal_details.xml" value="0.24615384615384617" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_signup_home.xml" value="0.1" />

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.UsersListFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:id="@+id/mainLogo"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="40dp"/>
+        <EditText
+            android:id="@+id/searchFilterMeals"
+            android:layout_width="350dp"
+            android:layout_height="50dp"
+            android:background="@drawable/rounded_edittext"
+            android:paddingLeft="10dp"
+            android:layout_gravity="center"
+            android:hint="Search meals by name"
+            android:layout_marginBottom="10dp"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp">
+
+            <Spinner
+                android:id="@+id/sortingSpinnerMenu"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:spinnerMode="dialog"
+                android:popupBackground="@android:color/transparent"
+                android:background="@android:color/transparent"
+                android:layout_alignParentLeft="true"
+                android:textSize="20dp"/>
+
+            <Button
+                android:id="@+id/addMealButton"
+                android:layout_width="150dp"
+                android:layout_height="35dp"
+                android:layout_alignParentRight="true"
+                android:text="@string/addMenu"
+                android:textSize="12dp"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <View style="@style/Divider"
+            android:background="@color/material_blue_grey_800"/>
+
+        <ListView
+            android:id="@+id/menuListView"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:divider="@color/material_blue_grey_800"
+            android:dividerHeight="4dp"
+            android:footerDividersEnabled="false" />
+    </LinearLayout>
+</FrameLayout>
