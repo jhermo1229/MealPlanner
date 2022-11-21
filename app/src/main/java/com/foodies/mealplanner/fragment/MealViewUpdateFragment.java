@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
@@ -27,7 +28,7 @@ import com.foodies.mealplanner.viewmodel.MealViewModel;
 /**
  * Meal view of details and update fragment.
  */
-public class MealUpdateFragment extends Fragment {
+public class MealViewUpdateFragment extends Fragment {
 
     private View mealUpdateFragmentView;
     private static final String REQUIRED_ERROR = "Required";
@@ -40,16 +41,26 @@ public class MealUpdateFragment extends Fragment {
     Button updateMealButton, okButton, cancelButton;
     private String[] mealTypeList;
     private boolean isFieldChanged = false;
+    private String mParam1;
+    private static final String TYPE_PARAM = "View";
 
-    public MealUpdateFragment() {
+    public MealViewUpdateFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString(TYPE_PARAM);
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        mealUpdateFragmentView = inflater.inflate(R.layout.fragment_meal_update, container, false);
+        mealUpdateFragmentView = inflater.inflate(R.layout.fragment_meal_view_update, container, false);
         mealViewModel = new ViewModelProvider(requireActivity()).get(MealViewModel.class);
 
         //Get fields
@@ -65,20 +76,84 @@ public class MealUpdateFragment extends Fragment {
         updateMealButton = mealUpdateFragmentView.findViewById(R.id.updateMealButton);
         okButton = mealUpdateFragmentView.findViewById(R.id.okButtonMealUpdate);
         cancelButton = mealUpdateFragmentView.findViewById(R.id.cancelButtonMealUpdate);
-
-        setFieldDisabled();
-
-        updateMealButton.setOnClickListener(mealUpdateFragmentView ->{
-
-            okButton.setVisibility(View.VISIBLE);
-            cancelButton.setVisibility(View.VISIBLE);
-            updateMealButton.setVisibility(View.INVISIBLE);
-            setFieldEnabled();
-        });
-
         Meal liveMeal = mealViewModel.getSelectedItem().getValue();
+        //do this if fragment was Meal List
+        if(mParam1.equals("MealListView")) {
+            updateMealButton.setText("Update");
 
-        //Add meal values to the field
+
+            setFieldDisabled();
+
+            updateMealButton.setOnClickListener(mealUpdateFragmentView -> {
+
+                okButton.setVisibility(View.VISIBLE);
+                cancelButton.setVisibility(View.VISIBLE);
+                updateMealButton.setVisibility(View.INVISIBLE);
+                setFieldEnabled();
+            });
+
+
+
+            //Add meal values to the field
+            int spinnerPos = setValuesOnField(adapterMealType, liveMeal);
+
+            //Set listeners to the field if a change has been done
+            mealNameTxt.addTextChangedListener(textWatcher());
+            mealDescriptionTxt.addTextChangedListener(textWatcher());
+            mealIngredientTxt.addTextChangedListener(textWatcher());
+            mealPriceTxt.addTextChangedListener(textWatcher());
+            mealTypeSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
+
+            cancelButton.setOnClickListener((mealUpdateFragmentView) -> {
+                getParentFragmentManager().popBackStackImmediate();
+            });
+
+            okButton.setOnClickListener((mealUpdateFragmentView) -> {
+
+                //Check first if any field has changed
+                if (!isFieldChanged) {
+                    getParentFragmentManager().popBackStackImmediate();
+                    //check field validation
+                } else if (checkAllFields()) {
+                    meal.setMealName(mealNameTxt.getText().toString());
+                    meal.setMealStatus("Active");
+                    meal.setMealDescription(mealDescriptionTxt.getText().toString());
+                    meal.setMealIngredients(mealIngredientTxt.getText().toString());
+                    meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
+
+                    //update meal
+                    db.updateMeal(meal, getActivity());
+                    getParentFragmentManager().popBackStackImmediate();
+                }
+
+            });
+            //If fragment came from Menu view
+        } else if(mParam1.equals("MenuView")) {
+            setFieldDisabled();
+            setValuesOnField(adapterMealType, liveMeal);
+            updateMealButton.setText("Add");
+            updateMealButton.setOnClickListener((mealUpdateFragmentView) ->{
+                Bundle result = new Bundle();
+                result.putString("mealName", liveMeal.getMealName());
+                result.putString("mealDescription", liveMeal.getMealDescription());
+                result.putString("mealIngredients", liveMeal.getMealIngredients());
+                result.putDouble("mealPrice", liveMeal.getMealPrice());
+                result.putString("mealStatus", liveMeal.getMealStatus());
+                result.putString("mealType", liveMeal.getMealType());
+
+                MenuAddFragment menuAddFragment = new MenuAddFragment();
+                menuAddFragment.setArguments(result);
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.addToBackStack(MenuListFragment.TAG);
+                transaction.replace(R.id.loginHomeFrame, menuAddFragment);
+
+                transaction.commit();
+            });
+        }
+        return mealUpdateFragmentView;
+    }
+
+    private int setValuesOnField(ArrayAdapter<String> adapterMealType, Meal liveMeal) {
         mealNameTxt.setText(liveMeal.getMealName());
         mealDescriptionTxt.setText(liveMeal.getMealDescription());
         mealIngredientTxt.setText(liveMeal.getMealIngredients());
@@ -87,38 +162,7 @@ public class MealUpdateFragment extends Fragment {
         int spinnerPos = adapterMealType.getPosition(liveMeal.getMealType());
         mealTypeSpinner.setSelection(spinnerPos);
 
-        //Set listeners to the field if a change has been done
-        mealNameTxt.addTextChangedListener(textWatcher());
-        mealDescriptionTxt.addTextChangedListener(textWatcher());
-        mealIngredientTxt.addTextChangedListener(textWatcher());
-        mealPriceTxt.addTextChangedListener(textWatcher());
-        mealTypeSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
-
-        cancelButton.setOnClickListener((mealUpdateFragmentView) -> {
-            getParentFragmentManager().popBackStackImmediate();
-        });
-
-        okButton.setOnClickListener((mealUpdateFragmentView) -> {
-
-                    //Check first if any field has changed
-                    if (!isFieldChanged) {
-                        getParentFragmentManager().popBackStackImmediate();
-                        //check field validation
-                    } else if (checkAllFields()) {
-                        meal.setMealName(mealNameTxt.getText().toString());
-                        meal.setMealStatus("Active");
-                        meal.setMealDescription(mealDescriptionTxt.getText().toString());
-                        meal.setMealIngredients(mealIngredientTxt.getText().toString());
-                        meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
-
-                        //update meal
-                        db.updateMeal(meal, getActivity());
-                        getParentFragmentManager().popBackStackImmediate();
-                    }
-
-        });
-
-        return mealUpdateFragmentView;
+        return spinnerPos;
     }
 
     /**

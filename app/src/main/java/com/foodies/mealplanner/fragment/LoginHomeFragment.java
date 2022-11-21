@@ -79,8 +79,6 @@ public class LoginHomeFragment extends Fragment {
                 userParam.setPassword(Objects.requireNonNull(password.getEditText()).getText().toString());
 
                 db.getUser(user -> {
-                    if (user != null) {
-//                        userList.add(user);
 
 
                         if (user != null) {
@@ -116,7 +114,7 @@ public class LoginHomeFragment extends Fragment {
                         } else {
                             email.setError(EMAIL_DOES_NOT_EXIST);
                         }
-                    }
+
                 }, userParam);
             }
         });

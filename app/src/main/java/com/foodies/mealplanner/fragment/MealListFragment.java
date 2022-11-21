@@ -16,7 +16,6 @@ import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Meal list fragment
@@ -138,10 +136,13 @@ public class MealListFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Meal meal = mealList.get(i);
                     mViewModel.setSelectedItem(meal);
-                    MealUpdateFragment mealUpdateFragment = new MealUpdateFragment();
+                    MealViewUpdateFragment mealViewUpdateFragment = new MealViewUpdateFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("View", "MealListView");
+                    mealViewUpdateFragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.addToBackStack(MealListFragment.TAG);
-                    transaction.replace(R.id.loginHomeFrame, mealUpdateFragment);
+                    transaction.replace(R.id.loginHomeFrame, mealViewUpdateFragment);
                     transaction.commit();
 
                 }

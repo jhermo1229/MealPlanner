@@ -1,24 +1,14 @@
 package com.foodies.mealplanner.repository;
 
-import static com.firebase.ui.auth.AuthUI.getApplicationContext;
-
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.util.Log;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
 import com.foodies.mealplanner.Interface.MealListCallBack;
-import com.foodies.mealplanner.activity.LoginActivity;
-import com.foodies.mealplanner.activity.MainActivity;
-import com.foodies.mealplanner.Interface.MealCallBack;
-import com.foodies.mealplanner.Interface.UserListCallBack;
+import com.foodies.mealplanner.Interface.MealNameCallBack;
 import com.foodies.mealplanner.model.Meal;
-import com.foodies.mealplanner.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -76,10 +66,10 @@ public class MealRepository {
     /**
      * Callback function to return query.
      * Uses Callback interface as firestore cloud is asynchronous
-     * @param mealCallBack - will callback together with the object queried
+     * @param mealNameCallBack - will callback together with the object queried
      * @param mealParam - contains meal name
      */
-    public void getMeal(MealCallBack mealCallBack, String mealParam){
+    public void getMealName(MealNameCallBack mealNameCallBack, String mealParam){
 
         DocumentReference docRef = dbCollection.document(mealParam);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -89,11 +79,11 @@ public class MealRepository {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         Meal meal = document.toObject(Meal.class);
-                        mealCallBack.onCallBack(meal);
+                        mealNameCallBack.onCallBack(meal);
                         Log.d("MEAL DATABASE", "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d("MEAL DATABASE", "No such document");
-                        mealCallBack.onCallBack(null);
+                        mealNameCallBack.onCallBack(null);
                     }
                 } else {
                     Log.d("DATABASE", "get failed with ", task.getException());
@@ -101,6 +91,33 @@ public class MealRepository {
             }
         });
 
+    }
+
+    /**
+     * Get all meals depending on type
+     * @param mealListCallBack
+     * @param mealType
+     */
+    public void getAllMealType(MealListCallBack mealListCallBack, String mealType){
+
+        List<Meal> mealList = new ArrayList<>();
+
+        dbCollection.whereEqualTo("mealType", mealType)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                mealList.add(document.toObject(Meal.class));
+                            }
+                            Log.d("MEAL DATABASE", "Successfully retrieved all");
+                            mealListCallBack.onCallBack(mealList);
+                        }else{
+                            Log.d("MEAL DATABASE", "Error retrieving all meals");
+                        }
+                    }
+                });
     }
 
     /**

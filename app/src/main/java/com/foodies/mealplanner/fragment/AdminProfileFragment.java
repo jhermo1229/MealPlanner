@@ -21,7 +21,7 @@ public class AdminProfileFragment extends Fragment {
     public static final String TAG = AdminProfileFragment.class.getName();
     private AdminProfileViewModel mViewModel;
     private View adminProfileFragmentView;
-    private Button usersButton, mealsButton;
+    private Button usersButton, mealsButton, menusButton;
 
     public static AdminProfileFragment newInstance() {
         return new AdminProfileFragment();
@@ -52,6 +52,17 @@ public class AdminProfileFragment extends Fragment {
 
             transaction.commit();
 
+        });
+
+        menusButton = adminProfileFragmentView.findViewById(R.id.menuBtn);
+        menusButton.setOnClickListener((adminProfileFragmentView) ->{
+
+            MenuListFragment menuListFragment = new MenuListFragment();
+            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+            transaction.addToBackStack(MenuListFragment.TAG);
+            transaction.replace(R.id.loginHomeFrame, menuListFragment);
+
+            transaction.commit();
         });
 
 

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/drawable/border.xml" value="0.15885416666666666" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/drawable/rounded_edittext.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_login.xml" value="0.12708333333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/activity_main.xml" value="0.11302083333333333" />
@@ -24,8 +25,9 @@
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_list.xml" value="0.1933876811594203" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_type.xml" value="0.12239583333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_update.xml" value="0.1421875" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meal_view_update.xml" value="0.14270833333333333" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_meals_delivery_rate.xml" value="0.12708333333333333" />
-        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_menu_add.xml" value="0.2" />
+        <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_menu_add.xml" value="0.1" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_menu_list.xml" value="0.18795289855072464" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_payment.xml" value="0.2" />
         <entry key="..\:/Users/herje/Desktop/Prog8480/MealPlanner/app/src/main/res/layout/fragment_personal_details.xml" value="0.24615384615384617" />
