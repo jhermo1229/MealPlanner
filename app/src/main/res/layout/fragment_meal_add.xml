@@ -44,14 +44,14 @@
             android:hint="Description">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/mealDescEditText"
                 android:layout_width="350dp"
                 android:layout_height="120dp"
                 android:inputType="textMultiLine"
                 android:lines="4"
                 android:maxLines="4"
                 android:minLines="1"
-                android:scrollbars="vertical"
-                android:id="@+id/mealDescEditText"/>
+                android:scrollbars="vertical" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout

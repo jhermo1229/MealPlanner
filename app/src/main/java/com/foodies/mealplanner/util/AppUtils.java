@@ -1,6 +1,13 @@
 package com.foodies.mealplanner.util;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 
 public class AppUtils {
 
@@ -13,5 +20,14 @@ public class AppUtils {
         Log.d("DECODE", data);
         byte[] decodedBytes = android.util.Base64.decode(data, android.util.Base64.DEFAULT);
         return new String(decodedBytes);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public String dateFormatter(LocalDate date){
+
+        String formattedDate = date.format(DateTimeFormatter
+                .ofLocalizedDate(FormatStyle.MEDIUM));
+
+        return formattedDate;
     }
 }
