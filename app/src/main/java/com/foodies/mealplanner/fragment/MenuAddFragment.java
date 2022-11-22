@@ -21,6 +21,7 @@ import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.model.Menu;
 import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
+import com.foodies.mealplanner.validations.FieldValidator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ public class MenuAddFragment extends Fragment {
 
     public static final String TAG = MenuAddFragment.class.getName();
     private View menuAddFragmentView;
-    private Button addMeat, addVegetable, addBoth, okButton, cancelButton;
-    private EditText menuName, meatMenu, vegetableMenu, bothMenu;
+    private Button okButton, cancelButton;
+    private EditText menuNameTxt, meatMenuTxt, vegetableMenuTxt, bothMenuTxt;
 
 
     private MealRepository mealDb = new MealRepository();
@@ -43,8 +44,8 @@ public class MenuAddFragment extends Fragment {
     private List vegetableNameList = new ArrayList<>();
     private List bothNameList = new ArrayList<>();
     private Menu menu = new Menu();
-
-
+    private static final String REQUIRED_ERROR = "Required";
+    private final FieldValidator fieldValidator = new FieldValidator();
 
     public MenuAddFragment() {
         // Required empty public constructor
@@ -55,10 +56,10 @@ public class MenuAddFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         menuAddFragmentView = inflater.inflate(R.layout.fragment_menu_add, container, false);
-        menuName = menuAddFragmentView.findViewById(R.id.menuNameEditText);
-        meatMenu = menuAddFragmentView.findViewById(R.id.meatMenuEditText);
-        vegetableMenu = menuAddFragmentView.findViewById(R.id.vegetableMenuEditText);
-        bothMenu = menuAddFragmentView.findViewById(R.id.bothMenuEditText);
+        menuNameTxt = menuAddFragmentView.findViewById(R.id.menuNameEditText);
+        meatMenuTxt = menuAddFragmentView.findViewById(R.id.meatMenuEditText);
+        vegetableMenuTxt = menuAddFragmentView.findViewById(R.id.vegetableMenuEditText);
+        bothMenuTxt = menuAddFragmentView.findViewById(R.id.bothMenuEditText);
         okButton = menuAddFragmentView.findViewById(R.id.okButtonMenuAdd);
         cancelButton = menuAddFragmentView.findViewById(R.id.cancelButtonMenuAdd);
 
@@ -72,7 +73,7 @@ public class MenuAddFragment extends Fragment {
                 meatNameList.add(meal.getMealName());
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meals_listview, R.id.mealView, meatNameList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, meatNameList);
             meatListView.setAdapter(adapter);
 
             //Set header of list
@@ -102,7 +103,7 @@ public class MenuAddFragment extends Fragment {
                             // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    meatMenu.setText(meal.getMealName());
+                                    meatMenuTxt.setText(meal.getMealName());
                                     menu.setMeatMeal(meal);
                                 }
                             })
@@ -120,7 +121,7 @@ public class MenuAddFragment extends Fragment {
                 vegetableNameList.add(meal.getMealName());
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meals_listview, R.id.mealView, vegetableNameList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, vegetableNameList);
             vegetableListView.setAdapter(adapter);
 
             //Set header of list
@@ -149,7 +150,7 @@ public class MenuAddFragment extends Fragment {
                             // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    vegetableMenu.setText(meal.getMealName());
+                                    vegetableMenuTxt.setText(meal.getMealName());
                                     menu.setVegetableMeal(meal);
                                 }
                             })
@@ -168,7 +169,7 @@ public class MenuAddFragment extends Fragment {
                 bothNameList.add(meal.getMealName());
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meals_listview, R.id.mealView, bothNameList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, bothNameList);
             bothListView.setAdapter(adapter);
 
             //Set header of list
@@ -197,7 +198,7 @@ public class MenuAddFragment extends Fragment {
                             // The dialog is automatically dismissed when a dialog button is clicked.
                             .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
-                                    bothMenu.setText(meal.getMealName());
+                                    bothMenuTxt.setText(meal.getMealName());
                                     menu.setBothMeal(meal);
                                 }
                             })
@@ -209,10 +210,11 @@ public class MenuAddFragment extends Fragment {
         }, "Both");
 
         okButton.setOnClickListener((menuAddFragmentView) ->{
-            menu.setMenuName(menuName.getText().toString());
-
-
-            menuDb.addMenu(menu, getActivity());
+            if(checkAllFields()) {
+                menu.setMenuName(menuNameTxt.getText().toString());
+                menuDb.addMenu(menu, getActivity());
+                getParentFragmentManager().popBackStackImmediate();
+            }
         });
 
         cancelButton.setOnClickListener((menuAddFragmentView)->{
@@ -221,5 +223,49 @@ public class MenuAddFragment extends Fragment {
         });
 
         return menuAddFragmentView;
+    }
+
+    /**
+     * Check all required fields if value is present
+     * Check also if inputs are valid
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFields() {
+
+        boolean allValid = true;
+        errorReset();
+
+        if (fieldValidator.validateFieldIfEmpty(menuNameTxt.length())) {
+            menuNameTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(meatMenuTxt.length())) {
+            meatMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(vegetableMenuTxt.length())) {
+            vegetableMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(bothMenuTxt.length())) {
+            bothMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
+     * Reset error messages on field
+     */
+    private void errorReset() {
+        meatMenuTxt.setError(null);
+        menuNameTxt.setError(null);
+        vegetableMenuTxt.setError(null);
+        bothMenuTxt.setError(null);
     }
 }

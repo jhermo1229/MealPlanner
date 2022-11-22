@@ -26,7 +26,6 @@ import com.foodies.mealplanner.viewmodel.MealViewModel;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.List;
 
 /**
  * Meal list fragment
@@ -42,7 +41,6 @@ public class MealListFragment extends Fragment {
     private ListView mealListView;
     private String[] sortArray;
     private MealViewModel mViewModel;
-    private List<Meal> filterList = new ArrayList<>();
 
 
     public MealListFragment() {
@@ -65,7 +63,7 @@ public class MealListFragment extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(MealViewModel.class);
 
         //get fields
-        searchFilter = mealListFragmentView.findViewById(R.id.searchFilterMeals);
+        searchFilter = mealListFragmentView.findViewById(R.id.searchFilterMenus);
         mealListView = mealListFragmentView.findViewById(R.id.mealListView);
         sortSpinner = mealListFragmentView.findViewById(R.id.sortingSpinnerMeals);
         addMealButton = mealListFragmentView.findViewById(R.id.addMealButton);
@@ -91,7 +89,7 @@ public class MealListFragment extends Fragment {
 
 
         db.getAllMeals(mealList -> {
-            Log.d("MEAL LIST FRAG", "HERE " + mealList.size());
+            Log.d("MEAL LIST FRAG", "SIZE " + mealList.size());
             for (Meal meal : mealList) {
                 mealNameList.add(meal.getMealName());
             }
@@ -102,7 +100,7 @@ public class MealListFragment extends Fragment {
                     if (i == 1) {
                         Collections.sort(mealNameList, Comparator.comparing(String::toLowerCase));
                         Collections.sort(mealList, Comparator.comparing(o -> o.getMealName().toLowerCase()));
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.meals_listview, R.id.mealView, mealNameList);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.meal_listview, R.id.mealView, mealNameList);
                         mealListView.setAdapter(adapter);
                         textChangeListener(adapter);
                         sortSpinner.setSelection(0);
@@ -112,7 +110,7 @@ public class MealListFragment extends Fragment {
                         Collections.sort(mealList, (o1, o2) -> o2.getMealName().toLowerCase()
                                 .compareTo(o1.getMealName().toLowerCase()));
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.meals_listview, R.id.mealView, mealNameList);
+                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.meal_listview, R.id.mealView, mealNameList);
                         mealListView.setAdapter(adapter);
                         textChangeListener(adapter);
                         sortSpinner.setSelection(0);
@@ -126,7 +124,7 @@ public class MealListFragment extends Fragment {
 
             });
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meals_listview, R.id.mealView, mealNameList);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, mealNameList);
               mealListView.setAdapter(adapter);
             textChangeListener(adapter);
 

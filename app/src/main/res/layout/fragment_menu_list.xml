@@ -17,7 +17,7 @@
             android:src="@drawable/logo"
             android:layout_marginBottom="40dp"/>
         <EditText
-            android:id="@+id/searchFilterMeals"
+            android:id="@+id/searchFilterMenus"
             android:layout_width="350dp"
             android:layout_height="50dp"
             android:background="@drawable/rounded_edittext"
@@ -35,11 +35,11 @@
                 android:id="@+id/sortingSpinnerMenu"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
-                android:spinnerMode="dialog"
-                android:popupBackground="@android:color/transparent"
-                android:background="@android:color/transparent"
                 android:layout_alignParentLeft="true"
-                android:textSize="20dp"/>
+                android:background="@android:color/transparent"
+                android:popupBackground="@android:color/transparent"
+                android:spinnerMode="dialog"
+                android:textSize="20dp" />
 
             <Button
                 android:id="@+id/addMenuButton"

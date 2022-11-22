@@ -1,12 +1,6 @@
 package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -19,6 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.repository.MealRepository;
@@ -30,19 +28,19 @@ import com.foodies.mealplanner.viewmodel.MealViewModel;
  */
 public class MealViewUpdateFragment extends Fragment {
 
-    private View mealUpdateFragmentView;
     private static final String REQUIRED_ERROR = "Required";
-    private MealRepository db = new MealRepository();
-    private Meal meal = new Meal();
-    private FieldValidator fieldValidator = new FieldValidator();
+    private static final String TYPE_PARAM = "View";
+    private View mealUpdateFragmentView;
+    private final MealRepository db = new MealRepository();
+    private final Meal meal = new Meal();
+    private final FieldValidator fieldValidator = new FieldValidator();
     private MealViewModel mealViewModel;
     private EditText mealNameTxt, mealDescriptionTxt, mealIngredientTxt, mealPriceTxt;
     private Spinner mealTypeSpinner;
-    Button updateMealButton, okButton, cancelButton;
+    private Button updateMealButton, okButton, cancelButton;
     private String[] mealTypeList;
     private boolean isFieldChanged = false;
     private String mParam1;
-    private static final String TYPE_PARAM = "View";
 
     public MealViewUpdateFragment() {
         // Required empty public constructor
@@ -77,79 +75,55 @@ public class MealViewUpdateFragment extends Fragment {
         okButton = mealUpdateFragmentView.findViewById(R.id.okButtonMealUpdate);
         cancelButton = mealUpdateFragmentView.findViewById(R.id.cancelButtonMealUpdate);
         Meal liveMeal = mealViewModel.getSelectedItem().getValue();
-        //do this if fragment was Meal List
-        if(mParam1.equals("MealListView")) {
-            updateMealButton.setText("Update");
+
+        updateMealButton.setText("Update");
 
 
-            setFieldDisabled();
+        setFieldDisabled();
 
-            updateMealButton.setOnClickListener(mealUpdateFragmentView -> {
+        updateMealButton.setOnClickListener(mealUpdateFragmentView -> {
 
-                okButton.setVisibility(View.VISIBLE);
-                cancelButton.setVisibility(View.VISIBLE);
-                updateMealButton.setVisibility(View.INVISIBLE);
-                setFieldEnabled();
-            });
+            okButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+            updateMealButton.setVisibility(View.INVISIBLE);
+            setFieldEnabled();
+        });
 
 
+        //Add meal values to the field
+        int spinnerPos = setValuesOnField(adapterMealType, liveMeal);
 
-            //Add meal values to the field
-            int spinnerPos = setValuesOnField(adapterMealType, liveMeal);
+        //Set listeners to the field if a change has been done
+        mealNameTxt.addTextChangedListener(textWatcher());
+        mealDescriptionTxt.addTextChangedListener(textWatcher());
+        mealIngredientTxt.addTextChangedListener(textWatcher());
+        mealPriceTxt.addTextChangedListener(textWatcher());
+        mealTypeSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
 
-            //Set listeners to the field if a change has been done
-            mealNameTxt.addTextChangedListener(textWatcher());
-            mealDescriptionTxt.addTextChangedListener(textWatcher());
-            mealIngredientTxt.addTextChangedListener(textWatcher());
-            mealPriceTxt.addTextChangedListener(textWatcher());
-            mealTypeSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
+        cancelButton.setOnClickListener((mealUpdateFragmentView) -> {
+            getParentFragmentManager().popBackStackImmediate();
+        });
 
-            cancelButton.setOnClickListener((mealUpdateFragmentView) -> {
+        okButton.setOnClickListener((mealUpdateFragmentView) -> {
+
+            //Check first if any field has changed
+            if (!isFieldChanged) {
                 getParentFragmentManager().popBackStackImmediate();
-            });
+                //check field validation
+            } else if (checkAllFields()) {
+                meal.setMealName(mealNameTxt.getText().toString());
+                meal.setMealStatus("Active");
+                meal.setMealDescription(mealDescriptionTxt.getText().toString());
+                meal.setMealIngredients(mealIngredientTxt.getText().toString());
+                meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
 
-            okButton.setOnClickListener((mealUpdateFragmentView) -> {
+                //update meal
+                db.updateMeal(meal, getActivity());
+                getParentFragmentManager().popBackStackImmediate();
+            }
 
-                //Check first if any field has changed
-                if (!isFieldChanged) {
-                    getParentFragmentManager().popBackStackImmediate();
-                    //check field validation
-                } else if (checkAllFields()) {
-                    meal.setMealName(mealNameTxt.getText().toString());
-                    meal.setMealStatus("Active");
-                    meal.setMealDescription(mealDescriptionTxt.getText().toString());
-                    meal.setMealIngredients(mealIngredientTxt.getText().toString());
-                    meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
+        });
 
-                    //update meal
-                    db.updateMeal(meal, getActivity());
-                    getParentFragmentManager().popBackStackImmediate();
-                }
-
-            });
-            //If fragment came from Menu view
-        } else if(mParam1.equals("MenuView")) {
-            setFieldDisabled();
-            setValuesOnField(adapterMealType, liveMeal);
-            updateMealButton.setText("Add");
-            updateMealButton.setOnClickListener((mealUpdateFragmentView) ->{
-                Bundle result = new Bundle();
-                result.putString("mealName", liveMeal.getMealName());
-                result.putString("mealDescription", liveMeal.getMealDescription());
-                result.putString("mealIngredients", liveMeal.getMealIngredients());
-                result.putDouble("mealPrice", liveMeal.getMealPrice());
-                result.putString("mealStatus", liveMeal.getMealStatus());
-                result.putString("mealType", liveMeal.getMealType());
-
-                MenuAddFragment menuAddFragment = new MenuAddFragment();
-                menuAddFragment.setArguments(result);
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.addToBackStack(MenuListFragment.TAG);
-                transaction.replace(R.id.loginHomeFrame, menuAddFragment);
-
-                transaction.commit();
-            });
-        }
         return mealUpdateFragmentView;
     }
 
@@ -256,7 +230,7 @@ public class MealViewUpdateFragment extends Fragment {
         mealPriceTxt.setError(null);
     }
 
-    private void setFieldDisabled(){
+    private void setFieldDisabled() {
         mealNameTxt.setEnabled(false);
         mealDescriptionTxt.setEnabled(false);
         mealIngredientTxt.setEnabled(false);
@@ -264,7 +238,7 @@ public class MealViewUpdateFragment extends Fragment {
         mealTypeSpinner.setEnabled(false);
     }
 
-    private void setFieldEnabled(){
+    private void setFieldEnabled() {
         mealDescriptionTxt.setEnabled(true);
         mealIngredientTxt.setEnabled(true);
         mealPriceTxt.setEnabled(true);
