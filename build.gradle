@@ -9,6 +9,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.7.21"
         classpath "org.jetbrains.kotlin:kotlin-android-extensions:1.7.21"
         classpath 'com.google.gms:google-services:4.3.14'
+        classpath 'com.sun.mail:android-mail:1.6.2'
+        classpath 'com.sun.mail:android-activation:1.6.2'
 
 
         // NOTE: Do not place your application dependencies here; they belong

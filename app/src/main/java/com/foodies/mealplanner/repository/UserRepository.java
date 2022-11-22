@@ -10,7 +10,9 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.foodies.mealplanner.Interface.MealListCallBack;
 import com.foodies.mealplanner.Interface.UserListCallBack;
+import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.activity.MainActivity;
 import com.foodies.mealplanner.Interface.UserCallBack;
@@ -123,6 +125,33 @@ public class UserRepository {
                 }
             }
         });
+    }
+
+    /**
+     * Get all meals depending on type
+     * @param userListCallBack
+     */
+    public void getAllUserCustomerActive(UserListCallBack userListCallBack){
+
+        List<User> userList = new ArrayList<>();
+
+        db.collection("userCredentials").whereEqualTo("status", "A")
+                .whereEqualTo("userType", "C")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()){
+                            for(QueryDocumentSnapshot document : task.getResult()){
+                                userList.add(document.toObject(User.class));
+                            }
+                            Log.d("USER DATABASE", "Successfully retrieved all active customer");
+                            userListCallBack.onCallBack(userList);
+                        }else{
+                            Log.d("MEAL DATABASE", "Error retrieving all active customer");
+                        }
+                    }
+                });
     }
 
     /**

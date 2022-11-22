@@ -1,14 +1,17 @@
 package com.foodies.mealplanner.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.RequiresApi;
@@ -20,27 +23,28 @@ import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.EmailUtil;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment for sending email.
  */
 public class EmailMenuFragment extends Fragment {
 
+    public static final String PICK_A_MENU = "Pick a menu";
+    private final AppUtils appUtils = new AppUtils();
+    private final UserRepository userDb = new UserRepository();
+    private final MenuRepository menuDb = new MenuRepository();
+    private final StringBuilder emailAddress = new StringBuilder();
     private View emailMenuFragment;
     private TextView mondayTxt, wednesdayTxt, fridayTxt;
-    private final AppUtils appUtils = new AppUtils();
-    private ListView menuListView;
-    private final UserRepository userDb = new UserRepository();
-    private MenuRepository menuDb = new MenuRepository();
-    private StringBuilder emailAddress = new StringBuilder();
-    private EditText emailEditTxt;
-    private List<String> menuNameList = new ArrayList<>();
+    private EditText emailEditTxt, mondayMenuTxt, wednesdayMenuTxt, fridayMenuTxt, notesTxt;
+    private ArrayList<String> menuNameList = new ArrayList<>();
+    private Button mondayBtn, wednesdayBtn, fridayBtn, sendBtn;
 
 
     public EmailMenuFragment() {
@@ -56,8 +60,15 @@ public class EmailMenuFragment extends Fragment {
         mondayTxt = emailMenuFragment.findViewById(R.id.mondayTxtView);
         wednesdayTxt = emailMenuFragment.findViewById(R.id.wednesdayTxtView);
         fridayTxt = emailMenuFragment.findViewById(R.id.fridayTxtView);
-        menuListView = emailMenuFragment.findViewById(R.id.emailMenuListView);
         emailEditTxt = emailMenuFragment.findViewById(R.id.emailEditText);
+        mondayBtn = emailMenuFragment.findViewById(R.id.mondayBtn);
+        wednesdayBtn = emailMenuFragment.findViewById(R.id.wednesdayBtn);
+        fridayBtn = emailMenuFragment.findViewById(R.id.fridayBtn);
+        mondayMenuTxt = emailMenuFragment.findViewById(R.id.mondayMenuTxt);
+        wednesdayMenuTxt = emailMenuFragment.findViewById(R.id.wednesdayMenuTxt);
+        fridayMenuTxt = emailMenuFragment.findViewById(R.id.fridayMenuTxt);
+        notesTxt = emailMenuFragment.findViewById(R.id.notesTxt);
+        sendBtn = emailMenuFragment.findViewById(R.id.sendEmailButton);
 
         LocalDate monday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
         LocalDate wednesday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY));
@@ -71,7 +82,7 @@ public class EmailMenuFragment extends Fragment {
         wednesdayTxt.setText(wednesdayFormat);
         fridayTxt.setText(fridayFormat);
 
-        userDb.getAllUsers(userList -> {
+        userDb.getAllUserCustomerActive(userList -> {
             for (User user : userList) {
 
                 emailAddress.append(user.getEmail());
@@ -88,22 +99,70 @@ public class EmailMenuFragment extends Fragment {
 
         });
 
-        menuDb.getAllMenus(menuList ->{
+        menuDb.getAllMenus(menuList -> {
 
             Log.d("MENU LIST FRAG", "SIZE: " + menuList.size());
             menuNameList = new ArrayList();
             for (Menu menu : menuList) {
                 menuNameList.add(menu.getMenuName());
-
             }
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.menu_listview, R.id.menuView, menuNameList);
-            menuListView.setAdapter(adapter);
 
+            mondayBtn.setOnClickListener((emailMenuFragmentMon) -> {
+
+                alertDialog(mondayMenuTxt);
+            });
+
+            wednesdayBtn.setOnClickListener((emailMenuFragmentWed) -> {
+
+                alertDialog(wednesdayMenuTxt);
+
+            });
+
+            fridayBtn.setOnClickListener((emailMenuFragmentFri) -> {
+
+                alertDialog(fridayMenuTxt);
+
+            });
         });
 
+        sendBtn.setOnClickListener((emailMenuFragment) ->{
 
+            sendEmail(getContext());
+        });
 
         return emailMenuFragment;
+    }
+
+    /**
+     * Set alert dialog to show the menu to choose from
+     * @param editText
+     */
+    private void alertDialog(EditText editText) {
+
+        //Set alert dialog custom textview
+        TextView textView = new TextView(getContext());
+        textView.setText(PICK_A_MENU);
+        textView.setPadding(20, 30, 20, 30);
+        textView.setTextSize(20F);
+        textView.setBackgroundColor(Color.LTGRAY);
+        textView.setTextColor(Color.WHITE);
+
+        new AlertDialog.Builder(getContext())
+                .setItems(menuNameList.toArray(new String[menuNameList.size()]), new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int i) {
+                        editText.setText(menuNameList.get(i));
+                    }
+                }).setCustomTitle(textView).show();
+    }
+
+
+    private void sendEmail(Context context) {
+        String email = "jbhermo@yahoo.com";
+        String subject = "Test123";
+        String message = "Success!";
+        EmailUtil sm = new EmailUtil(context, email, subject, message);
+        Log.d(">>>>>>>>>>>>", "TEST EMAIL: " + email);
+        sm.execute();
     }
 }

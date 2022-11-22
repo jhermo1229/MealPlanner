@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -13,10 +13,10 @@
 
         <ImageView
             android:id="@+id/mainLogo"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_gravity="center"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="10dp"
             android:src="@drawable/logo" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -37,14 +37,14 @@
                 android:lines="5"/>
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ListView
-            android:id="@+id/emailMenuListView"
-            android:layout_width="380dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="5dp"
-            android:background="@drawable/border"
-            android:dividerHeight="4dp"
-            android:scrollbarSize="10dp" />
+<!--        <ListView-->
+<!--            android:id="@+id/emailMenuListView"-->
+<!--            android:layout_width="380dp"-->
+<!--            android:layout_height="150dp"-->
+<!--            android:layout_marginBottom="5dp"-->
+<!--            android:background="@drawable/border"-->
+<!--            android:dividerHeight="4dp"-->
+<!--            android:scrollbarSize="10dp" />-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -62,18 +62,24 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="270dp"
+            android:layout_width="220dp"
             android:layout_height="75dp"
-            android:layout_marginRight="20dp"
             android:hint="Monday">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/mondayMenuTxt"
-                android:layout_width="270dp"
+                android:layout_width="220dp"
                 android:layout_height="55dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+            <Button
+                android:layout_width="70dp"
+                android:layout_height="55dp"
+                android:text="Add"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/mondayBtn"/>
 
         </LinearLayout>
 
@@ -94,18 +100,24 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="270dp"
+            android:layout_width="220dp"
             android:layout_height="75dp"
-            android:layout_marginRight="20dp"
             android:hint="Wednesday">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/wednesdayMenuTxt"
-                android:layout_width="270dp"
+                android:layout_width="220dp"
                 android:layout_height="55dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="55dp"
+            android:text="Add"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/wednesdayBtn"/>
     </LinearLayout>
 
     <LinearLayout
@@ -124,19 +136,39 @@
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="270dp"
+            android:layout_width="220dp"
             android:layout_height="75dp"
-            android:layout_marginRight="20dp"
             android:hint="Friday">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/fridayMenuTxt"
-                android:layout_width="270dp"
+                android:layout_width="220dp"
                 android:layout_height="55dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"/>
         </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:layout_width="70dp"
+            android:layout_height="55dp"
+            android:text="Add"
+            android:layout_marginLeft="5dp"
+            android:id="@+id/fridayBtn"/>
     </LinearLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="350dp"
+            android:layout_height="75dp"
+            android:hint="Other Notes"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/notesTxt"
+                android:layout_width="350dp"
+                android:layout_height="70dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/sendEmailButton"
@@ -152,4 +184,4 @@
 
     </LinearLayout>
 
-</FrameLayout>
+</ScrollView>
