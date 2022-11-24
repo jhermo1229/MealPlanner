@@ -18,6 +18,8 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.model.Meal;
+import com.foodies.mealplanner.model.MealPlanWeek;
 import com.foodies.mealplanner.model.Menu;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.MenuRepository;
@@ -29,6 +31,11 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
 
 /**
  * Fragment for sending email.
@@ -39,12 +46,14 @@ public class EmailMenuFragment extends Fragment {
     private final AppUtils appUtils = new AppUtils();
     private final UserRepository userDb = new UserRepository();
     private final MenuRepository menuDb = new MenuRepository();
-    private final StringBuilder emailAddress = new StringBuilder();
+    private final HashMap<String, Menu> menuMap = new HashMap<>();
     private View emailMenuFragment;
     private TextView mondayTxt, wednesdayTxt, fridayTxt;
     private EditText emailEditTxt, mondayMenuTxt, wednesdayMenuTxt, fridayMenuTxt, notesTxt;
     private ArrayList<String> menuNameList = new ArrayList<>();
     private Button mondayBtn, wednesdayBtn, fridayBtn, sendBtn;
+    private Menu mondayMenu, wednesdayMenu, fridayMenu;
+    private String mondayDate, wednesdayDate, fridayDate;
 
 
     public EmailMenuFragment() {
@@ -74,24 +83,30 @@ public class EmailMenuFragment extends Fragment {
         LocalDate wednesday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY));
         LocalDate friday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
 
-        String mondayFormat = appUtils.dateFormatter(monday);
-        String wednesdayFormat = appUtils.dateFormatter(wednesday);
-        String fridayFormat = appUtils.dateFormatter(friday);
+        mondayDate = appUtils.dateFormatter(monday);
+        wednesdayDate = appUtils.dateFormatter(wednesday);
+        fridayDate = appUtils.dateFormatter(friday);
 
-        mondayTxt.setText(mondayFormat);
-        wednesdayTxt.setText(wednesdayFormat);
-        fridayTxt.setText(fridayFormat);
+        mondayTxt.setText(mondayDate);
+        wednesdayTxt.setText(wednesdayDate);
+        fridayTxt.setText(fridayDate);
+        List<String> emailAddressList = new ArrayList<>();
+
 
         userDb.getAllUserCustomerActive(userList -> {
             for (User user : userList) {
+                emailAddressList.add(user.getEmail());
 
-                emailAddress.append(user.getEmail());
-                emailAddress.append(";");
-                Log.d("USERS EMAIL", emailAddress.toString());
             }
+            Log.d("USERS EMAIL", "SIZE: " + emailAddressList.size());
 
             //Lock the edit text but scrollable
-            emailEditTxt.setText(emailAddress);
+            if (emailAddressList.size() == 0) {
+                emailEditTxt.setText("No emails available");
+            } else {
+                emailEditTxt.setText(emailAddressList.toString().replaceAll("[\\[\\]]", ""));
+            }
+
             emailEditTxt.setEnabled(true);
             emailEditTxt.setKeyListener(null);
             emailEditTxt.setCursorVisible(false);
@@ -103,14 +118,18 @@ public class EmailMenuFragment extends Fragment {
 
             Log.d("MENU LIST FRAG", "SIZE: " + menuList.size());
             menuNameList = new ArrayList();
+
+
             for (Menu menu : menuList) {
                 menuNameList.add(menu.getMenuName());
+                menuMap.put(menu.getMenuName(), menu);
             }
 
 
             mondayBtn.setOnClickListener((emailMenuFragmentMon) -> {
 
                 alertDialog(mondayMenuTxt);
+
             });
 
             wednesdayBtn.setOnClickListener((emailMenuFragmentWed) -> {
@@ -126,9 +145,20 @@ public class EmailMenuFragment extends Fragment {
             });
         });
 
-        sendBtn.setOnClickListener((emailMenuFragment) ->{
+        sendBtn.setOnClickListener((emailMenuFragment) -> {
 
-            sendEmail(getContext());
+            mondayMenu = menuMap.get(mondayMenuTxt.getText().toString());
+            wednesdayMenu = menuMap.get(wednesdayMenuTxt.getText().toString());
+            fridayMenu = menuMap.get(fridayMenuTxt.getText().toString());
+            MealPlanWeek mealPlanWeek = new MealPlanWeek();
+            mealPlanWeek.setEmailAddressList(emailAddressList);
+            mealPlanWeek.setMondayMenu(mondayMenu);
+            mealPlanWeek.setWednesdayMenu(wednesdayMenu);
+            mealPlanWeek.setFridayMenu(fridayMenu);
+            mealPlanWeek.setNotes(notesTxt.getText().toString());
+            sendEmail(getContext(), mealPlanWeek);
+
+            getParentFragmentManager().popBackStackImmediate();
         });
 
         return emailMenuFragment;
@@ -136,6 +166,7 @@ public class EmailMenuFragment extends Fragment {
 
     /**
      * Set alert dialog to show the menu to choose from
+     *
      * @param editText
      */
     private void alertDialog(EditText editText) {
@@ -157,12 +188,68 @@ public class EmailMenuFragment extends Fragment {
     }
 
 
-    private void sendEmail(Context context) {
-        String email = "jbhermo@yahoo.com";
-        String subject = "Test123";
-        String message = "Success!";
-        EmailUtil sm = new EmailUtil(context, email, subject, message);
-        Log.d(">>>>>>>>>>>>", "TEST EMAIL: " + email);
+    private void sendEmail(Context context, MealPlanWeek mealPlan) {
+
+
+        List<String> emailList = new ArrayList<>();
+        emailList.addAll(mealPlan.getEmailAddressList());
+
+        String composedMessage = composeMessageHTML(mealPlan);
+        InternetAddress[] emailAdd = new InternetAddress[emailList.size()];
+
+        for (int i = 0; i < emailList.size(); i++) {
+            try {
+                emailAdd[i] = new InternetAddress(emailList.get(i));
+            } catch (AddressException e) {
+                e.printStackTrace();
+            }
+        }
+        String subject = "Meal Planner plan of the week";
+        String message = composedMessage;
+        EmailUtil sm = new EmailUtil(context, emailAdd, subject, message);
+        Log.d(">>>>>>>>>>>>", "TEST EMAIL: " + emailAdd[0]);
         sm.execute();
+    }
+
+    private String composeMessageHTML(MealPlanWeek mealPLan) {
+        StringBuilder messageFormat = new StringBuilder();
+
+        messageFormat.append("<h2>Hello MealPlanners! This is the menu for the week:</h2>");
+        messageFormat.append(buildMealMessage(mealPLan.getMondayMenu(), "Monday", mondayDate ));
+        messageFormat.append(buildMealMessage(mealPLan.getWednesdayMenu(), "Wednesday", wednesdayDate));
+        messageFormat.append(buildMealMessage(mealPLan.getFridayMenu(), "Friday", fridayDate));
+        messageFormat.append(mealPLan.getNotes());
+        messageFormat.append(" Thank you!<br><br>" + "Regards,<br><br>" + "Meal Planner Team");
+
+
+        Log.d("EMAIL MESSAGE: ", " " + messageFormat.toString());
+        return messageFormat.toString();
+    }
+
+    private StringBuilder buildMealMessage(Menu menu, String day, String date) {
+        StringBuilder messageFormat = new StringBuilder();
+
+        messageFormat.append("<h4 style= \"color: green;\"> <b>" + day + "(" + date + "): "
+                + menu.getMenuName() + "</h4></b>");
+        messageFormat.append(buildMealMessage(menu.getMeatMeal()));
+        messageFormat.append(buildMealMessage(menu.getVegetableMeal()));
+        messageFormat.append(buildMealMessage(menu.getBothMeal()));
+
+        return messageFormat;
+    }
+
+    private StringBuilder buildMealMessage(Meal meal) {
+
+        StringBuilder messageFormat = new StringBuilder();
+        messageFormat.append("<b>&nbsp&nbsp&nbsp&nbsp" + meal.getMealType() + ": "
+                + meal.getMealName() +"</b>");
+        messageFormat.append("<br><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Ingredients: "
+                + meal.getMealIngredients() +"</p>");
+        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Description: "
+                + meal.getMealDescription() +"</p>");
+        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Price: CAD "
+                + meal.getMealPrice() +"</p>" + "<br>");
+
+        return messageFormat;
     }
 }

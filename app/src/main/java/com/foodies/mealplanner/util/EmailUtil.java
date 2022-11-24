@@ -20,12 +20,12 @@ public class EmailUtil extends AsyncTask<Void, Void, Void>{
 
     private Context context;
     private Session session;
-    private String email;
+    private InternetAddress[] email;
     private String subject;
     private String message;
     private ProgressDialog progressDialog;
 
-    public EmailUtil(Context context, String email, String subject, String message){
+    public EmailUtil(Context context, InternetAddress[] email, String subject, String message){
         this.context = context;
         this.email = email;
         this.subject = subject;
@@ -50,9 +50,11 @@ public class EmailUtil extends AsyncTask<Void, Void, Void>{
         try {
             MimeMessage mm = new MimeMessage(session);
             mm.setFrom(new InternetAddress(Config.EMAIL));
-            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+//            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            mm.setRecipients(Message.RecipientType.TO, email);
             mm.setSubject(subject);
-            mm.setText(message);
+//            mm.setText(message);
+            mm.setContent(message, "text/html");
             Log.d("EMAIL UTIL", "BEFORE SEND");
             Transport.send(mm);
         }
