@@ -1,82 +1,422 @@
 package com.foodies.mealplanner.fragment;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.model.UserDetails;
+import com.foodies.mealplanner.repository.UserRepository;
+import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.IOException;
+import java.util.UUID;
 
 /**
- * A simple {@link Fragment} subclass.
- * Use the {@link CustomerProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
+ * User profile fragment
  */
 public class CustomerProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    // instance for firebase storage and StorageReference
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+
+    ActivityResultLauncher<Intent> launchSomeActivity
+            = registerForActivityResult(
+            new ActivityResultContracts
+                    .StartActivityForResult(),
+            result -> {
+                if (result.getResultCode()
+                        == Activity.RESULT_OK) {
+                    Intent data = result.getData();
+                    // do your operation from here....
+                    if (data != null
+                            && data.getData() != null) {
+                        Uri selectedImageUri = data.getData();
+                        Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
+                        Bitmap selectedImageBitmap;
+                        try {
+                            selectedImageBitmap
+                                    = MediaStore.Images.Media.getBitmap(
+                                    getContext().getContentResolver(),
+                                    selectedImageUri);
+                            uploadImage(selectedImageUri);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+//                        imageView.setImageBitmap(
+//                                selectedImageBitmap);
+                    }
+                }
+            });
+
     private SignupViewModel signupViewModel;
     private User user = new User();
-    private TextView nameTxt;
+    private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog, cityDialog, postalCodeDialog,
+            phoneNumberDialog;
+    private FieldValidator fieldValidator = new FieldValidator();
     private View userProfileView;
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn;
+    public static final int TEN = 10;
+    public static final String REQUIRED_ERROR = "Required";
+    public static final String INVALID_LENGTH = "Invalid length";
+    private UserRepository userDb = new UserRepository();
+    private boolean isFieldChanged = false;
 
     public CustomerProfileFragment() {
         // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment UserProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CustomerProfileFragment newInstance(String param1, String param2) {
-        CustomerProfileFragment fragment = new CustomerProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        userProfileView = inflater.inflate(R.layout.fragment_user_profile, container, false);
+        userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
         signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+        imageBtn = userProfileView.findViewById(R.id.changePhoto);
+        updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
+
+        // get the Firebase  storage reference
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        imageBtn.setOnClickListener((userProfileView) -> {
+
+            imageChooser();
+        });
 
         signupViewModel.getSelectedItem().observe(getActivity(), users -> {
             user = users;
         });
 
-        nameTxt = userProfileView.findViewById(R.id.nameTxt);
-        nameTxt.setText(user.getUserDetails().getFirstName());
+        updatePersonalBtn.setOnClickListener((userProfileView) -> {
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            // Get the layout inflater
+            LayoutInflater inflater2 = requireActivity().getLayoutInflater();
+            // Inflate and set the layout for the dialog
+            // Pass null as the parent view because its going in the dialog layout
+            View dialogView = inflater2.inflate(R.layout.fragment_update_personal_dialog, null);
+            firstNameDialog = dialogView.findViewById(R.id.firstNameUpdate);
+            lastNameDialog = dialogView.findViewById(R.id.lastNameUpdate);
+            houseNumberDialog = dialogView.findViewById(R.id.houseNumberUpdate);
+            streetDialog = dialogView.findViewById(R.id.streetUpdate);
+            cityDialog = dialogView.findViewById(R.id.cityUpdate);
+            postalCodeDialog = dialogView.findViewById(R.id.postalCodeUpdate);
+            phoneNumberDialog = dialogView.findViewById(R.id.phoneNumberUpdate);
+            Spinner provinceSpinnerDialog = dialogView.findViewById(R.id.provinceSpinnerUpdate);
+            String[] province = getResources().getStringArray(R.array.province_canada);
+
+
+            //Set adapter of spinner
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                    R.layout.spinner_item, province);
+            provinceSpinnerDialog.setAdapter(adapter);
+
+            int spinnerPos = adapter.getPosition(user.getUserDetails().getAddress().getProvince());
+
+            provinceSpinnerDialog.setSelection(spinnerPos);
+
+            //Add listener if spinner has been changed.
+            provinceSpinnerDialog.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
+
+            firstNameDialog.setText(user.getUserDetails().getFirstName());
+            lastNameDialog.setText(user.getUserDetails().getLastName());
+            houseNumberDialog.setText(user.getUserDetails().getAddress().getHouseNumber());
+            streetDialog.setText(user.getUserDetails().getAddress().getStreet());
+            cityDialog.setText(user.getUserDetails().getAddress().getCity());
+            postalCodeDialog.setText(user.getUserDetails().getAddress().getPostalCode());
+            phoneNumberDialog.setText(user.getUserDetails().getPhoneNumber());
+
+            firstNameDialog.setEnabled(false);
+            lastNameDialog.setEnabled(false);
+
+
+            //Add text change listener if a field has been changed.
+            firstNameDialog.addTextChangedListener(textWatcher());
+            lastNameDialog.addTextChangedListener(textWatcher());
+            houseNumberDialog.addTextChangedListener(textWatcher());
+            streetDialog.addTextChangedListener(textWatcher());
+            cityDialog.addTextChangedListener(textWatcher());
+            postalCodeDialog.addTextChangedListener(textWatcher());
+            phoneNumberDialog.addTextChangedListener(textWatcher());
+
+            builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    dialog.dismiss();
+                }
+            })
+                    .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    // Do not use this place as we are overriding this button.
+                }
+            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    if(isFieldChanged) {
+                        if (checkAllFields()) {
+
+                            UserDetails userDetails = new UserDetails();
+                            userDetails.setFirstName(firstNameDialog.getText().toString());
+                            userDetails.setLastName(lastNameDialog.getText().toString());
+                            userDetails.setPhoneNumber(phoneNumberDialog.getText().toString());
+                            Address address = new Address();
+                            address.setHouseNumber(houseNumberDialog.getText().toString());
+                            address.setStreet(streetDialog.getText().toString());
+                            address.setCity(cityDialog.getText().toString());
+                            address.setProvince(provinceSpinnerDialog.getSelectedItem().toString());
+                            address.setPostalCode(postalCodeDialog.getText().toString());
+                            userDetails.setAddress(address);
+
+                            user.setUserDetails(userDetails);
+
+                            userDb.updateUser(user, getActivity());
+                            alert.dismiss();
+                        } else {
+
+                        }
+                    }
+                }
+            });
+        });
         return userProfileView;
+    }
+
+    private void imageChooser() {
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        launchSomeActivity.launch(i);
+    }
+
+    // UploadImage method
+    private void uploadImage(Uri filePath) {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(getContext());
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference
+            StorageReference ref
+                    = storageReference
+                    .child(
+                            "images/"
+                                    + UUID.randomUUID().toString());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+
+                                    // Image uploaded successfully
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+                                    Toast
+                                            .makeText(getContext(),
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(getContext(),
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int) progress + "%");
+                                }
+                            });
+        }
+    }
+
+    /**
+     * Check if a change is done on the text fields.
+     */
+    @NonNull
+    private TextWatcher textWatcher() {
+
+        return new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                isFieldChanged = true;
+                Log.d("TEXT LISTENER", ":::::" + isFieldChanged);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        };
+    }
+
+    /**
+     * Check if a change is done on a spinner.
+     *
+     * @return
+     */
+    @NonNull
+    private AdapterView.OnItemSelectedListener spinnerWatcher(int spinnerPosition) {
+        return new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                if (spinnerPosition != i) {
+                    Log.i("SPINNER POS" , "T/F: " + isFieldChanged);
+                    isFieldChanged = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        };
+    }
+
+    /**
+     * Check all required fields if value is present
+     * Check also if inputs are valid
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFields() {
+
+        boolean allValid = true;
+        errorReset();
+
+        if (fieldValidator.validateFieldIfEmpty(firstNameDialog.length())) {
+            firstNameDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(lastNameDialog.length())) {
+            lastNameDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(houseNumberDialog.length())) {
+            houseNumberDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(streetDialog.length())) {
+            streetDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(cityDialog.length())) {
+            cityDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(postalCodeDialog.length())) {
+            postalCodeDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(phoneNumberDialog.length())) {
+            phoneNumberDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        //Check first if it has a value then check the length. So that error message wont overlap
+        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumberDialog.length())) {
+            phoneNumberDialog.setError(INVALID_LENGTH);
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
+     * Reset error messages on field
+     */
+    private void errorReset() {
+        firstNameDialog.setError(null);
+        lastNameDialog.setError(null);
+        houseNumberDialog.setError(null);
+        streetDialog.setError(null);
+        cityDialog.setError(null);
+        postalCodeDialog.setError(null);
+        phoneNumberDialog.setError(null);
     }
 }

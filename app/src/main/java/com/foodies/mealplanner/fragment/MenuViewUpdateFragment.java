@@ -87,13 +87,9 @@ public class MenuViewUpdateFragment extends Fragment {
             setFieldEnabled();
 
             //Set listeners to the field if a change has been done
-            Log.d("CHANGE LISTENER", "1");
             menuNameTxt.addTextChangedListener(textWatcher());
-            Log.d("CHANGE LISTENER", "2");
             meatMenuTxt.addTextChangedListener(textWatcher());
-            Log.d("CHANGE LISTENER", "3");
             vegetableMenuTxt.addTextChangedListener(textWatcher());
-            Log.d("CHANGE LISTENER", "4");
             bothMenuTxt.addTextChangedListener(textWatcher());
 
             mealDb.getAllMealType(mealList -> {

@@ -140,11 +140,11 @@
             android:id="@+id/saveButton"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:text="@string/addMealOrder"
             android:textAlignment="center"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:layout_gravity="center"
             tools:layout_editor_absoluteX="100dp"
             tools:layout_editor_absoluteY="100dp" />
     </LinearLayout>

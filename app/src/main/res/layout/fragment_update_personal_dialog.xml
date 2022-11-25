@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".fragment.UpdateLoginDialogFragment">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:id="@+id/mainLogo"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="40dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <EditText
+            android:id="@+id/firstNameUpdate"
+            android:inputType="text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="First Name"
+            android:layout_marginRight="30dp"/>
+        <EditText
+            android:id="@+id/lastNameUpdate"
+            android:inputType="text"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:hint="Last Name"/>
+    </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/houseNumberUpdate"
+                android:inputType="number"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="House Number"
+                android:layout_marginRight="30dp"/>
+
+            <EditText
+                android:id="@+id/streetUpdate"
+                android:inputType="text"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="Street"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/cityUpdate"
+                android:inputType="text"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="City"
+                android:layout_marginRight="80dp"/>
+
+            <Spinner
+                android:id="@+id/provinceSpinnerUpdate"
+                android:layout_width="100dp"
+                android:layout_height="55dp"
+                android:background="@android:drawable/btn_dropdown"
+                android:spinnerMode="dropdown"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+
+            <EditText
+                android:id="@+id/postalCodeUpdate"
+                android:inputType="text"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="Postal Code"
+                android:layout_marginRight="30dp"/>
+
+            <EditText
+                android:id="@+id/phoneNumberUpdate"
+                android:inputType="number"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:hint="Phone Number"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
