@@ -12,6 +12,7 @@ public class User implements  Comparable<User>{
     private UserPaymentDetails userPaymentDetails;
     private String userType;
     private String status;
+    private String imageUrl;
 
 
     public UserDetails getUserDetails() {
@@ -74,5 +75,13 @@ public class User implements  Comparable<User>{
     @Override
     public int compareTo(User user) {
         return 0;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

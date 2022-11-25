@@ -2,11 +2,11 @@ package com.foodies.mealplanner.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -20,13 +20,16 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
@@ -38,11 +41,13 @@ import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.UUID;
 
@@ -51,11 +56,15 @@ import java.util.UUID;
  */
 public class CustomerProfileFragment extends Fragment {
 
+    public static final String BLANK = " ";
+    public static final int TEN = 10;
+    public static final String REQUIRED_ERROR = "Required";
+    public static final String INVALID_LENGTH = "Invalid length";
+    private final FieldValidator fieldValidator = new FieldValidator();
+    private final UserRepository userDb = new UserRepository();
     // instance for firebase storage and StorageReference
-    FirebaseStorage storage;
-    StorageReference storageReference;
-
-
+    FirebaseStorage storage = FirebaseStorage.getInstance();
+    StorageReference storageReference = storage.getReference();
     ActivityResultLauncher<Intent> launchSomeActivity
             = registerForActivityResult(
             new ActivityResultContracts
@@ -84,19 +93,15 @@ public class CustomerProfileFragment extends Fragment {
                     }
                 }
             });
-
     private SignupViewModel signupViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog, cityDialog, postalCodeDialog,
             phoneNumberDialog;
-    private FieldValidator fieldValidator = new FieldValidator();
     private View userProfileView;
     private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn;
-    public static final int TEN = 10;
-    public static final String REQUIRED_ERROR = "Required";
-    public static final String INVALID_LENGTH = "Invalid length";
-    private UserRepository userDb = new UserRepository();
     private boolean isFieldChanged = false;
+    private TextView fullNameView, fullAddressView, phoneView;
+    private ImageView imageView;
 
     public CustomerProfileFragment() {
         // Required empty public constructor
@@ -110,19 +115,48 @@ public class CustomerProfileFragment extends Fragment {
         signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
+        fullNameView = userProfileView.findViewById(R.id.fullnameTxtView);
+        fullAddressView = userProfileView.findViewById(R.id.addressTxtView);
+        phoneView = userProfileView.findViewById(R.id.phoneNumberTxtView);
+        imageView = userProfileView.findViewById(R.id.userImage);
 
-        // get the Firebase  storage reference
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        signupViewModel.getSelectedItem().observe(getActivity(), users -> {
+            user = users;
+        });
+
+        StorageReference mRef = storageReference.child(user.getImageUrl());
+        File localFile = null;
+        try {
+            localFile = File.createTempFile("images", "jpg");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        File finalLocalFile = localFile;
+        mRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+                Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
+                imageView.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
 
         imageBtn.setOnClickListener((userProfileView) -> {
 
             imageChooser();
         });
 
-        signupViewModel.getSelectedItem().observe(getActivity(), users -> {
-            user = users;
-        });
+
+        fullNameView.setText(user.getUserDetails().getFirstName() + BLANK + user.getUserDetails().getLastName());
+        Address add = user.getUserDetails().getAddress();
+        fullAddressView.setText(add.getHouseNumber() + BLANK + add.getStreet() + BLANK + add.getCity()
+                + BLANK + add.getProvince() + BLANK + add.getPostalCode());
+        phoneView.setText(user.getUserDetails().getPhoneNumber());
 
         updatePersonalBtn.setOnClickListener((userProfileView) -> {
 
@@ -178,25 +212,23 @@ public class CustomerProfileFragment extends Fragment {
 
             builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
                 @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
+                public void onClick(DialogInterface dialog, int which) {
                     dialog.dismiss();
                 }
             })
                     .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    // Do not use this place as we are overriding this button.
-                }
-            });
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            // Do not use this place as we are overriding this button.
+                        }
+                    });
             AlertDialog alert = builder.create();
             alert.show();
-            alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener(){
+            alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
-                    if(isFieldChanged) {
+                    if (isFieldChanged) {
                         if (checkAllFields()) {
 
                             UserDetails userDetails = new UserDetails();
@@ -214,6 +246,15 @@ public class CustomerProfileFragment extends Fragment {
                             user.setUserDetails(userDetails);
 
                             userDb.updateUser(user, getActivity());
+
+                            signupViewModel.setSelectedItem(user);
+
+                            CustomerProfileFragment userFrag = new CustomerProfileFragment();
+                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                            transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                            transaction.replace(R.id.loginHomeFrame, userFrag);
+
+                            transaction.commit();
                             alert.dismiss();
                         } else {
 
@@ -248,7 +289,7 @@ public class CustomerProfileFragment extends Fragment {
                     = storageReference
                     .child(
                             "images/"
-                                    + UUID.randomUUID().toString());
+                                    + user.getEmail());
 
             // adding listeners on upload
             // or failure of image
@@ -340,7 +381,7 @@ public class CustomerProfileFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (spinnerPosition != i) {
-                    Log.i("SPINNER POS" , "T/F: " + isFieldChanged);
+                    Log.i("SPINNER POS", "T/F: " + isFieldChanged);
                     isFieldChanged = true;
                 }
             }
