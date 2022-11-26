@@ -44,6 +44,7 @@
     <string name="sendEmail">Send</string>
     <string name="ok">Ok</string>
     <string name="cancel">Cancel</string>
+    <string name="changePassword">Change Password</string>
 
     <string-array name="province_canada">
         <item>AB</item>

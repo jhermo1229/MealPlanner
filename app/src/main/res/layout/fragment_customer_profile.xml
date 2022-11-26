@@ -197,12 +197,12 @@
 
 
             <Button
-                android:id="@+id/updatePayment"
-                android:layout_width="100dp"
+                android:id="@+id/updateLoginDetails"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:layout_marginBottom="20dp"
-                android:text="@string/update"
+                android:text="@string/changePassword"
                 android:textColor="@color/white"
                 android:textStyle="bold" />
 
@@ -313,7 +313,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/updateLoginDetails"
+                android:id="@+id/updatePaymentDetails"
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"

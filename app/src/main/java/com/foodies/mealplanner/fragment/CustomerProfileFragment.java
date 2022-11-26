@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -35,6 +38,7 @@ import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.repository.UserRepository;
+import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,17 +67,18 @@ public class CustomerProfileFragment extends Fragment {
     // instance for firebase storage and StorageReference
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
-
+private CheckBox passwordCheckbox;
     private SignupViewModel signupViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog, cityDialog, postalCodeDialog,
-            phoneNumberDialog;
+            phoneNumberDialog, oldPasswordDialog, newPasswordDialog, confirmNewPasswordDialog;
     private View userProfileView;
     private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn;
-    private boolean isFieldChanged = false;
+    private Boolean isFieldChanged = false;
     private TextView fullNameView, fullAddressView, phoneView;
     private ImageView imageView;
     private ActivityResultLauncher<Intent> launchSomeActivity;
+    private AppUtils appUtils = new AppUtils();
 
     public CustomerProfileFragment() {
         // Required empty public constructor
@@ -151,8 +156,76 @@ public class CustomerProfileFragment extends Fragment {
 
         updateLoginBtn.setOnClickListener((userProfileView) ->{
 
-
+updateLoginDetailsProcess();
         });
+
+    }
+
+    private void updateLoginDetailsProcess() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get the layout inflater
+        LayoutInflater loginInflater = requireActivity().getLayoutInflater();
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View dialogView = loginInflater.inflate(R.layout.fragment_update_login_dialog, null);
+        Boolean isPasswordCorrect = false;
+        Boolean isPasswordSame = false;
+
+        oldPasswordDialog = dialogView.findViewById(R.id.oldPasswordUpdate);
+        newPasswordDialog = dialogView.findViewById(R.id.newPasswordUpdate);
+        confirmNewPasswordDialog = dialogView.findViewById(R.id.newPasswordConfirmUpdate);
+        passwordCheckbox = dialogView.findViewById(R.id.passwordCheckbox);
+
+
+        //Show password or not show
+        passwordCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if (!isChecked) {
+                    oldPasswordDialog.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    newPasswordDialog.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    confirmNewPasswordDialog.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                } else {
+                    oldPasswordDialog.setTransformationMethod(null);
+                    newPasswordDialog.setTransformationMethod(null);
+                    confirmNewPasswordDialog.setTransformationMethod(null);
+                }
+            }
+        });
+
+
+        builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        })
+                .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do not use this place as we are overriding this button.
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                    if (checkAllFieldsLogin()) {
+                        user.setPassword(appUtils.encodeBase64(newPasswordDialog.getText().toString()));
+
+                        userDb.updateUser(user, getActivity());
+
+                        alert.dismiss();
+                    }
+
+            }
+        });
+
+
+
 
     }
 
@@ -162,10 +235,10 @@ public class CustomerProfileFragment extends Fragment {
     private void updatePersonalDetailsProcess() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
-        LayoutInflater inflater2 = requireActivity().getLayoutInflater();
+        LayoutInflater personalInflater = requireActivity().getLayoutInflater();
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        View dialogView = inflater2.inflate(R.layout.fragment_update_personal_dialog, null);
+        View dialogView = personalInflater.inflate(R.layout.fragment_update_personal_dialog, null);
         firstNameDialog = dialogView.findViewById(R.id.firstNameUpdate);
         lastNameDialog = dialogView.findViewById(R.id.lastNameUpdate);
         houseNumberDialog = dialogView.findViewById(R.id.houseNumberUpdate);
@@ -228,7 +301,7 @@ public class CustomerProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (isFieldChanged) {
-                    if (checkAllFields()) {
+                    if (checkAllFieldsPersonal()) {
 
 
                         UserDetails userDetails = new UserDetails();
@@ -433,7 +506,7 @@ public class CustomerProfileFragment extends Fragment {
      *
      * @return boolean, true if all valid
      */
-    private boolean checkAllFields() {
+    private boolean checkAllFieldsPersonal() {
 
         boolean allValid = true;
         errorReset();
@@ -483,6 +556,48 @@ public class CustomerProfileFragment extends Fragment {
     }
 
     /**
+     * Check all required fields if value is present
+     * Check also if inputs are valid
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFieldsLogin() {
+
+        boolean allValid = true;
+        errorResetLogin();
+
+        if (fieldValidator.validateFieldIfEmpty(oldPasswordDialog.length())) {
+            oldPasswordDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(newPasswordDialog.length())) {
+            newPasswordDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(confirmNewPasswordDialog.length())) {
+            confirmNewPasswordDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        String oldPasswordDecode = appUtils.decodeBase64(user.getPassword());
+        if(allValid && (!oldPasswordDecode.equals(oldPasswordDialog.getText().toString()))){
+            oldPasswordDialog.setError("Incorrect password");
+            allValid = false;
+        }
+
+        if(allValid && (!newPasswordDialog.getText().toString()
+                .equals(confirmNewPasswordDialog.getText().toString()))){
+            confirmNewPasswordDialog.setError("Password does not match");
+            newPasswordDialog.setError("Password does not match");
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
      * Reset error messages on field
      */
     private void errorReset() {
@@ -493,5 +608,11 @@ public class CustomerProfileFragment extends Fragment {
         cityDialog.setError(null);
         postalCodeDialog.setError(null);
         phoneNumberDialog.setError(null);
+    }
+
+    private void errorResetLogin(){
+        oldPasswordDialog.setError(null);
+        newPasswordDialog.setError(null);
+        confirmNewPasswordDialog.setError(null);
     }
 }
