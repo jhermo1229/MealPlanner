@@ -28,7 +28,6 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/firstNameAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -38,7 +37,7 @@
                         android:layout_width="150dp"
                         android:layout_height="55dp"
                         android:inputType="text"
-                        android:id="@+id/firstNameEditText"
+                        android:id="@+id/firstNameAdminUpdate"
                         android:enabled="false"/>
 
                 </com.google.android.material.textfield.TextInputLayout>
@@ -51,7 +50,6 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/lastNameAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -61,7 +59,7 @@
                         android:layout_width="150dp"
                         android:layout_height="55dp"
                         android:inputType="text"
-                        android:id="@+id/lastNameEditText"
+                        android:id="@+id/lastNameAdminUpdate"
                         android:enabled="false"/>
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -80,7 +78,6 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/houseNumberAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -89,7 +86,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/houseNUmberAdminUpdate" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -101,7 +99,6 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/streetAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -110,7 +107,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/streetAdminUpdate"/>
+
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
@@ -129,7 +128,6 @@
 
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/cityAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -138,7 +136,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/cityAdminUpdate" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -179,7 +178,6 @@
                 android:orientation="vertical">
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/postalCodeAdminEditProf"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -188,7 +186,8 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="58dp"
-                        android:inputType="text" />
+                        android:inputType="text"
+                        android:id="@+id/postalCodeAdminUpdate" />
 
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
@@ -208,7 +207,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="150dp"
                         android:layout_height="55dp"
-                        android:inputType="number" />
+                        android:inputType="number"
+                        android:id="@+id/phoneNumberAdminUpdate" />
+
                 </com.google.android.material.textfield.TextInputLayout>
             </LinearLayout>
         </LinearLayout>
@@ -216,16 +217,17 @@
             android:layout_width="80dp"
             android:layout_height="match_parent"
             android:gravity="center_vertical"
-            android:text="User Status"
+            android:text="@string/userStatus"
             android:textColor="@color/purple_500"
             android:textStyle="bold" />
         <Spinner
             android:id="@+id/statusAdminEditProf"
-            android:layout_width="100dp"
+            android:layout_width="170dp"
             android:layout_height="55dp"
             android:background="@android:drawable/btn_dropdown"
             android:spinnerMode="dropdown"/>
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:layout_marginBottom="20dp"
@@ -233,23 +235,41 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/okButton"
+                android:id="@+id/okButtonUserUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
-                android:text="Ok"
+                android:text="@string/ok"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:layout_marginRight="20dp"/>
+                android:layout_marginLeft="50dp"
+                android:layout_alignParentLeft="true"
+                android:visibility="invisible"/>
+
             <Button
-                android:id="@+id/cancelButton"
+                android:id="@+id/cancelButtonUserUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textAlignment="center"
                 android:textColor="@color/white"
-                android:textStyle="bold" />
-        </LinearLayout>
+                android:textStyle="bold"
+                android:layout_marginRight="50dp"
+                android:layout_alignParentRight="true"
+                android:visibility="invisible"/>
+
+            <Button
+                android:id="@+id/updateUserButton"
+                android:layout_width="300dp"
+                android:layout_height="55dp"
+                android:layout_centerHorizontal="true"
+                android:text="@string/update"
+                android:textAlignment="center"
+                android:textColor="@color/white"
+                android:textStyle="bold"
+                android:visibility="visible" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 

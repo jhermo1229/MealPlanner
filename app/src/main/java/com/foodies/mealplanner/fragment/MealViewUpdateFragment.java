@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +30,6 @@ import com.foodies.mealplanner.viewmodel.MealViewModel;
 public class MealViewUpdateFragment extends Fragment {
 
     private static final String REQUIRED_ERROR = "Required";
-    private static final String TYPE_PARAM = "View";
     private View mealUpdateFragmentView;
     private final MealRepository db = new MealRepository();
     private final Meal meal = new Meal();
@@ -40,18 +40,9 @@ public class MealViewUpdateFragment extends Fragment {
     private Button updateMealButton, okButton, cancelButton;
     private String[] mealTypeList;
     private boolean isFieldChanged = false;
-    private String mParam1;
 
     public MealViewUpdateFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(TYPE_PARAM);
-        }
     }
 
     @Override
@@ -75,9 +66,6 @@ public class MealViewUpdateFragment extends Fragment {
         okButton = mealUpdateFragmentView.findViewById(R.id.okButtonMealUpdate);
         cancelButton = mealUpdateFragmentView.findViewById(R.id.cancelButtonMealUpdate);
         Meal liveMeal = mealViewModel.getSelectedItem().getValue();
-
-        updateMealButton.setText("Update");
-
 
         setFieldDisabled();
 
@@ -108,7 +96,8 @@ public class MealViewUpdateFragment extends Fragment {
 
             //Check first if any field has changed
             if (!isFieldChanged) {
-                getParentFragmentManager().popBackStackImmediate();
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_SHORT);
+                toast.show();
                 //check field validation
             } else if (checkAllFields()) {
                 meal.setMealName(mealNameTxt.getText().toString());

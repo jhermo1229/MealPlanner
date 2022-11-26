@@ -2,6 +2,7 @@ package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +99,7 @@ public class LoginHomeFragment extends Fragment {
                                     transaction.commit();
                                 } else if (user.getUserType().equals("A")) {
                                     adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
-
+                                    Log.i("LOGIN", "HEREEE");
                                     adminViewModel.setSelectedItem(user);
 
                                     AdminProfileFragment adminFrag = new AdminProfileFragment();

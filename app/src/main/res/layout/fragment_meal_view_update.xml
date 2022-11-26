@@ -126,7 +126,7 @@
                 android:id="@+id/okButtonMealUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
-                android:text="Ok"
+                android:text="@string/ok"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -138,7 +138,7 @@
                 android:id="@+id/cancelButtonMealUpdate"
                 android:layout_width="100dp"
                 android:layout_height="55dp"
-                android:text="Cancel"
+                android:text="@string/cancel"
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
@@ -154,7 +154,8 @@
                 android:textAlignment="center"
                 android:textColor="@color/white"
                 android:textStyle="bold"
-                android:visibility="visible" />
+                android:visibility="visible"
+                android:text="@string/update"/>
 
         </RelativeLayout>
 

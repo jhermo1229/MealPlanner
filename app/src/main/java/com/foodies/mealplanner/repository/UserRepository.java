@@ -95,7 +95,12 @@ public class UserRepository {
                     DocumentSnapshot document = task.getResult();
                     if (document.exists()) {
                         User user = document.toObject(User.class);
-                        userCallBack.onCallBack(user);
+
+                        if(user.getStatus().equals("Active")) {
+                            userCallBack.onCallBack(user);
+                        }else{
+                            userCallBack.onCallBack(null);
+                        }
                         Log.d("DATABASE", "DocumentSnapshot data: " + document.getData());
                     } else {
                         Log.d("DATABASE", "No such document");
@@ -135,7 +140,7 @@ public class UserRepository {
 
         List<User> userList = new ArrayList<>();
 
-        db.collection("userCredentials").whereEqualTo("status", "A")
+        db.collection("userCredentials").whereEqualTo("status", "Active")
                 .whereEqualTo("userType", "C")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {

@@ -243,7 +243,7 @@ public class MenuViewUpdateFragment extends Fragment {
                         getParentFragmentManager().popBackStackImmediate();
                     }
                 } else {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_LONG);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_SHORT);
                     toast.show();
                 }
             });

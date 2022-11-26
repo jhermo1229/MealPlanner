@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,6 @@ import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 public class AdminProfileFragment extends Fragment {
 
     public static final String TAG = AdminProfileFragment.class.getName();
-    private AdminProfileViewModel mViewModel;
     private View adminProfileFragmentView;
     private Button usersButton, mealsButton, menusButton, emailButton;
 
@@ -31,7 +31,7 @@ public class AdminProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
 
-
+        Log.i("ADMINFRAG", "HEREEE");
         adminProfileFragmentView = inflater.inflate(R.layout.fragment_admin_profile, container, false);
         usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
         usersButton.setOnClickListener((adminProfileFragmentView)->{

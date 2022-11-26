@@ -127,7 +127,7 @@ public class UsersListFragment extends Fragment {
                     User user = userList.get(i);
                     userUpdateViewModel.setSelectedItem(user);
 
-                    UserUpdateProfileFragment userUpdateProfileFragment = new UserUpdateProfileFragment();
+                    UserViewUpdateFragment userUpdateProfileFragment = new UserViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.addToBackStack(UsersListFragment.TAG);
                     transaction.replace(R.id.loginHomeFrame, userUpdateProfileFragment);

@@ -3,18 +3,19 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="signup">Signup</string>
     <string name="login">Login</string>
-    <!--    <string name="firstName">First Name</string>-->
-    <!--    <string name="lastName">Last Name</string>-->
-    <!--    <string name="houseNumber">House Number</string>-->
-    <!--    <string name="street">Street</string>-->
-    <!--    <string name="city">City</string>-->
+    <string name="firstName">First Name</string>
+    <string name="lastName">Last Name</string>
+    <string name="houseNumber">House Number</string>
+    <string name="street">Street</string>
+    <string name="city">City</string>
     <string name="province">Province</string>
     <string name="loginCred">Login Credentials</string>
     <string name="showPassword">Show Password</string>
-    <!--    <string name="postalCode">Postal Code</string>-->
-    <!--    <string name="phoneNumber">Phone Number</string>-->
-    <!--    <string name="email">Email</string>-->
-    <!--    <string name="password">Password</string>-->
+    <string name="postalCode">Postal Code</string>
+    <string name="phoneNumber">Phone Number</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="userStatus">User Status</string>
     <string name="next">Next</string>
     <string name="one">1</string>
     <string name="two">2</string>
@@ -40,8 +41,9 @@
     <string name="addMenu">Add menu</string>
     <string name="menuName">Menu name</string>
     <string name="add">Add</string>
-    <string name="email">Email</string>
     <string name="sendEmail">Send</string>
+    <string name="ok">Ok</string>
+    <string name="cancel">Cancel</string>
 
     <string-array name="province_canada">
         <item>AB</item>
@@ -57,8 +59,8 @@
     </string-array>
 
     <string-array name="status">
-        <item>A</item>
-        <item>I</item>
+        <item>Active</item>
+        <item>Inactive</item>
     </string-array>
 
     <string-array name="mealTypeList">

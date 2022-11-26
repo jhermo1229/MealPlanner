@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +31,7 @@ import com.google.android.material.textfield.TextInputLayout;
 /**
  * Fragment for updating users profile by the admin
  */
-public class UserUpdateProfileFragment extends Fragment {
+public class UserViewUpdateFragment extends Fragment {
 
     private static final String REQUIRED_ERROR = "Required";
     private static final String INVALID_LENGTH = "Invalid length";
@@ -39,55 +41,51 @@ public class UserUpdateProfileFragment extends Fragment {
     private final FieldValidator fieldValidator = new FieldValidator();
     private UserUpdateViewModel userUpdateViewModel;
     private View userProfileUpdateView;
-    private TextInputLayout firstName, lastName, houseNumber, street, city, postalCode,
+    private EditText firstName, lastName, houseNumber, street, city, postalCode,
             phoneNumber;
     private String[] provinceList;
     private String[] statusList;
-    private Button okButton, cancelButton;
+    private Button okButton, cancelButton, updateButton;
     private Spinner provinceSpinner, statusSpinner;
     private boolean isFieldChanged = false;
 
-    public UserUpdateProfileFragment() {
+    public UserViewUpdateFragment() {
         // Required empty public constructor
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        userProfileUpdateView = inflater.inflate(R.layout.fragment_user_update_profile, container, false);
+        userProfileUpdateView = inflater.inflate(R.layout.fragment_user_view_update, container, false);
         userUpdateViewModel = new ViewModelProvider(requireActivity()).get(UserUpdateViewModel.class);
 
         //Get fields
-        firstName = userProfileUpdateView.findViewById(R.id.firstNameAdminEditProf);
-        lastName = userProfileUpdateView.findViewById(R.id.lastNameAdminEditProf);
-        houseNumber = userProfileUpdateView.findViewById(R.id.houseNumberAdminEditProf);
-        street = userProfileUpdateView.findViewById(R.id.streetAdminEditProf);
-        city = userProfileUpdateView.findViewById(R.id.cityAdminEditProf);
-        postalCode = userProfileUpdateView.findViewById(R.id.postalCodeAdminEditProf);
-        phoneNumber = userProfileUpdateView.findViewById(R.id.phoneNumberAdminEditProf);
-        phoneNumber.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
+        firstName = userProfileUpdateView.findViewById(R.id.firstNameAdminUpdate);
+        lastName = userProfileUpdateView.findViewById(R.id.lastNameAdminUpdate);
+        houseNumber = userProfileUpdateView.findViewById(R.id.houseNUmberAdminUpdate);
+        street = userProfileUpdateView.findViewById(R.id.streetAdminUpdate);
+        city = userProfileUpdateView.findViewById(R.id.cityAdminUpdate);
+        postalCode = userProfileUpdateView.findViewById(R.id.postalCodeAdminUpdate);
+        phoneNumber = userProfileUpdateView.findViewById(R.id.phoneNumberAdminUpdate);
+        phoneNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(10)});
         provinceSpinner = userProfileUpdateView.findViewById(R.id.provinceSpinAdminEditProf);
         statusSpinner = userProfileUpdateView.findViewById(R.id.statusAdminEditProf);
-        cancelButton = userProfileUpdateView.findViewById(R.id.cancelButton);
-        okButton = userProfileUpdateView.findViewById(R.id.okButton);
+        cancelButton = userProfileUpdateView.findViewById(R.id.cancelButtonUserUpdate);
+        okButton = userProfileUpdateView.findViewById(R.id.okButtonUserUpdate);
+        updateButton = userProfileUpdateView.findViewById(R.id.updateUserButton);
 
         //get user set in view model
         User liveUser = userUpdateViewModel.getSelectedItem().getValue();
 
         //Add user to the fields
-        firstName.getEditText().setText(liveUser.getUserDetails().getFirstName());
-        lastName.getEditText().setText(liveUser.getUserDetails().getLastName());
-        houseNumber.getEditText().setText(liveUser.getUserDetails().getAddress().getHouseNumber());
-        street.getEditText().setText(liveUser.getUserDetails().getAddress().getStreet());
-        city.getEditText().setText(liveUser.getUserDetails().getAddress().getCity());
-        postalCode.getEditText().setText(liveUser.getUserDetails().getAddress().getPostalCode());
-        phoneNumber.getEditText().setText(liveUser.getUserDetails().getPhoneNumber());
+        firstName.setText(liveUser.getUserDetails().getFirstName());
+        lastName.setText(liveUser.getUserDetails().getLastName());
+        houseNumber.setText(liveUser.getUserDetails().getAddress().getHouseNumber());
+        street.setText(liveUser.getUserDetails().getAddress().getStreet());
+        city.setText(liveUser.getUserDetails().getAddress().getCity());
+        postalCode.setText(liveUser.getUserDetails().getAddress().getPostalCode());
+        phoneNumber.setText(liveUser.getUserDetails().getPhoneNumber());
 
         //set spinner items
         provinceList = getResources().getStringArray(R.array.province_canada);
@@ -108,15 +106,24 @@ public class UserUpdateProfileFragment extends Fragment {
         statusSpinner.setSelection(spinnerStatusPos);
 
         //Set listeners to the field if a user did a change
-        firstName.getEditText().addTextChangedListener(textWatcher());
-        lastName.getEditText().addTextChangedListener(textWatcher());
-        houseNumber.getEditText().addTextChangedListener(textWatcher());
-        street.getEditText().addTextChangedListener(textWatcher());
-        city.getEditText().addTextChangedListener(textWatcher());
-        postalCode.getEditText().addTextChangedListener(textWatcher());
-        phoneNumber.getEditText().addTextChangedListener(textWatcher());
+        firstName.addTextChangedListener(textWatcher());
+        lastName.addTextChangedListener(textWatcher());
+        houseNumber.addTextChangedListener(textWatcher());
+        street.addTextChangedListener(textWatcher());
+        city.addTextChangedListener(textWatcher());
+        postalCode.addTextChangedListener(textWatcher());
+        phoneNumber.addTextChangedListener(textWatcher());
         provinceSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
         statusSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerStatusPos));
+
+        setFieldsDisabled();
+
+        updateButton.setOnClickListener((userProfileUpdateView) -> {
+            setFieldsEnabled();
+            updateButton.setVisibility(View.INVISIBLE);
+            okButton.setVisibility(View.VISIBLE);
+            cancelButton.setVisibility(View.VISIBLE);
+        });
 
         //if cancel button is clicked, go back to previous fragment
         cancelButton.setOnClickListener((userProfileUpdateView) -> {
@@ -128,7 +135,8 @@ public class UserUpdateProfileFragment extends Fragment {
 
                     //Check first if any field has changed
                     if (!isFieldChanged) {
-                        getParentFragmentManager().popBackStackImmediate();
+                        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_SHORT);
+                        toast.show();
                         //check field validation
                     } else if (checkAllFields()) {
 
@@ -138,17 +146,17 @@ public class UserUpdateProfileFragment extends Fragment {
                         user.setPassword(userUpdateViewModel.getSelectedItem().getValue().getPassword());
                         user.setUserType(userUpdateViewModel.getSelectedItem().getValue().getUserType());
                         user.setUserPaymentDetails(userUpdateViewModel.getSelectedItem().getValue().getUserPaymentDetails());
-                        userDetails.setFirstName(firstName.getEditText().getText().toString());
-                        userDetails.setLastName(lastName.getEditText().getText().toString());
-                        userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
+                        userDetails.setFirstName(firstName.getText().toString());
+                        userDetails.setLastName(lastName.getText().toString());
+                        userDetails.setPhoneNumber(phoneNumber.getText().toString());
 
                         //Set address
                         Address address = new Address();
-                        address.setHouseNumber(houseNumber.getEditText().getText().toString());
-                        address.setStreet(street.getEditText().getText().toString());
-                        address.setCity(city.getEditText().getText().toString());
+                        address.setHouseNumber(houseNumber.getText().toString());
+                        address.setStreet(street.getText().toString());
+                        address.setCity(city.getText().toString());
                         address.setProvince(provinceSpinner.getSelectedItem().toString());
-                        address.setPostalCode(postalCode.getEditText().getText().toString());
+                        address.setPostalCode(postalCode.getText().toString());
 
                         userDetails.setAddress(address);
 
@@ -223,33 +231,33 @@ public class UserUpdateProfileFragment extends Fragment {
         boolean allValid = true;
         errorReset();
 
-        if (fieldValidator.validateFieldIfEmpty(houseNumber.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(houseNumber.length())) {
             houseNumber.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(street.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(street.length())) {
             street.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(city.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(city.length())) {
             city.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(postalCode.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(postalCode.length())) {
             postalCode.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(phoneNumber.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(phoneNumber.length())) {
             phoneNumber.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
         //Check first if it has a value then check the length. So that error message wont overlap
-        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumber.getEditText().length())) {
+        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumber.length())) {
             phoneNumber.setError(INVALID_LENGTH);
             allValid = false;
         }
@@ -266,5 +274,37 @@ public class UserUpdateProfileFragment extends Fragment {
         city.setError(null);
         postalCode.setError(null);
         phoneNumber.setError(null);
+    }
+
+    /**
+     * Disable field on load
+     */
+    private void setFieldsDisabled() {
+
+        firstName.setEnabled(false);
+        lastName.setEnabled(false);
+        houseNumber.setEnabled(false);
+        street.setEnabled(false);
+        city.setEnabled(false);
+        provinceSpinner.setEnabled(false);
+        postalCode.setEnabled(false);
+        phoneNumber.setEnabled(false);
+        statusSpinner.setEnabled(false);
+    }
+
+    /**
+     * Disable field on load
+     */
+    private void setFieldsEnabled() {
+
+        firstName.setEnabled(true);
+        lastName.setEnabled(true);
+        houseNumber.setEnabled(true);
+        street.setEnabled(true);
+        city.setEnabled(true);
+        provinceSpinner.setEnabled(true);
+        postalCode.setEnabled(true);
+        phoneNumber.setEnabled(true);
+        statusSpinner.setEnabled(true);
     }
 }
