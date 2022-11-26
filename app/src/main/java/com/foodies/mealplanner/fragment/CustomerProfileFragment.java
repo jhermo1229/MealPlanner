@@ -9,7 +9,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,7 +28,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
@@ -49,13 +47,13 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.UUID;
 
 /**
  * User profile fragment
  */
 public class CustomerProfileFragment extends Fragment {
 
+    public static final String TAG = CustomerProfileFragment.class.getName();
     public static final String BLANK = " ";
     public static final int TEN = 10;
     public static final String REQUIRED_ERROR = "Required";
@@ -63,36 +61,9 @@ public class CustomerProfileFragment extends Fragment {
     private final FieldValidator fieldValidator = new FieldValidator();
     private final UserRepository userDb = new UserRepository();
     // instance for firebase storage and StorageReference
-    FirebaseStorage storage = FirebaseStorage.getInstance();
-    StorageReference storageReference = storage.getReference();
-    ActivityResultLauncher<Intent> launchSomeActivity
-            = registerForActivityResult(
-            new ActivityResultContracts
-                    .StartActivityForResult(),
-            result -> {
-                if (result.getResultCode()
-                        == Activity.RESULT_OK) {
-                    Intent data = result.getData();
-                    // do your operation from here....
-                    if (data != null
-                            && data.getData() != null) {
-                        Uri selectedImageUri = data.getData();
-                        Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
-                        Bitmap selectedImageBitmap;
-                        try {
-                            selectedImageBitmap
-                                    = MediaStore.Images.Media.getBitmap(
-                                    getContext().getContentResolver(),
-                                    selectedImageUri);
-                            uploadImage(selectedImageUri);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-//                        imageView.setImageBitmap(
-//                                selectedImageBitmap);
-                    }
-                }
-            });
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final StorageReference storageReference = storage.getReference();
+
     private SignupViewModel signupViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog, cityDialog, postalCodeDialog,
@@ -102,10 +73,44 @@ public class CustomerProfileFragment extends Fragment {
     private boolean isFieldChanged = false;
     private TextView fullNameView, fullAddressView, phoneView;
     private ImageView imageView;
+    private ActivityResultLauncher<Intent> launchSomeActivity;
 
     public CustomerProfileFragment() {
         // Required empty public constructor
     }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        launchSomeActivity
+                = registerForActivityResult(
+                new ActivityResultContracts
+                        .StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode()
+                            == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        // do your operation from here....
+                        if (data != null
+                                && data.getData() != null) {
+                            Uri selectedImageUri = data.getData();
+                            Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
+                            Bitmap selectedImageBitmap;
+
+//                                selectedImageBitmap
+//                                        = MediaStore.Images.Media.getBitmap(
+//                                        getContext().getContentResolver(),
+//                                        selectedImageUri);
+                            uploadImage(selectedImageUri);
+
+//                        imageView.setImageBitmap(
+//                                selectedImageBitmap);
+                        }
+                    }
+                });
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -115,21 +120,168 @@ public class CustomerProfileFragment extends Fragment {
         signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
+        updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
         fullNameView = userProfileView.findViewById(R.id.fullnameTxtView);
         fullAddressView = userProfileView.findViewById(R.id.addressTxtView);
         phoneView = userProfileView.findViewById(R.id.phoneNumberTxtView);
         imageView = userProfileView.findViewById(R.id.userImage);
+        return userProfileView;
+    }
+
+    @Override
+    public void onViewCreated(View view,
+                              Bundle savedInstanceState) {
 
         signupViewModel.getSelectedItem().observe(getActivity(), users -> {
             user = users;
         });
 
+        loadImage();
+
+        imageBtn.setOnClickListener((userProfileView) -> {
+            imageChooser();
+        });
+
+        setFieldValue();
+
+        updatePersonalBtn.setOnClickListener((userProfileView) -> {
+
+            updatePersonalDetailsProcess();
+        });
+
+        updateLoginBtn.setOnClickListener((userProfileView) ->{
+
+
+        });
+
+    }
+
+    /**
+     * Process for updating personal details
+     */
+    private void updatePersonalDetailsProcess() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get the layout inflater
+        LayoutInflater inflater2 = requireActivity().getLayoutInflater();
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View dialogView = inflater2.inflate(R.layout.fragment_update_personal_dialog, null);
+        firstNameDialog = dialogView.findViewById(R.id.firstNameUpdate);
+        lastNameDialog = dialogView.findViewById(R.id.lastNameUpdate);
+        houseNumberDialog = dialogView.findViewById(R.id.houseNumberUpdate);
+        streetDialog = dialogView.findViewById(R.id.streetUpdate);
+        cityDialog = dialogView.findViewById(R.id.cityUpdate);
+        postalCodeDialog = dialogView.findViewById(R.id.postalCodeUpdate);
+        phoneNumberDialog = dialogView.findViewById(R.id.phoneNumberUpdate);
+        Spinner provinceSpinnerDialog = dialogView.findViewById(R.id.provinceSpinnerUpdate);
+        String[] province = getResources().getStringArray(R.array.province_canada);
+
+        //Set adapter of spinner
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
+                R.layout.spinner_item, province);
+        provinceSpinnerDialog.setAdapter(adapter);
+
+        int spinnerPos = adapter.getPosition(user.getUserDetails().getAddress().getProvince());
+
+        provinceSpinnerDialog.setSelection(spinnerPos);
+
+        //Add listener if spinner has been changed.
+        provinceSpinnerDialog.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
+
+        firstNameDialog.setText(user.getUserDetails().getFirstName());
+        lastNameDialog.setText(user.getUserDetails().getLastName());
+        houseNumberDialog.setText(user.getUserDetails().getAddress().getHouseNumber());
+        streetDialog.setText(user.getUserDetails().getAddress().getStreet());
+        cityDialog.setText(user.getUserDetails().getAddress().getCity());
+        postalCodeDialog.setText(user.getUserDetails().getAddress().getPostalCode());
+        phoneNumberDialog.setText(user.getUserDetails().getPhoneNumber());
+
+        firstNameDialog.setEnabled(false);
+        lastNameDialog.setEnabled(false);
+
+
+        //Add text change listener if a field has been changed.
+        firstNameDialog.addTextChangedListener(textWatcher());
+        lastNameDialog.addTextChangedListener(textWatcher());
+        houseNumberDialog.addTextChangedListener(textWatcher());
+        streetDialog.addTextChangedListener(textWatcher());
+        cityDialog.addTextChangedListener(textWatcher());
+        postalCodeDialog.addTextChangedListener(textWatcher());
+        phoneNumberDialog.addTextChangedListener(textWatcher());
+
+        builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        })
+                .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do not use this place as we are overriding this button.
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (isFieldChanged) {
+                    if (checkAllFields()) {
+
+
+                        UserDetails userDetails = new UserDetails();
+                        userDetails.setFirstName(firstNameDialog.getText().toString());
+                        userDetails.setLastName(lastNameDialog.getText().toString());
+                        userDetails.setPhoneNumber(phoneNumberDialog.getText().toString());
+                        Address address = new Address();
+                        address.setHouseNumber(houseNumberDialog.getText().toString());
+                        address.setStreet(streetDialog.getText().toString());
+                        address.setCity(cityDialog.getText().toString());
+                        address.setProvince(provinceSpinnerDialog.getSelectedItem().toString());
+                        address.setPostalCode(postalCodeDialog.getText().toString());
+                        userDetails.setAddress(address);
+
+                        user.setUserDetails(userDetails);
+
+                        userDb.updateUser(user, getActivity());
+
+                        signupViewModel.setSelectedItem(user);
+
+                        setFieldValue();
+
+                        alert.dismiss();
+                    } else {
+                        Toast toast = Toast.makeText(alert.getContext(), "No field was updated", Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * Setting field value to reset value
+     */
+    private void setFieldValue() {
+        fullNameView.setText(user.getUserDetails().getFirstName() + BLANK + user.getUserDetails().getLastName());
+        Address add = user.getUserDetails().getAddress();
+        fullAddressView.setText(add.getHouseNumber() + BLANK + add.getStreet() + BLANK + add.getCity()
+                + BLANK + add.getProvince() + BLANK + add.getPostalCode());
+        phoneView.setText(user.getUserDetails().getPhoneNumber());
+    }
+
+    /**
+     * Method for loading image using url
+     */
+    private void loadImage() {
         StorageReference mRef = storageReference.child(user.getImageUrl());
         File localFile = null;
         try {
             localFile = File.createTempFile("images", "jpg");
         } catch (IOException e) {
-            e.printStackTrace();
+            Log.e("Customer Profile", "Error creating file" + e.toString());
         }
 
         File finalLocalFile = localFile;
@@ -145,125 +297,6 @@ public class CustomerProfileFragment extends Fragment {
                 // Handle any errors
             }
         });
-
-        imageBtn.setOnClickListener((userProfileView) -> {
-
-            imageChooser();
-        });
-
-
-        fullNameView.setText(user.getUserDetails().getFirstName() + BLANK + user.getUserDetails().getLastName());
-        Address add = user.getUserDetails().getAddress();
-        fullAddressView.setText(add.getHouseNumber() + BLANK + add.getStreet() + BLANK + add.getCity()
-                + BLANK + add.getProvince() + BLANK + add.getPostalCode());
-        phoneView.setText(user.getUserDetails().getPhoneNumber());
-
-        updatePersonalBtn.setOnClickListener((userProfileView) -> {
-
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            // Get the layout inflater
-            LayoutInflater inflater2 = requireActivity().getLayoutInflater();
-            // Inflate and set the layout for the dialog
-            // Pass null as the parent view because its going in the dialog layout
-            View dialogView = inflater2.inflate(R.layout.fragment_update_personal_dialog, null);
-            firstNameDialog = dialogView.findViewById(R.id.firstNameUpdate);
-            lastNameDialog = dialogView.findViewById(R.id.lastNameUpdate);
-            houseNumberDialog = dialogView.findViewById(R.id.houseNumberUpdate);
-            streetDialog = dialogView.findViewById(R.id.streetUpdate);
-            cityDialog = dialogView.findViewById(R.id.cityUpdate);
-            postalCodeDialog = dialogView.findViewById(R.id.postalCodeUpdate);
-            phoneNumberDialog = dialogView.findViewById(R.id.phoneNumberUpdate);
-            Spinner provinceSpinnerDialog = dialogView.findViewById(R.id.provinceSpinnerUpdate);
-            String[] province = getResources().getStringArray(R.array.province_canada);
-
-
-            //Set adapter of spinner
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),
-                    R.layout.spinner_item, province);
-            provinceSpinnerDialog.setAdapter(adapter);
-
-            int spinnerPos = adapter.getPosition(user.getUserDetails().getAddress().getProvince());
-
-            provinceSpinnerDialog.setSelection(spinnerPos);
-
-            //Add listener if spinner has been changed.
-            provinceSpinnerDialog.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
-
-            firstNameDialog.setText(user.getUserDetails().getFirstName());
-            lastNameDialog.setText(user.getUserDetails().getLastName());
-            houseNumberDialog.setText(user.getUserDetails().getAddress().getHouseNumber());
-            streetDialog.setText(user.getUserDetails().getAddress().getStreet());
-            cityDialog.setText(user.getUserDetails().getAddress().getCity());
-            postalCodeDialog.setText(user.getUserDetails().getAddress().getPostalCode());
-            phoneNumberDialog.setText(user.getUserDetails().getPhoneNumber());
-
-            firstNameDialog.setEnabled(false);
-            lastNameDialog.setEnabled(false);
-
-
-            //Add text change listener if a field has been changed.
-            firstNameDialog.addTextChangedListener(textWatcher());
-            lastNameDialog.addTextChangedListener(textWatcher());
-            houseNumberDialog.addTextChangedListener(textWatcher());
-            streetDialog.addTextChangedListener(textWatcher());
-            cityDialog.addTextChangedListener(textWatcher());
-            postalCodeDialog.addTextChangedListener(textWatcher());
-            phoneNumberDialog.addTextChangedListener(textWatcher());
-
-            builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            })
-                    .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            // Do not use this place as we are overriding this button.
-                        }
-                    });
-            AlertDialog alert = builder.create();
-            alert.show();
-            alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if (isFieldChanged) {
-                        if (checkAllFields()) {
-
-                            UserDetails userDetails = new UserDetails();
-                            userDetails.setFirstName(firstNameDialog.getText().toString());
-                            userDetails.setLastName(lastNameDialog.getText().toString());
-                            userDetails.setPhoneNumber(phoneNumberDialog.getText().toString());
-                            Address address = new Address();
-                            address.setHouseNumber(houseNumberDialog.getText().toString());
-                            address.setStreet(streetDialog.getText().toString());
-                            address.setCity(cityDialog.getText().toString());
-                            address.setProvince(provinceSpinnerDialog.getSelectedItem().toString());
-                            address.setPostalCode(postalCodeDialog.getText().toString());
-                            userDetails.setAddress(address);
-
-                            user.setUserDetails(userDetails);
-
-                            userDb.updateUser(user, getActivity());
-
-                            signupViewModel.setSelectedItem(user);
-
-                            CustomerProfileFragment userFrag = new CustomerProfileFragment();
-                            FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                            transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                            transaction.replace(R.id.loginHomeFrame, userFrag);
-
-                            transaction.commit();
-                            alert.dismiss();
-                        } else {
-
-                        }
-                    }
-                }
-            });
-        });
-        return userProfileView;
     }
 
     private void imageChooser() {
@@ -304,6 +337,7 @@ public class CustomerProfileFragment extends Fragment {
                                     // Image uploaded successfully
                                     // Dismiss dialog
                                     progressDialog.dismiss();
+                                    loadImage();
                                     Toast
                                             .makeText(getContext(),
                                                     "Image Uploaded!!",

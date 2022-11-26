@@ -5,10 +5,53 @@
     android:layout_height="match_parent"
     tools:context=".fragment.UpdateLoginDialogFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_gravity="center"
+            android:id="@+id/mainLogo"
+            android:src="@drawable/logo"
+            android:layout_marginBottom="40dp"/>
+
+        <EditText
+            android:id="@+id/oldPasswordUpdate"
+            android:inputType="textPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter current password"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:id="@+id/newPasswordUpdate"
+            android:inputType="textPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter new password"
+            android:layout_marginBottom="10dp"/>
+
+        <EditText
+            android:id="@+id/newPasswordConfirmUpdate"
+            android:inputType="textPassword"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:hint="Enter new password"
+            android:layout_marginBottom="10dp"/>
+
+        <CheckBox
+            android:id="@+id/passwordCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/showPassword"
+            android:layout_marginBottom="10dp"
+            android:layout_marginRight="30dp"
+            android:layout_gravity="right"/>
+
+    </LinearLayout>
 
 </FrameLayout>
