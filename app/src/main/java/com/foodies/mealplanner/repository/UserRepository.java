@@ -190,8 +190,10 @@ public class UserRepository {
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("USER DATABASE UPDATE", "Successfully updated");
 
-                Toast toast=Toast.makeText(activity.getApplicationContext(), "Successfully updated user",Toast.LENGTH_SHORT);
-                toast.show();
+                if(user.getStatus().equals("Active")) {
+                    Toast toast = Toast.makeText(activity.getApplicationContext(), "Successfully updated user", Toast.LENGTH_SHORT);
+                    toast.show();
+                }
             }
         });
     }

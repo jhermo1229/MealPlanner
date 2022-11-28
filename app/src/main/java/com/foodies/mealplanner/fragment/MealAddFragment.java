@@ -70,6 +70,10 @@ public class MealAddFragment extends Fragment {
             }
         });
 
+        cancelButton.setOnClickListener((mealProfileFragmentView) -> {
+            getParentFragmentManager().popBackStackImmediate();
+        });
+
 
         return mealProfileFragmentView;
     }

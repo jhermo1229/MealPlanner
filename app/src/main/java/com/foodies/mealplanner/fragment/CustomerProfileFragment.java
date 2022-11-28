@@ -37,6 +37,7 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
+import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
@@ -51,6 +52,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * User profile fragment
@@ -67,18 +71,19 @@ public class CustomerProfileFragment extends Fragment {
     // instance for firebase storage and StorageReference
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
-private CheckBox passwordCheckbox;
+    private CheckBox passwordCheckbox;
     private SignupViewModel signupViewModel;
     private User user = new User();
-    private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog, cityDialog, postalCodeDialog,
-            phoneNumberDialog, oldPasswordDialog, newPasswordDialog, confirmNewPasswordDialog;
+    private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog,
+            cityDialog, postalCodeDialog, phoneNumberDialog, oldPasswordDialog, newPasswordDialog,
+            confirmNewPasswordDialog, cardNameDialog, cardNumberDialog, expiryDateDialog, cvcDialog;
     private View userProfileView;
-    private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn;
+    private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn, cancelSubscriptionBtn;
     private Boolean isFieldChanged = false;
-    private TextView fullNameView, fullAddressView, phoneView;
-    private ImageView imageView;
+    private TextView fullNameView, fullAddressView, phoneView, emailView, cardNameView, cardNumberView,expiryDateView;
+    private ImageView imageView, cardTypeView;
     private ActivityResultLauncher<Intent> launchSomeActivity;
-    private AppUtils appUtils = new AppUtils();
+    private final AppUtils appUtils = new AppUtils();
 
     public CustomerProfileFragment() {
         // Required empty public constructor
@@ -126,10 +131,17 @@ private CheckBox passwordCheckbox;
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
         updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
+        updatePaymentBtn = userProfileView.findViewById(R.id.updatePaymentDetails);
+        cancelSubscriptionBtn = userProfileView.findViewById(R.id.cancelSubscription);
         fullNameView = userProfileView.findViewById(R.id.fullnameTxtView);
         fullAddressView = userProfileView.findViewById(R.id.addressTxtView);
         phoneView = userProfileView.findViewById(R.id.phoneNumberTxtView);
+        emailView = userProfileView.findViewById(R.id.emailTextView);
+        cardNameView = userProfileView.findViewById(R.id.cardNameTextView);
+        cardNumberView = userProfileView.findViewById(R.id.cardNumberTextView);
+        expiryDateView = userProfileView.findViewById(R.id.expiryDateTextView);
         imageView = userProfileView.findViewById(R.id.userImage);
+        cardTypeView = userProfileView.findViewById(R.id.creditCardType);
         return userProfileView;
     }
 
@@ -142,21 +154,111 @@ private CheckBox passwordCheckbox;
         });
 
         loadImage();
+        setFieldValue();
 
         imageBtn.setOnClickListener((userProfileView) -> {
             imageChooser();
         });
-
-        setFieldValue();
 
         updatePersonalBtn.setOnClickListener((userProfileView) -> {
 
             updatePersonalDetailsProcess();
         });
 
-        updateLoginBtn.setOnClickListener((userProfileView) ->{
+        updateLoginBtn.setOnClickListener((userProfileView) -> {
 
-updateLoginDetailsProcess();
+            updateLoginDetailsProcess();
+        });
+
+        updatePaymentBtn.setOnClickListener((userProfileView) ->{
+
+            updatePaymentDetailsProcess();
+        });
+
+        cancelSubscriptionBtn.setOnClickListener((userProfileView -> {
+
+            AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
+            builder.setMessage("Are you sure you want to end subscription?").setTitle("Cancel Subscription");
+
+            builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Will cancel the subscription. Make status of the user to Inactive.
+
+                    user.setStatus("Inactive");
+                    userDb.updateUser(user,getActivity());
+                    getActivity().finish();
+                }
+            });
+
+            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            builder.create().show();
+        }));
+
+    }
+
+    private void updatePaymentDetailsProcess() {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        // Get the layout inflater
+        LayoutInflater loginInflater = requireActivity().getLayoutInflater();
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        View dialogView = loginInflater.inflate(R.layout.update_payment_dialog, null);
+        cardNameDialog = dialogView.findViewById(R.id.nameOnCardUpdate);
+        cardNumberDialog = dialogView.findViewById(R.id.cardNumberUpdate);
+        expiryDateDialog = dialogView.findViewById(R.id.expiryDateUpdate);
+        cvcDialog = dialogView.findViewById(R.id.cvcUpdate);
+        cardNumberDialog.setText(user.getUserPaymentDetails().getCardNumber().toString());
+        cardNameDialog.setText(user.getUserPaymentDetails().getNameOnCard());
+        expiryDateDialog.setText(user.getUserPaymentDetails().getExpiryDate().toString());
+        cvcDialog.setText(user.getUserPaymentDetails().getSecurityCode());
+
+
+        builder.setView(dialogView).setNegativeButton(R.string.fui_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        })
+                .setPositiveButton(R.string.update, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Do not use this place as we are overriding this button.
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
+        alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (checkAllFieldsPayment()) {
+
+                    UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
+                    userPaymentDetails.setCardNumber(Double.valueOf(cardNumberDialog.getText().toString()));
+                    userPaymentDetails.setNameOnCard(cardNameDialog.getText().toString());
+                    userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDateDialog.getText().toString()));
+                    userPaymentDetails.setSecurityCode(cvcDialog.getText().toString());
+
+                    user.setUserPaymentDetails(userPaymentDetails);
+
+                    userDb.updateUser(user, getActivity());
+
+                    signupViewModel.setSelectedItem(user);
+
+                    setFieldValue();
+
+                    alert.dismiss();
+                }
+
+            }
         });
 
     }
@@ -168,10 +270,7 @@ updateLoginDetailsProcess();
         LayoutInflater loginInflater = requireActivity().getLayoutInflater();
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        View dialogView = loginInflater.inflate(R.layout.fragment_update_login_dialog, null);
-        Boolean isPasswordCorrect = false;
-        Boolean isPasswordSame = false;
-
+        View dialogView = loginInflater.inflate(R.layout.update_login_dialog, null);
         oldPasswordDialog = dialogView.findViewById(R.id.oldPasswordUpdate);
         newPasswordDialog = dialogView.findViewById(R.id.newPasswordUpdate);
         confirmNewPasswordDialog = dialogView.findViewById(R.id.newPasswordConfirmUpdate);
@@ -213,18 +312,16 @@ updateLoginDetailsProcess();
 
             @Override
             public void onClick(View v) {
-                    if (checkAllFieldsLogin()) {
-                        user.setPassword(appUtils.encodeBase64(newPasswordDialog.getText().toString()));
+                if (checkAllFieldsLogin()) {
+                    user.setPassword(appUtils.encodeBase64(newPasswordDialog.getText().toString()));
 
-                        userDb.updateUser(user, getActivity());
+                    userDb.updateUser(user, getActivity());
 
-                        alert.dismiss();
-                    }
+                    alert.dismiss();
+                }
 
             }
         });
-
-
 
 
     }
@@ -238,7 +335,7 @@ updateLoginDetailsProcess();
         LayoutInflater personalInflater = requireActivity().getLayoutInflater();
         // Inflate and set the layout for the dialog
         // Pass null as the parent view because its going in the dialog layout
-        View dialogView = personalInflater.inflate(R.layout.fragment_update_personal_dialog, null);
+        View dialogView = personalInflater.inflate(R.layout.update_personal_dialog, null);
         firstNameDialog = dialogView.findViewById(R.id.firstNameUpdate);
         lastNameDialog = dialogView.findViewById(R.id.lastNameUpdate);
         houseNumberDialog = dialogView.findViewById(R.id.houseNumberUpdate);
@@ -271,7 +368,6 @@ updateLoginDetailsProcess();
 
         firstNameDialog.setEnabled(false);
         lastNameDialog.setEnabled(false);
-
 
         //Add text change listener if a field has been changed.
         firstNameDialog.addTextChangedListener(textWatcher());
@@ -343,6 +439,19 @@ updateLoginDetailsProcess();
         fullAddressView.setText(add.getHouseNumber() + BLANK + add.getStreet() + BLANK + add.getCity()
                 + BLANK + add.getProvince() + BLANK + add.getPostalCode());
         phoneView.setText(user.getUserDetails().getPhoneNumber());
+        emailView.setText(user.getEmail());
+        cardNameView.setText(user.getUserPaymentDetails().getNameOnCard());
+        cardNumberView.setText(user.getUserPaymentDetails().getCardNumber().toString());
+        expiryDateView.setText(user.getUserPaymentDetails().getExpiryDate().toString());
+
+        //update image view for card type
+        if(cardNumberView.getText().charAt(0) == '3'){
+            cardTypeView.setImageResource(R.drawable.amex_icon);
+        }else if(cardNumberView.getText().charAt(0) == '4') {
+            cardTypeView.setImageResource(R.drawable.visa_icon);
+        }else if(cardNumberView.getText().charAt(0) == '5') {
+            cardTypeView.setImageResource(R.drawable.mastercard_icon);
+        }
     }
 
     /**
@@ -582,15 +691,49 @@ updateLoginDetailsProcess();
         }
 
         String oldPasswordDecode = appUtils.decodeBase64(user.getPassword());
-        if(allValid && (!oldPasswordDecode.equals(oldPasswordDialog.getText().toString()))){
+        if (allValid && (!oldPasswordDecode.equals(oldPasswordDialog.getText().toString()))) {
             oldPasswordDialog.setError("Incorrect password");
             allValid = false;
         }
 
-        if(allValid && (!newPasswordDialog.getText().toString()
-                .equals(confirmNewPasswordDialog.getText().toString()))){
+        if (allValid && (!newPasswordDialog.getText().toString()
+                .equals(confirmNewPasswordDialog.getText().toString()))) {
             confirmNewPasswordDialog.setError("Password does not match");
             newPasswordDialog.setError("Password does not match");
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
+     * Check all required fields if value is present
+     * Check also if inputs are valid
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFieldsPayment() {
+
+        boolean allValid = true;
+        errorResetPayment();
+
+        if (fieldValidator.validateFieldIfEmpty(cardNumberDialog.length())) {
+            cardNumberDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(cardNameDialog.length())) {
+            cardNameDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(expiryDateDialog.length())) {
+            expiryDateDialog.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(cvcDialog.length())) {
+            cvcDialog.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
@@ -610,9 +753,16 @@ updateLoginDetailsProcess();
         phoneNumberDialog.setError(null);
     }
 
-    private void errorResetLogin(){
+    private void errorResetLogin() {
         oldPasswordDialog.setError(null);
         newPasswordDialog.setError(null);
         confirmNewPasswordDialog.setError(null);
+    }
+
+    private void errorResetPayment() {
+        cardNameDialog.setError(null);
+        cardNumberDialog.setError(null);
+        expiryDateDialog.setError(null);
+        cvcDialog.setError(null);
     }
 }
