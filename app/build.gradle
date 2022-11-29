@@ -74,4 +74,15 @@ dependencies {
     //circular image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
+    //Generating javadocs as tool>generate javadocs command is having a problem seeing SDKs
+    task javadoc(type: Javadoc) {
+        source = android.sourceSets.main.java.srcDirs
+        classpath += project.files(android.getBootClasspath().join(File.pathSeparator))
+    }
+    afterEvaluate {
+        javadoc.classpath += files(android.applicationVariants.collect { variant ->
+            variant.javaCompileProvider.get().classpath.files
+        })
+    }
+
 }

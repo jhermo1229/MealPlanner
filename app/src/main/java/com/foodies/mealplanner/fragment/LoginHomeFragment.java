@@ -28,6 +28,7 @@ import java.util.Objects;
 /**
  * Main page of Meal Planner
  * Contains the login or signup
+ * @author herje
  */
 public class LoginHomeFragment extends Fragment {
 
@@ -38,7 +39,6 @@ public class LoginHomeFragment extends Fragment {
     private final UserRepository db = new UserRepository();
     private final FieldValidator fieldValidator = new FieldValidator();
     private final AppUtils appUtils = new AppUtils();
-//    List<User> userList = new ArrayList<>();
     private Button loginBtn;
     private View homeLoginView;
     private CheckBox passwordChk;
@@ -122,6 +122,8 @@ public class LoginHomeFragment extends Fragment {
 
         return homeLoginView;
     }
+
+
 
     /**
      * Check all required fields if value is present

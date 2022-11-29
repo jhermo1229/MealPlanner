@@ -26,7 +26,7 @@ import java.util.List;
 
 /**
  * User repository for meal planner.
- * Uses firebase -> cloud firestore
+ * Uses firebase cloud firestore
  */
 public class MealRepository {
 
