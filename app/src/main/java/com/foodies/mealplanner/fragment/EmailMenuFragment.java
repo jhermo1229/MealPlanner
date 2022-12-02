@@ -1,7 +1,6 @@
 package com.foodies.mealplanner.fragment;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
@@ -14,17 +13,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.model.Meal;
+import com.foodies.mealplanner.model.Email;
 import com.foodies.mealplanner.model.MealPlanWeek;
 import com.foodies.mealplanner.model.Menu;
 import com.foodies.mealplanner.model.User;
+import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.EmailSendingUtil;
 import com.foodies.mealplanner.util.EmailUtil;
 
 import java.time.DayOfWeek;
@@ -34,17 +36,14 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-
 /**
  * Fragment for sending email.
  */
 public class EmailMenuFragment extends Fragment {
 
     public static final String PICK_A_MENU = "Pick a menu";
-    public static final String MEAL_PLANNER_PLAN_OF_THE_WEEK = "Meal Planner plan of the week";
     private final AppUtils appUtils = new AppUtils();
+    private EmailUtil emailUtil = new EmailUtil();
     private final UserRepository userDb = new UserRepository();
     private final MenuRepository menuDb = new MenuRepository();
     private final HashMap<String, Menu> menuMap = new HashMap<>();
@@ -52,9 +51,10 @@ public class EmailMenuFragment extends Fragment {
     private TextView mondayTxt, wednesdayTxt, fridayTxt;
     private EditText emailEditTxt, mondayMenuTxt, wednesdayMenuTxt, fridayMenuTxt, notesTxt;
     private ArrayList<String> menuNameList = new ArrayList<>();
-    private Button mondayBtn, wednesdayBtn, fridayBtn, sendBtn;
+    private Button mondayBtn, wednesdayBtn, fridayBtn, sendBtn, saveBtn;
     private Menu mondayMenu, wednesdayMenu, fridayMenu;
-    private String mondayDate, wednesdayDate, fridayDate;
+
+    private EmailRepository emailRepository = new EmailRepository();
 
 
     public EmailMenuFragment() {
@@ -79,19 +79,8 @@ public class EmailMenuFragment extends Fragment {
         fridayMenuTxt = emailMenuFragment.findViewById(R.id.fridayMenuTxt);
         notesTxt = emailMenuFragment.findViewById(R.id.notesTxt);
         sendBtn = emailMenuFragment.findViewById(R.id.sendEmailButton);
+        saveBtn = emailMenuFragment.findViewById(R.id.saveEmailButton);
 
-        //Set the next dates. This email should be sent on a saturday or sunday to get the correct date.
-        LocalDate monday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));
-        LocalDate wednesday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY));
-        LocalDate friday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
-
-        mondayDate = appUtils.dateFormatter(monday);
-        wednesdayDate = appUtils.dateFormatter(wednesday);
-        fridayDate = appUtils.dateFormatter(friday);
-
-        mondayTxt.setText(mondayDate);
-        wednesdayTxt.setText(wednesdayDate);
-        fridayTxt.setText(fridayDate);
         List<String> emailAddressList = new ArrayList<>();
 
         //get all users
@@ -142,23 +131,40 @@ public class EmailMenuFragment extends Fragment {
 
         sendBtn.setOnClickListener((emailMenuFragment) -> {
 
-            mondayMenu = menuMap.get(mondayMenuTxt.getText().toString());
-            wednesdayMenu = menuMap.get(wednesdayMenuTxt.getText().toString());
-            fridayMenu = menuMap.get(fridayMenuTxt.getText().toString());
-            MealPlanWeek mealPlanWeek = new MealPlanWeek();
-            mealPlanWeek.setEmailAddressList(emailAddressList);
-            mealPlanWeek.setMondayMenu(mondayMenu);
-            mealPlanWeek.setWednesdayMenu(wednesdayMenu);
-            mealPlanWeek.setFridayMenu(fridayMenu);
-            mealPlanWeek.setNotes(notesTxt.getText().toString());
 
-            //Send email
-            sendEmail(getContext(), mealPlanWeek);
+            MealPlanWeek mealPlanWeek = getMealPlanWeek(emailAddressList);
+
+            //Build Email and send
+            emailUtil.sendEmail(getContext(), mealPlanWeek);
+            saveEmail(mealPlanWeek, true);
 
             getParentFragmentManager().popBackStackImmediate();
         });
 
+        saveBtn.setOnClickListener((emailMenuFragment) -> {
+            saveEmail(getMealPlanWeek(emailAddressList), false);
+        });
+
         return emailMenuFragment;
+    }
+
+    /**
+     * Compose the meal plan for the week
+     * @param emailAddressList - email address to be sent.
+     * @return mealPlanWeek - composed meal plan
+     */
+    @NonNull
+    private MealPlanWeek getMealPlanWeek(List<String> emailAddressList) {
+        mondayMenu = menuMap.get(mondayMenuTxt.getText().toString());
+        wednesdayMenu = menuMap.get(wednesdayMenuTxt.getText().toString());
+        fridayMenu = menuMap.get(fridayMenuTxt.getText().toString());
+        MealPlanWeek mealPlanWeek = new MealPlanWeek();
+        mealPlanWeek.setEmailAddressList(emailAddressList);
+        mealPlanWeek.setMondayMenu(mondayMenu);
+        mealPlanWeek.setWednesdayMenu(wednesdayMenu);
+        mealPlanWeek.setFridayMenu(fridayMenu);
+        mealPlanWeek.setNotes(notesTxt.getText().toString());
+        return mealPlanWeek;
     }
 
     /**
@@ -184,92 +190,28 @@ public class EmailMenuFragment extends Fragment {
                 }).setCustomTitle(textView).show();
     }
 
-    /**
-     * Sends the email
-     *
-     * @param context
-     * @param mealPlan
-     */
-    private void sendEmail(Context context, MealPlanWeek mealPlan) {
 
-        List<String> emailList = new ArrayList<>();
-        emailList.addAll(mealPlan.getEmailAddressList());
-
-        //Compose the message
-        String composedMessage = composeMessageHTML(mealPlan);
-
-        //add all the email address
-        InternetAddress[] emailAdd = new InternetAddress[emailList.size()];
-
-        for (int i = 0; i < emailList.size(); i++) {
-            try {
-                emailAdd[i] = new InternetAddress(emailList.get(i));
-            } catch (AddressException e) {
-                Log.e("Email address list error ", e.toString());
-            }
-        }
-        String subject = MEAL_PLANNER_PLAN_OF_THE_WEEK;
-        String message = composedMessage;
-        EmailUtil emailUtil = new EmailUtil(context, emailAdd, subject, message);
-        emailUtil.execute();
-    }
 
     /**
-     * Compose message html style
-     *
-     * @param mealPLan
-     * @return
+     * Saved the email and to be sent on a later date
+     * @param mealPlan - composed meal plan for the week
      */
-    private String composeMessageHTML(MealPlanWeek mealPLan) {
-        StringBuilder messageFormat = new StringBuilder();
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void saveEmail(MealPlanWeek mealPlan, Boolean isSent){
+//
+//        LocalDate saturday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
+//        String saturdayDate = appUtils.dateFormatter(saturday);
 
-        messageFormat.append("<h2>Hello MealPlanners! This is the menu for the week:</h2>");
-        messageFormat.append(buildMealMessage(mealPLan.getMondayMenu(), "Monday", mondayDate));
-        messageFormat.append(buildMealMessage(mealPLan.getWednesdayMenu(), "Wednesday", wednesdayDate));
-        messageFormat.append(buildMealMessage(mealPLan.getFridayMenu(), "Friday", fridayDate));
-        messageFormat.append(mealPLan.getNotes());
-        messageFormat.append(" Thank you!<br><br>" + "Regards,<br><br>" + "Meal Planner Team");
-        return messageFormat.toString();
+        LocalDate saturday = LocalDate.now();
+        String saturdayDate = appUtils.dateFormatter(saturday);
+
+        Email email = new Email();
+        email.setMealPlanWeek(mealPlan);
+        email.setDeliveryDate(saturdayDate);
+        email.setSent(isSent);
+
+        emailRepository.saveEmail(email, getActivity());
+
     }
 
-    /**
-     * Compose meals of message body
-     *
-     * @param menu
-     * @param day
-     * @param date
-     * @return
-     */
-    private StringBuilder buildMealMessage(Menu menu, String day, String date) {
-        StringBuilder messageFormat = new StringBuilder();
-
-        messageFormat.append("<h4 style= \"color: green;\"> <b>" + day + "(" + date + "): "
-                + menu.getMenuName() + "</h4></b>");
-        messageFormat.append(buildMealMessage(menu.getMeatMeal()));
-        messageFormat.append(buildMealMessage(menu.getVegetableMeal()));
-        messageFormat.append(buildMealMessage(menu.getBothMeal()));
-
-        return messageFormat;
-    }
-
-    /**
-     * Compose meal details of message body
-     *
-     * @param meal
-     * @return
-     */
-    private StringBuilder buildMealMessage(Meal meal) {
-
-        StringBuilder messageFormat = new StringBuilder();
-        messageFormat.append("<b>&nbsp&nbsp&nbsp&nbsp" + meal.getMealType() + ": "
-                + meal.getMealName() + "</b>");
-        messageFormat.append("<br><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Ingredients: "
-                + meal.getMealIngredients() + "</p>");
-        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Description: "
-                + meal.getMealDescription() + "</p>");
-        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Price: CAD "
-                + meal.getMealPrice() + "</p>" + "<br>");
-
-        return messageFormat;
-    }
 }

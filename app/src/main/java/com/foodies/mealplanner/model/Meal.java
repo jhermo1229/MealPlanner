@@ -1,5 +1,7 @@
 package com.foodies.mealplanner.model;
 
+import java.math.BigDecimal;
+
 /**
  * Model class for meals
  */
@@ -9,7 +11,7 @@ public class Meal {
     private String mealDescription;
     private String mealIngredients;
     private String mealType;
-    private Double mealPrice;
+    private BigDecimal mealPrice;
     private String mealStatus;
 
     public String getMealName() {
@@ -44,12 +46,13 @@ public class Meal {
         this.mealType = mealType;
     }
 
-    public Double getMealPrice() {
+    public BigDecimal getMealPrice() {
         return mealPrice;
     }
 
-    public void setMealPrice(Double mealPrice) {
-        this.mealPrice = mealPrice;
+    public void setMealPrice(BigDecimal mealPrice) {
+        
+        this.mealPrice = mealPrice.setScale(2, BigDecimal.ROUND_HALF_UP);
     }
 
     public String getMealStatus() {

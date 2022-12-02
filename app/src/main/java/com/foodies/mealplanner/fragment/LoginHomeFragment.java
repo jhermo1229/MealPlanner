@@ -2,7 +2,6 @@ package com.foodies.mealplanner.fragment;
 
 import android.os.Bundle;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +27,7 @@ import java.util.Objects;
 /**
  * Main page of Meal Planner
  * Contains the login or signup
+ *
  * @author herje
  */
 public class LoginHomeFragment extends Fragment {
@@ -36,6 +36,7 @@ public class LoginHomeFragment extends Fragment {
     public static final String PLEASE_CHECK_PASSWORD = "Please check password";
     public static final String EMAIL_DOES_NOT_EXIST = "Email does not exist";
     public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
+    public static String TAG = LoginHomeFragment.class.getName();
     private final UserRepository db = new UserRepository();
     private final FieldValidator fieldValidator = new FieldValidator();
     private final AppUtils appUtils = new AppUtils();
@@ -82,39 +83,38 @@ public class LoginHomeFragment extends Fragment {
                 db.getUser(user -> {
 
 
-                        if (user != null) {
-                            String passwordDecode = appUtils.decodeBase64(user.getPassword());
-                            if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
+                    if (user != null) {
+                        String passwordDecode = appUtils.decodeBase64(user.getPassword());
+                        if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
-                                if (user.getUserType().equals("C")) {
-                                    signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+                            if (user.getUserType().equals("C")) {
+                                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-                                    signupViewModel.setSelectedItem(user);
+                                signupViewModel.setSelectedItem(user);
 
-                                    CustomerProfileFragment userFrag = new CustomerProfileFragment();
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                    transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                                    transaction.replace(R.id.loginHomeFrame, userFrag);
+                                CustomerProfileFragment userFrag = new CustomerProfileFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.addToBackStack(PersonalDetailsFragment.TAG);
+                                transaction.replace(R.id.loginHomeFrame, userFrag);
 
-                                    transaction.commit();
-                                } else if (user.getUserType().equals("A")) {
-                                    adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
-                                    Log.i("LOGIN", "HEREEE");
-                                    adminViewModel.setSelectedItem(user);
+                                transaction.commit();
+                            } else if (user.getUserType().equals("A")) {
+                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
+                                adminViewModel.setSelectedItem(user);
 
-                                    AdminProfileFragment adminFrag = new AdminProfileFragment();
-                                    FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                    transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                                    transaction.replace(R.id.loginHomeFrame, adminFrag);
+                                AdminProfileFragment adminFrag = new AdminProfileFragment();
+                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                                transaction.addToBackStack(LoginHomeFragment.TAG);
+                                transaction.replace(R.id.loginHomeFrame, adminFrag);
 
-                                    transaction.commit();
-                                }
-                            } else {
-                                password.setError(PLEASE_CHECK_PASSWORD);
+                                transaction.commit();
                             }
                         } else {
-                            email.setError(EMAIL_DOES_NOT_EXIST);
+                            password.setError(PLEASE_CHECK_PASSWORD);
                         }
+                    } else {
+                        email.setError(EMAIL_DOES_NOT_EXIST);
+                    }
 
                 }, userParam);
             }
@@ -122,7 +122,6 @@ public class LoginHomeFragment extends Fragment {
 
         return homeLoginView;
     }
-
 
 
     /**

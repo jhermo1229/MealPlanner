@@ -19,6 +19,8 @@ import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
 
+import java.math.BigDecimal;
+
 public class MealAddFragment extends Fragment {
 
     public static final String ACTIVE = "Active";
@@ -62,7 +64,7 @@ public class MealAddFragment extends Fragment {
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
                 meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
-                meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
+                meal.setMealPrice(new BigDecimal(mealPriceTxt.getText().toString()));
                 meal.setMealStatus(ACTIVE);
 
                 db.addMeal(meal, getActivity());

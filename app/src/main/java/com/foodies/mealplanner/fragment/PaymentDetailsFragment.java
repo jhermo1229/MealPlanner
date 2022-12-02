@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
@@ -82,6 +83,12 @@ public class PaymentDetailsFragment extends Fragment {
 
                 //Save all details to database
                 db.addCustomerUser(user, getActivity());
+
+                RegisterDoneFragment registerDoneFragment = new RegisterDoneFragment();
+                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+                transaction.addToBackStack(LoginHomeFragment.TAG);
+                transaction.replace(R.id.signupHomeFrame, registerDoneFragment);
+                transaction.commit();
             }
         });
 

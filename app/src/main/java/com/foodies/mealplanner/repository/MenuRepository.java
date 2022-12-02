@@ -32,7 +32,7 @@ public class MenuRepository {
 
 
     /**
-     * Add customer in firebase database
+     * Add menu in firebase database
      *
      * @param menu
      * @param activity

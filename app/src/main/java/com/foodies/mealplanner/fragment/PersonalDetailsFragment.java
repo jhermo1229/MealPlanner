@@ -30,7 +30,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment class for personal details
+ * Signing up fragment for adding customer personal details.
+ * @author herje
+ * @version 1
  */
 public class PersonalDetailsFragment extends Fragment {
 
@@ -139,10 +141,10 @@ public class PersonalDetailsFragment extends Fragment {
                     if (userList.isEmpty()) {
                         //Add object to view model
                         signupViewModel.setSelectedItem(user);
-                        MealsDeliveryRateFragment mealsDeliveryFrag = new MealsDeliveryRateFragment();
+                        PaymentDetailsFragment paymentDetailsFragment = new PaymentDetailsFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.addToBackStack(MealsDeliveryRateFragment.TAG);
-                        transaction.replace(R.id.signupHomeFrame, mealsDeliveryFrag);
+                        transaction.addToBackStack(LoginHomeFragment.TAG);
+                        transaction.replace(R.id.signupHomeFrame, paymentDetailsFragment);
                         transaction.commit();
                     } else {
                         email.setError(EMAIL_ALREADY_EXISTING);

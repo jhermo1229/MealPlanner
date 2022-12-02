@@ -1,7 +1,5 @@
 package com.foodies.mealplanner
 
-import android.content.Context
-import android.util.Log
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
@@ -10,7 +8,6 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.internal.runner.junit4.AndroidJUnit4ClassRunner
 import com.foodies.mealplanner.activity.MainActivity
-import com.foodies.mealplanner.util.EmailUtil
 import org.junit.Test
 import org.junit.runner.RunWith
 

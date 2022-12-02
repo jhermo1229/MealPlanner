@@ -56,19 +56,6 @@ public class UserRepository {
 
                 Log.i("Database", "Successful adding user");
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                final EditText text = new EditText(activity);
-                builder.setTitle("Meal Planner").setMessage("Successfully Created Meal Order").setView(text);
-                builder.setPositiveButton("Continue", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface di, int ii) {
-                        Intent i = new Intent(activity, MainActivity.class);
-                        // i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP); // Call Only, if you wants to clears the activity stack else ignore it.
-                        activity.startActivity(i);
-                        activity.finish();
-                    }
-                });
-                builder.create().show();
-
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

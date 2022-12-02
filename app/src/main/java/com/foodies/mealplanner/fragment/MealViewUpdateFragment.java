@@ -24,6 +24,8 @@ import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.MealViewModel;
 
+import java.math.BigDecimal;
+
 /**
  * Meal view of details and update fragment.
  */
@@ -104,7 +106,7 @@ public class MealViewUpdateFragment extends Fragment {
                 meal.setMealStatus("Active");
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
-                meal.setMealPrice(Double.valueOf(mealPriceTxt.getText().toString()));
+                meal.setMealPrice(new BigDecimal(mealPriceTxt.getText().toString()));
 
                 //update meal
                 db.updateMeal(meal, getActivity());
