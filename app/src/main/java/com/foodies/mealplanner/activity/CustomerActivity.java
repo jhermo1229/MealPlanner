@@ -16,34 +16,34 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.MenuProvider;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.fragment.AdminProfileFragment;
-import com.foodies.mealplanner.fragment.LoginHomeFragment;
+import com.foodies.mealplanner.fragment.CustomerProfileFragment;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
+import com.foodies.mealplanner.viewmodel.CustomerViewModel;
 
 /**
- * Main activity of admin
- *
+ * Main activity for customer.
  * @author herje
  * @version 1
  */
-public class AdminActivity extends AppCompatActivity {
+public class CustomerActivity extends AppCompatActivity {
 
-    private AdminProfileViewModel adminProfileViewModel;
     private User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_admin);
+        setContentView(R.layout.activity_customer);
 
         //get passed object from login activity
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             user = (User) extras.getSerializable("user");
         }
+        CustomerViewModel customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
+        customerViewModel.setSelectedItem(user);
 
         //Create menu item for logout
         addMenuProvider(new MenuProvider() {
@@ -71,10 +71,9 @@ public class AdminActivity extends AppCompatActivity {
             }
         });
 
-
-        AdminProfileFragment adminFrag = new AdminProfileFragment();
+        CustomerProfileFragment userFrag = new CustomerProfileFragment();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.adminProfileFrame, adminFrag);
+        transaction.replace(R.id.customerProfileFrame, userFrag);
 
         transaction.commit();
     }
@@ -89,4 +88,3 @@ public class AdminActivity extends AppCompatActivity {
         startActivity(new Intent(this, MainActivity.class));
     }
 }
-

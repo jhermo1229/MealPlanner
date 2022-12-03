@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MealPlanner">
         <activity
+            android:name=".activity.CustomerActivity"
+            android:exported="false" />
+        <activity
             android:name=".activity.AdminActivity"
             android:exported="false" />
         <activity

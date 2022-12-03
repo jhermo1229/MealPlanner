@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.activity.AdminActivity;
+import com.foodies.mealplanner.activity.CustomerActivity;
 import com.foodies.mealplanner.activity.SignupActivity;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
@@ -54,8 +55,7 @@ public class LoginHomeFragment extends Fragment {
     private View homeLoginView;
     private CheckBox passwordChk;
     private TextInputLayout email, password;
-    private SignupViewModel signupViewModel;
-    private AdminProfileViewModel adminViewModel;
+
 
     public LoginHomeFragment() {
         // Required empty public constructor
@@ -98,19 +98,13 @@ public class LoginHomeFragment extends Fragment {
                         if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
                             if (user.getUserType().equals("C")) {
-                                signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-                                signupViewModel.setSelectedItem(user);
+                                Intent intent = new Intent(getActivity(), CustomerActivity.class);
+                                intent.putExtra("user", user);
+                                startActivity(intent);
 
-                                CustomerProfileFragment userFrag = new CustomerProfileFragment();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                transaction.addToBackStack(PersonalDetailsFragment.TAG);
-                                transaction.replace(R.id.loginHomeFrame, userFrag);
 
-                                transaction.commit();
                             } else if (user.getUserType().equals("A")) {
-//                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
-//                                adminViewModel.setSelectedItem(user);
 
                                 Intent intent = new Intent(getActivity(), AdminActivity.class);
                                 intent.putExtra("user", user);

@@ -41,7 +41,7 @@ import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.SignupViewModel;
+import com.foodies.mealplanner.viewmodel.CustomerViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FileDownloadTask;
@@ -52,9 +52,6 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * User profile fragment
@@ -71,19 +68,17 @@ public class CustomerProfileFragment extends Fragment {
     // instance for firebase storage and StorageReference
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
-    private CheckBox passwordCheckbox;
-    private SignupViewModel signupViewModel;
+    private final AppUtils appUtils = new AppUtils();
+    private CustomerViewModel customerViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog,
             cityDialog, postalCodeDialog, phoneNumberDialog, oldPasswordDialog, newPasswordDialog,
             confirmNewPasswordDialog, cardNameDialog, cardNumberDialog, expiryDateDialog, cvcDialog;
-    private View userProfileView;
     private Button imageBtn, updatePersonalBtn, updatePaymentBtn, updateLoginBtn, cancelSubscriptionBtn;
     private Boolean isFieldChanged = false;
-    private TextView fullNameView, fullAddressView, phoneView, emailView, cardNameView, cardNumberView,expiryDateView;
+    private TextView fullNameView, fullAddressView, phoneView, emailView, cardNameView, cardNumberView, expiryDateView;
     private ImageView imageView, cardTypeView;
     private ActivityResultLauncher<Intent> launchSomeActivity;
-    private final AppUtils appUtils = new AppUtils();
 
     public CustomerProfileFragment() {
         // Required empty public constructor
@@ -106,16 +101,9 @@ public class CustomerProfileFragment extends Fragment {
                                 && data.getData() != null) {
                             Uri selectedImageUri = data.getData();
                             Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
-                            Bitmap selectedImageBitmap;
 
-//                                selectedImageBitmap
-//                                        = MediaStore.Images.Media.getBitmap(
-//                                        getContext().getContentResolver(),
-//                                        selectedImageUri);
                             uploadImage(selectedImageUri);
 
-//                        imageView.setImageBitmap(
-//                                selectedImageBitmap);
                         }
                     }
                 });
@@ -126,8 +114,9 @@ public class CustomerProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
-        signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
+        View userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
+        customerViewModel = new ViewModelProvider(requireActivity()).get(CustomerViewModel.class);
+        user = customerViewModel.getSelectedItem().getValue();
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
         updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
@@ -149,9 +138,7 @@ public class CustomerProfileFragment extends Fragment {
     public void onViewCreated(View view,
                               Bundle savedInstanceState) {
 
-        signupViewModel.getSelectedItem().observe(getActivity(), users -> {
-            user = users;
-        });
+        Log.i("CUSTOMER VIEW", "USER: " + user.getEmail());
 
         loadImage();
         setFieldValue();
@@ -170,14 +157,14 @@ public class CustomerProfileFragment extends Fragment {
             updateLoginDetailsProcess();
         });
 
-        updatePaymentBtn.setOnClickListener((userProfileView) ->{
+        updatePaymentBtn.setOnClickListener((userProfileView) -> {
 
             updatePaymentDetailsProcess();
         });
 
         cancelSubscriptionBtn.setOnClickListener((userProfileView -> {
 
-            AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage("Are you sure you want to end subscription?").setTitle("Cancel Subscription");
 
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -186,7 +173,7 @@ public class CustomerProfileFragment extends Fragment {
                     //Will cancel the subscription. Make status of the user to Inactive.
 
                     user.setStatus("Inactive");
-                    userDb.updateUser(user,getActivity());
+                    userDb.updateUser(user, getActivity());
                     getActivity().finish();
                 }
             });
@@ -251,7 +238,7 @@ public class CustomerProfileFragment extends Fragment {
 
                     userDb.updateUser(user, getActivity());
 
-                    signupViewModel.setSelectedItem(user);
+                    customerViewModel.setSelectedItem(user);
 
                     setFieldValue();
 
@@ -274,7 +261,7 @@ public class CustomerProfileFragment extends Fragment {
         oldPasswordDialog = dialogView.findViewById(R.id.oldPasswordUpdate);
         newPasswordDialog = dialogView.findViewById(R.id.newPasswordUpdate);
         confirmNewPasswordDialog = dialogView.findViewById(R.id.newPasswordConfirmUpdate);
-        passwordCheckbox = dialogView.findViewById(R.id.passwordCheckbox);
+        CheckBox passwordCheckbox = dialogView.findViewById(R.id.passwordCheckbox);
 
 
         //Show password or not show
@@ -416,7 +403,7 @@ public class CustomerProfileFragment extends Fragment {
 
                         userDb.updateUser(user, getActivity());
 
-                        signupViewModel.setSelectedItem(user);
+                        customerViewModel.setSelectedItem(user);
 
                         setFieldValue();
 
@@ -445,11 +432,11 @@ public class CustomerProfileFragment extends Fragment {
         expiryDateView.setText(user.getUserPaymentDetails().getExpiryDate().toString());
 
         //update image view for card type
-        if(cardNumberView.getText().charAt(0) == '3'){
+        if (cardNumberView.getText().charAt(0) == '3') {
             cardTypeView.setImageResource(R.drawable.amex_icon);
-        }else if(cardNumberView.getText().charAt(0) == '4') {
+        } else if (cardNumberView.getText().charAt(0) == '4') {
             cardTypeView.setImageResource(R.drawable.visa_icon);
-        }else if(cardNumberView.getText().charAt(0) == '5') {
+        } else if (cardNumberView.getText().charAt(0) == '5') {
             cardTypeView.setImageResource(R.drawable.mastercard_icon);
         }
     }
@@ -576,7 +563,6 @@ public class CustomerProfileFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 isFieldChanged = true;
-                Log.d("TEXT LISTENER", ":::::" + isFieldChanged);
             }
 
             @Override
@@ -589,7 +575,7 @@ public class CustomerProfileFragment extends Fragment {
     /**
      * Check if a change is done on a spinner.
      *
-     * @return
+     * @return adapter - spinner adapt to be used.
      */
     @NonNull
     private AdapterView.OnItemSelectedListener spinnerWatcher(int spinnerPosition) {
