@@ -130,7 +130,7 @@ public class UsersListFragment extends Fragment {
                     UserViewUpdateFragment userUpdateProfileFragment = new UserViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.addToBackStack(UsersListFragment.TAG);
-                    transaction.replace(R.id.loginHomeFrame, userUpdateProfileFragment);
+                    transaction.replace(R.id.adminProfileFrame, userUpdateProfileFragment);
                     transaction.commit();
                 }
             });

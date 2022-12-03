@@ -1,9 +1,11 @@
 package com.foodies.mealplanner.model;
 
+import java.io.Serializable;
+
 /**
  * Main model for the user.
  */
-public class User implements  Comparable<User>{
+public class User implements  Comparable<User>, Serializable {
 
     private String email;
     private String password;

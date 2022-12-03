@@ -1,19 +1,29 @@
 package com.foodies.mealplanner.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import androidx.annotation.NonNull;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.activity.AdminActivity;
+import com.foodies.mealplanner.activity.SignupActivity;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
@@ -99,15 +109,14 @@ public class LoginHomeFragment extends Fragment {
 
                                 transaction.commit();
                             } else if (user.getUserType().equals("A")) {
-                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
-                                adminViewModel.setSelectedItem(user);
+//                                adminViewModel = new ViewModelProvider(requireActivity()).get(AdminProfileViewModel.class);
+//                                adminViewModel.setSelectedItem(user);
 
-                                AdminProfileFragment adminFrag = new AdminProfileFragment();
-                                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                                transaction.addToBackStack(LoginHomeFragment.TAG);
-                                transaction.replace(R.id.loginHomeFrame, adminFrag);
+                                Intent intent = new Intent(getActivity(), AdminActivity.class);
+                                intent.putExtra("user", user);
+                                startActivity(intent);
 
-                                transaction.commit();
+
                             }
                         } else {
                             password.setError(PLEASE_CHECK_PASSWORD);

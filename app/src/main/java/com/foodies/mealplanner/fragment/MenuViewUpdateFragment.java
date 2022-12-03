@@ -39,15 +39,15 @@ public class MenuViewUpdateFragment extends Fragment {
 
     private static final String REQUIRED_ERROR = "Required";
     private final FieldValidator fieldValidator = new FieldValidator();
-    private View menuViewUpdateFragment;
-    private Button updateMenuButton, okButton, cancelButton;
-    private EditText menuNameTxt, meatMenuTxt, vegetableMenuTxt, bothMenuTxt;
     private final List meatNameList = new ArrayList<>();
     private final List vegetableNameList = new ArrayList<>();
     private final List bothNameList = new ArrayList<>();
     private final Menu menu = new Menu();
     private final MealRepository mealDb = new MealRepository();
     private final MenuRepository menuDb = new MenuRepository();
+    private View menuViewUpdateFragment;
+    private Button updateMenuButton, okButton, cancelButton;
+    private EditText menuNameTxt, meatMenuTxt, vegetableMenuTxt, bothMenuTxt;
     private ListView meatListView, vegetableListView, bothListView;
     private MenuViewModel menuViewModel;
     private boolean isFieldChanged = false;
@@ -257,8 +257,11 @@ public class MenuViewUpdateFragment extends Fragment {
 
         Menu liveMenu = menuViewModel.getSelectedItem().getValue();
 
-
+        //Set initial values
         menuNameTxt.setText(liveMenu.getMenuName());
+        menu.setMeatMeal(liveMenu.getMeatMeal());
+        menu.setVegetableMeal(liveMenu.getVegetableMeal());
+        menu.setBothMeal(liveMenu.getBothMeal());
         meatMenuTxt.setText(liveMenu.getMeatMeal().getMealName());
         vegetableMenuTxt.setText(liveMenu.getVegetableMeal().getMealName());
         bothMenuTxt.setText(liveMenu.getBothMeal().getMealName());

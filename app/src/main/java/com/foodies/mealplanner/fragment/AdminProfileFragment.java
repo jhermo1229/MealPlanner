@@ -1,6 +1,7 @@
 package com.foodies.mealplanner.fragment;
 
 import androidx.annotation.RequiresApi;
+import androidx.core.view.MenuProvider;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.AlertDialog;
@@ -11,9 +12,13 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Lifecycle;
 
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,6 +26,7 @@ import android.widget.Button;
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.EmailUtil;
 import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 
 import java.time.DayOfWeek;
@@ -34,6 +40,7 @@ public class AdminProfileFragment extends Fragment {
     private Button usersButton, mealsButton, menusButton, emailButton;
     private EmailRepository emailRepo = new EmailRepository();
     private AppUtils appUtils = new AppUtils();
+    private EmailUtil emailUtil = new EmailUtil();
 
     public static AdminProfileFragment newInstance() {
         return new AdminProfileFragment();
@@ -57,7 +64,19 @@ public class AdminProfileFragment extends Fragment {
         if(email != null){
 
             AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
-            builder.setMessage("You have email that needs to be sent").setTitle("Email Alert");
+            builder.setTitle("Email Alert");
+
+            StringBuilder recipients = new StringBuilder();
+            for(String emailAdd : email.getMealPlanWeek().getEmailAddressList()){
+                recipients.append(emailAdd + ";");
+            }
+
+            builder.setMessage("Recipients: " + recipients.toString() +
+                    "\n\nMonday Menu: " + email.getMealPlanWeek().getMondayMenu().getMenuName() +
+                    "\nWednesday Menu: " + email.getMealPlanWeek().getWednesdayMenu().getMenuName() +
+                    "\nFriday Menu: " + email.getMealPlanWeek().getFridayMenu().getMenuName());
+
+
 
             builder.setPositiveButton(R.string.sendEmail, new DialogInterface.OnClickListener() {
                 @Override
@@ -87,7 +106,7 @@ public class AdminProfileFragment extends Fragment {
             UsersListFragment userListFrag = new UsersListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(UsersListFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, userListFrag);
+            transaction.replace(R.id.adminProfileFrame, userListFrag);
 
             transaction.commit();
             });
@@ -97,7 +116,7 @@ public class AdminProfileFragment extends Fragment {
             MealListFragment mealListFragment = new MealListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(AdminProfileFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, mealListFragment);
+            transaction.replace(R.id.adminProfileFrame, mealListFragment);
 
             transaction.commit();
 
@@ -109,7 +128,7 @@ public class AdminProfileFragment extends Fragment {
             MenuListFragment menuListFragment = new MenuListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(MenuListFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, menuListFragment);
+            transaction.replace(R.id.adminProfileFrame, menuListFragment);
 
             transaction.commit();
         });
@@ -120,13 +139,37 @@ public class AdminProfileFragment extends Fragment {
             EmailMenuFragment emailMenuFragment = new EmailMenuFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(MenuListFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, emailMenuFragment);
+            transaction.replace(R.id.adminProfileFrame, emailMenuFragment);
 
             transaction.commit();
         });
 
+        extracted();
+
 
         return adminProfileFragmentView;
+    }
+
+    private void extracted() {
+        requireActivity().addMenuProvider(new MenuProvider() {
+            @Override
+            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+
+                // Add option Menu Here
+                MenuItem item = menu.findItem(R.id.action_logout);
+                item.setVisible(true);
+
+
+
+            }
+
+            @Override
+            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+
+                return false;
+
+            }
+        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
     }
 
 

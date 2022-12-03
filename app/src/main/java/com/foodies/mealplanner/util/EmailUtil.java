@@ -41,7 +41,7 @@ public class EmailUtil {
         emailList.addAll(mealPlan.getEmailAddressList());
 
         //Compose the message
-        String composedMessage = getString(mealPlan);
+        String composedMessage = composeEmailBody(mealPlan);
 
         //add all the email address
         InternetAddress[] emailAdd = new InternetAddress[emailList.size()];
@@ -69,7 +69,7 @@ public class EmailUtil {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
-    private String getString(MealPlanWeek mealPlan) {
+    public String composeEmailBody(MealPlanWeek mealPlan) {
 
         //Set the next dates. This email should be sent on a saturday or sunday to get the correct date.
         LocalDate monday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.MONDAY));

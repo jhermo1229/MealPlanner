@@ -20,6 +20,7 @@ import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
 
 public class MealAddFragment extends Fragment {
 
@@ -64,7 +65,11 @@ public class MealAddFragment extends Fragment {
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
                 meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
-                meal.setMealPrice(new BigDecimal(mealPriceTxt.getText().toString()));
+
+                //Set currency and number format on price
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                format.setMaximumFractionDigits(2);
+                meal.setMealPrice(format.format(Double.valueOf(mealPriceTxt.getText().toString())));
                 meal.setMealStatus(ACTIVE);
 
                 db.addMeal(meal, getActivity());

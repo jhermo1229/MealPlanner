@@ -1,9 +1,11 @@
 package com.foodies.mealplanner.model;
 
+import java.io.Serializable;
+
 /**
  * Model for user details.
  */
-public class UserDetails {
+public class UserDetails implements Serializable {
 
     private String firstName;
     private String lastName;

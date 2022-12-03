@@ -1,9 +1,11 @@
 package com.foodies.mealplanner.model;
 
+import java.io.Serializable;
+
 /**
  * Model class for payment details of user.
  */
-public class UserPaymentDetails {
+public class UserPaymentDetails implements Serializable {
 
     private Double cardNumber;
     private Integer expiryDate;

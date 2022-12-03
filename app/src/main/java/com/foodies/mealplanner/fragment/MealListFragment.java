@@ -140,7 +140,7 @@ public class MealListFragment extends Fragment {
                     mealViewUpdateFragment.setArguments(bundle);
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.addToBackStack(MealListFragment.TAG);
-                    transaction.replace(R.id.loginHomeFrame, mealViewUpdateFragment);
+                    transaction.replace(R.id.adminProfileFrame, mealViewUpdateFragment);
                     transaction.commit();
 
                 }

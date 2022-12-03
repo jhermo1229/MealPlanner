@@ -1,9 +1,11 @@
 package com.foodies.mealplanner.model;
 
+import java.io.Serializable;
+
 /**
  * Model class for user meals chosen by the user.
  */
-public class UserMealDetails {
+public class UserMealDetails implements Serializable {
 
     private Integer deliveryFrequency;
     private String mealType;

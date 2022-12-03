@@ -132,7 +132,7 @@ public class MenuListFragment extends Fragment {
                     MenuViewUpdateFragment menuViewUpdateFragment = new MenuViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                     transaction.addToBackStack(MenuListFragment.TAG);
-                    transaction.replace(R.id.loginHomeFrame, menuViewUpdateFragment);
+                    transaction.replace(R.id.adminProfileFrame, menuViewUpdateFragment);
                     transaction.commit();
 
                 }

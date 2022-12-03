@@ -25,6 +25,8 @@ import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.MealViewModel;
 
 import java.math.BigDecimal;
+import java.text.NumberFormat;
+import java.util.Currency;
 
 /**
  * Meal view of details and update fragment.
@@ -106,7 +108,13 @@ public class MealViewUpdateFragment extends Fragment {
                 meal.setMealStatus("Active");
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
-                meal.setMealPrice(new BigDecimal(mealPriceTxt.getText().toString()));
+
+                //Set number currency and price
+                NumberFormat format = NumberFormat.getCurrencyInstance();
+                format.setMaximumFractionDigits(2);
+                meal.setMealPrice(format.format(Double.valueOf(mealPriceTxt.getText().toString())));
+                meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
+
 
                 //update meal
                 db.updateMeal(meal, getActivity());

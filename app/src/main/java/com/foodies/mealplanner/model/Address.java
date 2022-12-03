@@ -1,9 +1,11 @@
 package com.foodies.mealplanner.model;
 
+import java.io.Serializable;
+
 /**
  * Model class for address of user.
  */
-public class Address {
+public class Address implements Serializable {
 
     private String houseNumber;
     private String street;
