@@ -66,7 +66,7 @@ public class PaymentDetailsFragment extends Fragment {
 
             if (isFieldChecked) {
                 userPaymentDetails.setNameOnCard(nameOnCard.getEditText().getText().toString());
-                userPaymentDetails.setCardNumber(Double.valueOf(cardNumber.getEditText().getText().toString()));
+                userPaymentDetails.setCardNumber(cardNumber.getEditText().getText().toString());
                 userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDate.getEditText().getText().toString()));
                 String securityCodeEncrypt = appUtils.encodeBase64(securityCode.getEditText().getText().toString());
                 userPaymentDetails.setSecurityCode(securityCodeEncrypt);

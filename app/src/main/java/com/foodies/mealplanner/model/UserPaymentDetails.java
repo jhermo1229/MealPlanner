@@ -7,7 +7,7 @@ import java.io.Serializable;
  */
 public class UserPaymentDetails implements Serializable {
 
-    private Double cardNumber;
+    private String cardNumber;
     private Integer expiryDate;
     private String securityCode;
     private String nameOnCard;
@@ -20,11 +20,11 @@ public class UserPaymentDetails implements Serializable {
         this.expiryDate = expiryDate;
     }
 
-    public Double getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(Double cardNumber) {
+    public void setCardNumber(String cardNumber) {
         this.cardNumber = cardNumber;
     }
 

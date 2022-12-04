@@ -117,6 +117,7 @@ public class CustomerProfileFragment extends Fragment {
         View userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
         customerViewModel = new ViewModelProvider(requireActivity()).get(CustomerViewModel.class);
         user = customerViewModel.getSelectedItem().getValue();
+        Log.d("<><><><><>2", "Card Number: " + user.getUserPaymentDetails().getCardNumber().toString());
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
         updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
@@ -229,7 +230,7 @@ public class CustomerProfileFragment extends Fragment {
                 if (checkAllFieldsPayment()) {
 
                     UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
-                    userPaymentDetails.setCardNumber(Double.valueOf(cardNumberDialog.getText().toString()));
+                    userPaymentDetails.setCardNumber(cardNumberDialog.getText().toString());
                     userPaymentDetails.setNameOnCard(cardNameDialog.getText().toString());
                     userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDateDialog.getText().toString()));
                     userPaymentDetails.setSecurityCode(cvcDialog.getText().toString());
@@ -428,6 +429,7 @@ public class CustomerProfileFragment extends Fragment {
         phoneView.setText(user.getUserDetails().getPhoneNumber());
         emailView.setText(user.getEmail());
         cardNameView.setText(user.getUserPaymentDetails().getNameOnCard());
+        Log.d("<>><<><><>", "Card number: " + user.getUserPaymentDetails().getCardNumber().toString());
         cardNumberView.setText(user.getUserPaymentDetails().getCardNumber().toString());
         expiryDateView.setText(user.getUserPaymentDetails().getExpiryDate().toString());
 
@@ -490,7 +492,7 @@ public class CustomerProfileFragment extends Fragment {
             StorageReference ref
                     = storageReference
                     .child(
-                            "images/"
+                            "images/users/"
                                     + user.getEmail());
 
             // adding listeners on upload

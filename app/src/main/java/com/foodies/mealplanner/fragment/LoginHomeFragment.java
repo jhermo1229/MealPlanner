@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.method.PasswordTransformationMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -98,7 +99,7 @@ public class LoginHomeFragment extends Fragment {
                         if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
                             if (user.getUserType().equals("C")) {
-
+                                Log.d("<><><><><>00", "Card Number: " + user.getUserPaymentDetails().getCardNumber().toString());
                                 Intent intent = new Intent(getActivity(), CustomerActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
