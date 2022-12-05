@@ -82,7 +82,7 @@ public class MealListFragment extends Fragment {
             MealAddFragment mealAddFragment = new MealAddFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(AdminProfileFragment.TAG);
-            transaction.replace(R.id.loginHomeFrame, mealAddFragment);
+            transaction.replace(R.id.adminProfileFrame, mealAddFragment);
 
             transaction.commit();
         });
