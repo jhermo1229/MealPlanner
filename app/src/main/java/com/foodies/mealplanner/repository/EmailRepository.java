@@ -96,15 +96,15 @@ public class EmailRepository {
 
     /**
      * Update user profile by batch process in firestore
-     * @param email
-     * @param activity
+     * @param
+     * @param
      */
     public void updateEmail(String deliveryDate, Boolean isSent){
         // Get a new write batch
         WriteBatch batch = db.batch();
 
         DocumentReference ref = db.collection("emails").document(deliveryDate);
-        batch.update(ref, "isSent", isSent);
+        batch.update(ref, "sent", isSent);
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override

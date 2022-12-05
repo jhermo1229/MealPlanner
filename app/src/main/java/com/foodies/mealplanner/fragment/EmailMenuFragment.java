@@ -26,12 +26,10 @@ import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
-import com.foodies.mealplanner.util.EmailSendingUtil;
 import com.foodies.mealplanner.util.EmailUtil;
+import com.foodies.mealplanner.validations.FieldValidator;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,19 +40,20 @@ import java.util.List;
 public class EmailMenuFragment extends Fragment {
 
     public static final String PICK_A_MENU = "Pick a menu";
+    private static final String REQUIRED_ERROR = "Required";
     private final AppUtils appUtils = new AppUtils();
-    private EmailUtil emailUtil = new EmailUtil();
     private final UserRepository userDb = new UserRepository();
     private final MenuRepository menuDb = new MenuRepository();
     private final HashMap<String, Menu> menuMap = new HashMap<>();
+    private final FieldValidator fieldValidator = new FieldValidator();
+    private final EmailUtil emailUtil = new EmailUtil();
     private View emailMenuFragment;
     private TextView mondayTxt, wednesdayTxt, fridayTxt;
     private EditText emailEditTxt, mondayMenuTxt, wednesdayMenuTxt, fridayMenuTxt, notesTxt;
     private ArrayList<String> menuNameList = new ArrayList<>();
     private Button mondayBtn, wednesdayBtn, fridayBtn, sendBtn, saveBtn;
     private Menu mondayMenu, wednesdayMenu, fridayMenu;
-
-    private EmailRepository emailRepository = new EmailRepository();
+    private final EmailRepository emailRepository = new EmailRepository();
 
 
     public EmailMenuFragment() {
@@ -130,19 +129,23 @@ public class EmailMenuFragment extends Fragment {
         });
 
         sendBtn.setOnClickListener((emailMenuFragment) -> {
+            if (checkAllFields()) {
 
+                MealPlanWeek mealPlanWeek = getMealPlanWeek(emailAddressList);
 
-            MealPlanWeek mealPlanWeek = getMealPlanWeek(emailAddressList);
+                //Build Email and send
+                emailUtil.sendEmail(getContext(), mealPlanWeek);
+                saveEmail(mealPlanWeek, true);
 
-            //Build Email and send
-            emailUtil.sendEmail(getContext(), mealPlanWeek);
-            saveEmail(mealPlanWeek, true);
-
-            getParentFragmentManager().popBackStackImmediate();
+                getParentFragmentManager().popBackStackImmediate();
+            }
         });
 
         saveBtn.setOnClickListener((emailMenuFragment) -> {
-            saveEmail(getMealPlanWeek(emailAddressList), false);
+            if (checkAllFields()) {
+                saveEmail(getMealPlanWeek(emailAddressList), false);
+                getParentFragmentManager().popBackStackImmediate();
+            }
         });
 
         return emailMenuFragment;
@@ -150,6 +153,7 @@ public class EmailMenuFragment extends Fragment {
 
     /**
      * Compose the meal plan for the week
+     *
      * @param emailAddressList - email address to be sent.
      * @return mealPlanWeek - composed meal plan
      */
@@ -191,13 +195,13 @@ public class EmailMenuFragment extends Fragment {
     }
 
 
-
     /**
      * Saved the email and to be sent on a later date
+     *
      * @param mealPlan - composed meal plan for the week
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
-    private void saveEmail(MealPlanWeek mealPlan, Boolean isSent){
+    private void saveEmail(MealPlanWeek mealPlan, Boolean isSent) {
 //
 //        LocalDate saturday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
 //        String saturdayDate = appUtils.dateFormatter(saturday);
@@ -212,6 +216,44 @@ public class EmailMenuFragment extends Fragment {
 
         emailRepository.saveEmail(email, getActivity());
 
+    }
+
+    /**
+     * Check all required fields if value is present
+     * Check also if inputs are valid
+     *
+     * @return boolean, true if all valid
+     */
+    private boolean checkAllFields() {
+
+        boolean allValid = true;
+        errorReset();
+
+        if (fieldValidator.validateFieldIfEmpty(mondayMenuTxt.length())) {
+            mondayMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(wednesdayMenuTxt.length())) {
+            wednesdayMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        if (fieldValidator.validateFieldIfEmpty(fridayMenuTxt.length())) {
+            fridayMenuTxt.setError(REQUIRED_ERROR);
+            allValid = false;
+        }
+
+        return allValid;
+    }
+
+    /**
+     * Reset error messages on field
+     */
+    private void errorReset() {
+        mondayMenuTxt.setError(null);
+        wednesdayMenuTxt.setError(null);
+        fridayMenuTxt.setError(null);
     }
 
 }

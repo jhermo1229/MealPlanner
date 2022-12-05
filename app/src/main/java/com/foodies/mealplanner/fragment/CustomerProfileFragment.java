@@ -34,6 +34,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.activity.MainActivity;
 import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
@@ -140,8 +141,12 @@ public class CustomerProfileFragment extends Fragment {
                               Bundle savedInstanceState) {
 
         Log.i("CUSTOMER VIEW", "USER: " + user.getEmail());
-
-        loadImage();
+        if(user.getImageUrl()!= null) {
+            loadImage();
+        }else{
+            Bitmap myLogo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.fui_ic_twitter_bird_white_24dp);
+            imageView.setImageBitmap(myLogo);
+        }
         setFieldValue();
 
         imageBtn.setOnClickListener((userProfileView) -> {
@@ -175,7 +180,8 @@ public class CustomerProfileFragment extends Fragment {
 
                     user.setStatus("Inactive");
                     userDb.updateUser(user, getActivity());
-                    getActivity().finish();
+                    getActivity().finishAffinity();
+                    startActivity(new Intent(getActivity(), MainActivity.class));
                 }
             });
 
@@ -507,6 +513,8 @@ public class CustomerProfileFragment extends Fragment {
 
                                     // Image uploaded successfully
                                     // Dismiss dialog
+                                    user.setImageUrl(ref.getPath());
+                                    userDb.updateUser(user, getActivity());
                                     progressDialog.dismiss();
                                     loadImage();
                                     Toast

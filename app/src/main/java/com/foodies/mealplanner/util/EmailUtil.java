@@ -97,7 +97,7 @@ public class EmailUtil {
         messageFormat.append(buildMealMessage(mealPLan.getMondayMenu(), "Monday", mondayDate));
         messageFormat.append(buildMealMessage(mealPLan.getWednesdayMenu(), "Wednesday", wednesdayDate));
         messageFormat.append(buildMealMessage(mealPLan.getFridayMenu(), "Friday", fridayDate));
-        messageFormat.append(mealPLan.getNotes());
+        messageFormat.append(mealPLan.getNotes() + "<br><br>");
         messageFormat.append(" Thank you!<br><br>" + "Regards,<br><br>" + "Meal Planner Team");
         return messageFormat.toString();
     }

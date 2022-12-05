@@ -85,7 +85,9 @@ public class AdminProfileFragment extends Fragment {
 
 //                    user.setStatus("Inactive");
 //                    userDb.updateUser(user,getActivity());
-                    getActivity().finish();
+                    emailUtil.sendEmail(getContext(), email.getMealPlanWeek());
+                    emailRepo.updateEmail(email.getDeliveryDate(), true);
+                    dialog.dismiss();
                 }
             });
 

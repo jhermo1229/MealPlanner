@@ -29,7 +29,7 @@ public class PaymentDetailsFragment extends Fragment {
     public static final String REQUIRED = "Required";
     public static final String INVALID_LENGTH = "Invalid length";
     public static final String CUSTOMER = "C";
-    public static final String ACTIVE = "A";
+    public static final String ACTIVE = "Active";
     private final UserRepository db = new UserRepository();
     private final AppUtils appUtils = new AppUtils();
     private final UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
