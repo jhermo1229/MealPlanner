@@ -5,13 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +14,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Meal;
@@ -36,23 +35,28 @@ import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 
+/**
+ * Meal adder fragment
+ * @author herje
+ * @version 1
+ */
 public class MealAddFragment extends Fragment {
 
     public static final String ACTIVE = "Active";
-    private View mealProfileFragmentView;
-    private EditText mealNameTxt, mealDescriptionTxt, mealIngredientTxt, mealPriceTxt;
-    private Spinner mealTypeSpinner;
-    private Meal meal = new Meal();
-    private String[] mealTypeList;
-    private Button okButton, cancelButton, mealImageAddButton;
-    private MealRepository mealRepository = new MealRepository();
     private static final String REQUIRED_ERROR = "Required";
     private final FieldValidator fieldValidator = new FieldValidator();
-    private ImageView imageView;
-    private ActivityResultLauncher<Intent> launchSomeActivity;
     // instance for firebase storage and StorageReference
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
+    private View mealProfileFragmentView;
+    private EditText mealNameTxt, mealDescriptionTxt, mealIngredientTxt, mealPriceTxt;
+    private Spinner mealTypeSpinner;
+    private final Meal meal = new Meal();
+    private String[] mealTypeList;
+    private Button okButton, cancelButton, mealImageAddButton;
+    private final MealRepository mealRepository = new MealRepository();
+    private ImageView imageView;
+    private ActivityResultLauncher<Intent> launchSomeActivity;
 
     public static MealAddFragment newInstance() {
         return new MealAddFragment();
@@ -107,14 +111,16 @@ public class MealAddFragment extends Fragment {
         mealImageAddButton = mealProfileFragmentView.findViewById(R.id.mealAddImageButton);
         imageView = mealProfileFragmentView.findViewById(R.id.mealImageAdd);
 
+        //Add image and load on image view
         mealImageAddButton.setOnClickListener((mealProfileFragmentView) -> {
             imageChooser();
         });
 
-        okButton.setOnClickListener((mealProfileFragmentView)->{
+        //Saves the new meal in the database
+        okButton.setOnClickListener((mealProfileFragmentView) -> {
 
             //check first if all valid
-            if(checkAllFields()) {
+            if (checkAllFields()) {
                 meal.setMealName(mealNameTxt.getText().toString());
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
@@ -126,17 +132,15 @@ public class MealAddFragment extends Fragment {
                 meal.setMealPrice(format.format(Double.valueOf(mealPriceTxt.getText().toString())));
                 meal.setMealStatus(ACTIVE);
 
-
-
                 mealRepository.addMeal(meal, getActivity());
                 getParentFragmentManager().popBackStackImmediate();
             }
         });
 
+        //cancels the adding of meal
         cancelButton.setOnClickListener((mealProfileFragmentView) -> {
             getParentFragmentManager().popBackStackImmediate();
         });
-
 
         return mealProfileFragmentView;
     }
@@ -220,11 +224,6 @@ public class MealAddFragment extends Fragment {
                                         public void onSuccess(Uri uri) {
                                             // Image uploaded successfully
                                             meal.setImageUrl(uri.toString());
-
-                                            //updates database on location of the image. We used access token on cloud.
-//                                            mealRepository.updateMeal(meal, getActivity());
-
-                                            //loads image in the view
                                             loadImage(uri);
                                         }
                                     });
