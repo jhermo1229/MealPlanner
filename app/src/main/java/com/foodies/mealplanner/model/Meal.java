@@ -14,6 +14,7 @@ public class Meal {
     private String mealType;
     private String mealPrice;
     private String mealStatus;
+    private String imageUrl;
 
     public String getMealName() {
         return mealName;
@@ -61,5 +62,13 @@ public class Meal {
 
     public void setMealStatus(String mealStatus) {
         this.mealStatus = mealStatus;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }
