@@ -1,7 +1,11 @@
 package com.foodies.mealplanner.fragment;
 
+import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -10,30 +14,43 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.adapter.MealListViewAdapter;
 import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.model.Menu;
 import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.MenuViewModel;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Fragment for viewing and updating menu
+ *
+ * @author herje
+ * @version 1
  */
 public class MenuViewUpdateFragment extends Fragment {
 
@@ -42,18 +59,53 @@ public class MenuViewUpdateFragment extends Fragment {
     private final List meatNameList = new ArrayList<>();
     private final List vegetableNameList = new ArrayList<>();
     private final List bothNameList = new ArrayList<>();
-    private final Menu menu = new Menu();
-    private final MealRepository mealDb = new MealRepository();
-    private final MenuRepository menuDb = new MenuRepository();
+    private final MealRepository mealRepository = new MealRepository();
+    private final MenuRepository menuRepository = new MenuRepository();
+    // instance for firebase storage and StorageReference
+    private final FirebaseStorage storage = FirebaseStorage.getInstance();
+    private final StorageReference storageReference = storage.getReference();
+    private Menu menu = new Menu();
     private View menuViewUpdateFragment;
-    private Button updateMenuButton, okButton, cancelButton;
+    private Button updateMenuButton, okButton, cancelButton, menuImageButton;
     private EditText menuNameTxt, meatMenuTxt, vegetableMenuTxt, bothMenuTxt;
     private ListView meatListView, vegetableListView, bothListView;
     private MenuViewModel menuViewModel;
     private boolean isFieldChanged = false;
+    private ImageView menuImageView;
+    private ActivityResultLauncher<Intent> launchSomeActivity;
+    private Boolean isImageChanged = false;
 
     public MenuViewUpdateFragment() {
         // Required empty public constructor
+    }
+
+    /**
+     * On create, set activity for image.
+     *
+     * @param savedInstanceState - current instance of fragment
+     */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        launchSomeActivity
+                = registerForActivityResult(
+                new ActivityResultContracts
+                        .StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode()
+                            == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        // do your operation from here....
+                        if (data != null
+                                && data.getData() != null) {
+                            Uri selectedImageUri = data.getData();
+
+                            uploadImage(selectedImageUri);
+
+                        }
+                    }
+                });
     }
 
     @Override
@@ -63,6 +115,8 @@ public class MenuViewUpdateFragment extends Fragment {
         menuViewUpdateFragment = inflater.inflate(R.layout.fragment_menu_view_update, container, false);
         menuViewModel = new ViewModelProvider(requireActivity()).get(MenuViewModel.class);
 
+        menu = menuViewModel.getSelectedItem().getValue();
+
         menuNameTxt = menuViewUpdateFragment.findViewById(R.id.menuNameUpdateEditText);
         meatMenuTxt = menuViewUpdateFragment.findViewById(R.id.meatMenuUpdateEditText);
         vegetableMenuTxt = menuViewUpdateFragment.findViewById(R.id.vegetableMenuUpdateEditText);
@@ -70,16 +124,27 @@ public class MenuViewUpdateFragment extends Fragment {
         okButton = menuViewUpdateFragment.findViewById(R.id.okButtonMenuUpdate);
         cancelButton = menuViewUpdateFragment.findViewById(R.id.cancelButtonMenuUpdate);
         updateMenuButton = menuViewUpdateFragment.findViewById(R.id.updateMenuButton);
+        menuImageButton = menuViewUpdateFragment.findViewById(R.id.changeMenuImageButton);
 
         meatListView = menuViewUpdateFragment.findViewById(R.id.meatListViewUpdate);
         vegetableListView = menuViewUpdateFragment.findViewById(R.id.vegetableListViewUpdate);
         bothListView = menuViewUpdateFragment.findViewById(R.id.bothListViewUpdate);
+        menuImageView = menuViewUpdateFragment.findViewById(R.id.menuImageUpdate);
 
-        updateMenuButton.setText("Update");
+        if (menu.getImageUrl() != null) {
+            loadImage();
+        }
+
+        //choose image in root
+        menuImageButton.setOnClickListener(menuViewUpdateFragment -> {
+            imageChooser();
+        });
+
+        //Disable fields on initialize
         setFieldDisabled();
 
-
-        updateMenuButton.setOnClickListener(mealUpdateFragmentView -> {
+        //On click of update button, enables all the field.
+        updateMenuButton.setOnClickListener(menuViewUpdateFragment -> {
 
             okButton.setVisibility(View.VISIBLE);
             cancelButton.setVisibility(View.VISIBLE);
@@ -92,13 +157,12 @@ public class MenuViewUpdateFragment extends Fragment {
             vegetableMenuTxt.addTextChangedListener(textWatcher());
             bothMenuTxt.addTextChangedListener(textWatcher());
 
-            mealDb.getAllMealType(mealList -> {
-                Log.d("MEAL LIST FRAG", "HERE " + mealList.size());
+            mealRepository.getAllMealType(mealList -> {
                 for (Meal meal : mealList) {
                     meatNameList.add(meal.getMealName());
                 }
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, meatNameList);
+                MealListViewAdapter adapter = new MealListViewAdapter(getContext(), mealList, 0);
                 meatListView.setAdapter(adapter);
 
                 //Set header of list
@@ -107,7 +171,6 @@ public class MenuViewUpdateFragment extends Fragment {
                 textView.setText("Meat List");
 
                 meatListView.addHeaderView(textView, null, false);
-
 
                 meatListView.setClickable(true);
                 meatListView.setNestedScrollingEnabled(true);
@@ -129,7 +192,7 @@ public class MenuViewUpdateFragment extends Fragment {
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         meatMenuTxt.setText(meal.getMealName());
-                                        menu.setMeatMeal(meal);
+                                        MenuViewUpdateFragment.this.menu.setMeatMeal(meal);
                                     }
                                 })
                                 .show();
@@ -140,13 +203,9 @@ public class MenuViewUpdateFragment extends Fragment {
             }, "Meat");
 
             //Vegetable
-            mealDb.getAllMealType(vegetableMealList -> {
-                Log.d("VEGGIE MEAL LIST FRAG", "HERE " + vegetableMealList.size());
-                for (Meal meal : vegetableMealList) {
-                    vegetableNameList.add(meal.getMealName());
-                }
+            mealRepository.getAllMealType(vegetableMealList -> {
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, vegetableNameList);
+                MealListViewAdapter adapter = new MealListViewAdapter(getContext(), vegetableMealList, 0);
                 vegetableListView.setAdapter(adapter);
 
                 //Set header of list
@@ -159,6 +218,7 @@ public class MenuViewUpdateFragment extends Fragment {
                 vegetableListView.setClickable(true);
                 vegetableListView.setNestedScrollingEnabled(true);
                 vegetableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int j, long l) {
 
@@ -188,13 +248,9 @@ public class MenuViewUpdateFragment extends Fragment {
 
 
             //Both Meat and Vegetable
-            mealDb.getAllMealType(bothMealList -> {
-                Log.d("BOTH MEAL LIST FRAG", "HERE " + bothMealList.size());
-                for (Meal meal : bothMealList) {
-                    bothNameList.add(meal.getMealName());
-                }
+            mealRepository.getAllMealType(bothMealList -> {
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), R.layout.meal_listview, R.id.mealView, bothNameList);
+                MealListViewAdapter adapter = new MealListViewAdapter(getContext(), bothMealList, 0);
                 bothListView.setAdapter(adapter);
 
                 //Set header of list
@@ -236,10 +292,10 @@ public class MenuViewUpdateFragment extends Fragment {
 
             okButton.setOnClickListener((menuAddFragmentView) -> {
 
-                if (isFieldChanged) {
+                if (isFieldChanged || isImageChanged) {
                     if (checkAllFields()) {
                         menu.setMenuName(menuNameTxt.getText().toString());
-                        menuDb.addMenu(menu, getActivity());
+                        menuRepository.addMenu(menu, getActivity());
                         getParentFragmentManager().popBackStackImmediate();
                     }
                 } else {
@@ -255,16 +311,14 @@ public class MenuViewUpdateFragment extends Fragment {
         });
 
 
-        Menu liveMenu = menuViewModel.getSelectedItem().getValue();
-
         //Set initial values
-        menuNameTxt.setText(liveMenu.getMenuName());
-        menu.setMeatMeal(liveMenu.getMeatMeal());
-        menu.setVegetableMeal(liveMenu.getVegetableMeal());
-        menu.setBothMeal(liveMenu.getBothMeal());
-        meatMenuTxt.setText(liveMenu.getMeatMeal().getMealName());
-        vegetableMenuTxt.setText(liveMenu.getVegetableMeal().getMealName());
-        bothMenuTxt.setText(liveMenu.getBothMeal().getMealName());
+        menuNameTxt.setText(menu.getMenuName());
+        menu.setMeatMeal(menu.getMeatMeal());
+        menu.setVegetableMeal(menu.getVegetableMeal());
+        menu.setBothMeal(menu.getBothMeal());
+        meatMenuTxt.setText(menu.getMeatMeal().getMealName());
+        vegetableMenuTxt.setText(menu.getVegetableMeal().getMealName());
+        bothMenuTxt.setText(menu.getBothMeal().getMealName());
 
         return menuViewUpdateFragment;
     }
@@ -346,6 +400,7 @@ public class MenuViewUpdateFragment extends Fragment {
         meatListView.setEnabled(false);
         vegetableListView.setEnabled(false);
         bothListView.setEnabled(false);
+        menuImageButton.setEnabled(false);
     }
 
     private void setFieldEnabled() {
@@ -356,6 +411,116 @@ public class MenuViewUpdateFragment extends Fragment {
         meatListView.setEnabled(true);
         vegetableListView.setEnabled(true);
         bothListView.setEnabled(true);
+        menuImageButton.setEnabled(true);
+    }
+
+    /**
+     * uploads the image in the cloud.
+     *
+     * @param filePath - current location of the file in the device.
+     */
+    private void uploadImage(Uri filePath) {
+        if (filePath != null) {
+
+            // Code for showing progressDialog while uploading
+            ProgressDialog progressDialog
+                    = new ProgressDialog(getContext());
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            // Defining the child of storageReference of meals in the cloud.
+            StorageReference ref
+                    = storageReference
+                    .child(
+                            "images/menu/"
+                                    + menu.getMenuName());
+
+            Log.d("IMAGE", " " + menu.getMenuName());
+
+            // adding listeners on upload
+            // or failure of image
+            ref.putFile(filePath)
+                    .addOnSuccessListener(
+                            new OnSuccessListener<UploadTask.TaskSnapshot>() {
+
+                                @Override
+                                public void onSuccess(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            // Image uploaded successfully
+                                            menu.setImageUrl(uri.toString());
+                                            isImageChanged = true;
+
+                                            //loads image in the view
+                                            loadImage();
+                                        }
+                                    });
+
+                                    // Dismiss dialog
+                                    progressDialog.dismiss();
+
+                                    Toast
+                                            .makeText(getContext(),
+                                                    "Image Uploaded!!",
+                                                    Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            })
+
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            // Error, Image not uploaded
+                            progressDialog.dismiss();
+                            Toast
+                                    .makeText(getContext(),
+                                            "Failed " + e.getMessage(),
+                                            Toast.LENGTH_SHORT)
+                                    .show();
+                        }
+                    })
+                    .addOnProgressListener(
+                            new OnProgressListener<UploadTask.TaskSnapshot>() {
+
+                                // Progress Listener for loading
+                                // percentage on the dialog box
+                                @Override
+                                public void onProgress(
+                                        UploadTask.TaskSnapshot taskSnapshot) {
+                                    double progress
+                                            = (100.0
+                                            * taskSnapshot.getBytesTransferred()
+                                            / taskSnapshot.getTotalByteCount());
+                                    progressDialog.setMessage(
+                                            "Uploaded "
+                                                    + (int) progress + "%");
+                                }
+                            });
+        }
+    }
+
+    /**
+     * Open the images folder in the root of the device.
+     */
+    private void imageChooser() {
+        Intent i = new Intent();
+        i.setType("image/*");
+        i.setAction(Intent.ACTION_GET_CONTENT);
+
+        launchSomeActivity.launch(i);
+    }
+
+    /**
+     * Method for loading image using url
+     */
+    private void loadImage() {
+
+        //open source Picasso
+        Picasso.get().load(menu.getImageUrl())
+                .into(menuImageView);
     }
 
 }

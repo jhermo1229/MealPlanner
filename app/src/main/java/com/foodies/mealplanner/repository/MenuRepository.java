@@ -96,6 +96,7 @@ public class MenuRepository {
         batch.update(ref, "meatMeal", menu.getMeatMeal());
         batch.update(ref, "vegetableMeal", menu.getVegetableMeal());
         batch.update(ref, "bothMeal", menu.getBothMeal());
+        batch.update(ref, "imageUrl", menu.getImageUrl());
 
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
