@@ -159,6 +159,7 @@ public class MealRepository {
         batch.update(ref, "mealPrice", meal.getMealPrice());
         batch.update(ref, "mealStatus", meal.getMealStatus());
         batch.update(ref, "mealType", meal.getMealType());
+        batch.update(ref, "imageUrl", meal.getImageUrl());
 
         // Commit the batch
         batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {

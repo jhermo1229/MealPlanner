@@ -454,27 +454,6 @@ public class CustomerProfileFragment extends Fragment {
      * Method for loading image using url
      */
     private void loadImage() {
-//        StorageReference mRef = storageReference.child(user.getImageUrl());
-//        File localFile = null;
-//        try {
-//            localFile = File.createTempFile("images", "jpg");
-//        } catch (IOException e) {
-//            Log.e("Customer Profile", "Error creating file" + e.toString());
-//        }
-//
-//        File finalLocalFile = localFile;
-//        mRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-//                Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
-//                imageView.setImageBitmap(bitmap);
-//            }
-//        }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                // Handle any errors
-//            }
-//        });
 
         Picasso.get().load(user.getImageUrl())
                 .into(imageView);

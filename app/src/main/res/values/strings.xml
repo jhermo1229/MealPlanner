@@ -51,6 +51,7 @@
     <string name="changePayment">Change Payment</string>
     <string name="saveUser">Save</string>
     <string name="backLogin">Back to login</string>
+    <string name="change">Change</string>
     <string name="thankyouMessage">Thank you for registering for Meal Planner.</string>
 
     <string-array name="province_canada">
