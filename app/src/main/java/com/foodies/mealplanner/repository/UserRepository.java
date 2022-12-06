@@ -160,6 +160,7 @@ public class UserRepository {
         Log.d("DATABASE", user.getPassword());
         batch.update(ref, "password", user.getPassword());
         batch.update(ref, "status", user.getStatus());
+        batch.update(ref, "imageUrl", user.getImageUrl());
         batch.update(ref, "userType", user.getUserType());
         batch.update(ref, "userDetails.firstName", user.getUserDetails().getFirstName());
         batch.update(ref, "userDetails.lastName", user.getUserDetails().getLastName());

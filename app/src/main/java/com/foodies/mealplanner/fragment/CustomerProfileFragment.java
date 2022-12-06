@@ -50,6 +50,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -453,27 +454,30 @@ public class CustomerProfileFragment extends Fragment {
      * Method for loading image using url
      */
     private void loadImage() {
-        StorageReference mRef = storageReference.child(user.getImageUrl());
-        File localFile = null;
-        try {
-            localFile = File.createTempFile("images", "jpg");
-        } catch (IOException e) {
-            Log.e("Customer Profile", "Error creating file" + e.toString());
-        }
+//        StorageReference mRef = storageReference.child(user.getImageUrl());
+//        File localFile = null;
+//        try {
+//            localFile = File.createTempFile("images", "jpg");
+//        } catch (IOException e) {
+//            Log.e("Customer Profile", "Error creating file" + e.toString());
+//        }
+//
+//        File finalLocalFile = localFile;
+//        mRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
+//                Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
+//                imageView.setImageBitmap(bitmap);
+//            }
+//        }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                // Handle any errors
+//            }
+//        });
 
-        File finalLocalFile = localFile;
-        mRef.getFile(localFile).addOnSuccessListener(new OnSuccessListener<FileDownloadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
-                Bitmap bitmap = BitmapFactory.decodeFile(finalLocalFile.getAbsolutePath());
-                imageView.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        Picasso.get().load(user.getImageUrl())
+                .into(imageView);
     }
 
     private void imageChooser() {
@@ -510,13 +514,20 @@ public class CustomerProfileFragment extends Fragment {
                                 @Override
                                 public void onSuccess(
                                         UploadTask.TaskSnapshot taskSnapshot) {
+                                    ref.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                        @Override
+                                        public void onSuccess(Uri uri) {
+                                            // Image uploaded successfully
+                                            // Dismiss dialog
+                                            user.setImageUrl(uri.toString());
+                                            userDb.updateUser(user, getActivity());
+                                            loadImage();
+                                        }
+                                    });
 
-                                    // Image uploaded successfully
-                                    // Dismiss dialog
-                                    user.setImageUrl(ref.getPath());
-                                    userDb.updateUser(user, getActivity());
+
                                     progressDialog.dismiss();
-                                    loadImage();
+
                                     Toast
                                             .makeText(getContext(),
                                                     "Image Uploaded!!",
