@@ -9,6 +9,7 @@ public class Menu {
     private Meal meatMeal;
     private Meal vegetableMeal;
     private Meal bothMeal;
+    private String imageUrl;
 
 
     public String getMenuName() {
@@ -41,5 +42,13 @@ public class Menu {
 
     public void setBothMeal(Meal bothMeal) {
         this.bothMeal = bothMeal;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

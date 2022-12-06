@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.Meal;
-import com.foodies.mealplanner.model.MealDetailSpinner;
+import com.foodies.mealplanner.model.Menu;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,25 +24,25 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Custom adapter for the listview of meal.
+ * Custom adapter for the listview of menu.
  *
  * @author herje
  * @version 1
  */
-public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterable {
+public class MenuListViewAdapter extends ArrayAdapter<Menu> implements Filterable {
 
     private final Context context;
     private final ItemFilter itemFilter = new ItemFilter();
-    private List<Meal> mealList = new ArrayList<>();
-    private List<Meal> mealListCopy = new ArrayList<>();
+    private List<Menu> menuList = new ArrayList<>();
+    private List<Menu> menuListCopy = new ArrayList<>();
     private Integer sortOrder = 0;
     private final ViewHolder viewHolder = new ViewHolder();
 
-    public MealListViewAdapter(@NonNull Context context, List<Meal> mealList, Integer sortOrder) {
-        super(context, R.layout.meal_listview);
+    public MenuListViewAdapter(@NonNull Context context, List<Menu> menuList, Integer sortOrder) {
+        super(context, R.layout.menu_listview);
         this.context = context;
-        this.mealListCopy = mealList;
-        this.mealList = mealList;
+        this.menuListCopy = menuList;
+        this.menuList = menuList;
         this.sortOrder = sortOrder;
     }
 
@@ -53,7 +53,7 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
      */
     @Override
     public int getCount() {
-        return mealListCopy.size();
+        return menuListCopy.size();
     }
 
     /**
@@ -74,26 +74,34 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
             convertView = mInflater.inflate(R.layout.meal_listview, parent, false);
 
 
-            mViewHolder.imageView = (ImageView) convertView.findViewById(R.id.mealLogo);
-            mViewHolder.mealName = (TextView) convertView.findViewById(R.id.mealView);
+            mViewHolder.imageView = (ImageView) convertView.findViewById(R.id.menuLogo);
+            mViewHolder.menuName = (TextView) convertView.findViewById(R.id.menuView);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
         if (sortOrder == 1) {
-            Collections.sort(mealListCopy, Comparator.comparing(o -> o.getMealName().toLowerCase()));
+            Collections.sort(menuListCopy, Comparator.comparing(o -> o.getMenuName().toLowerCase()));
         } else if (sortOrder == 2) {
-            Collections.sort(mealListCopy, (o1, o2) -> o2.getMealName().toLowerCase()
-                    .compareTo(o1.getMealName().toLowerCase()));
+            Collections.sort(menuListCopy, (o1, o2) -> o2.getMenuName().toLowerCase()
+                    .compareTo(o1.getMenuName().toLowerCase()));
         }
 
-        Meal meal = mealListCopy.get(position);
-        mViewHolder.mealName.setText(meal.getMealName());
-        Picasso.get().load(meal.getImageUrl())
+        Menu menu = menuListCopy.get(position);
+        mViewHolder.menuName.setText(menu.getMenuName());
+        Picasso.get().load(menu.getImageUrl())
                 .into(mViewHolder.imageView);
 
         return convertView;
+    }
+
+    /**
+     * Holder of the items in the row.
+     */
+    private static class ViewHolder {
+        private ImageView imageView;
+        private TextView menuName;
     }
 
     /**
@@ -116,16 +124,8 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
      * @return object that was clicked.
      */
     @Override
-    public Meal getItem(int position) {
-        return mealListCopy.get(position);
-    }
-
-    /**
-     * Holder of the items in the row.
-     */
-    private static class ViewHolder {
-        private ImageView imageView;
-        private TextView mealName;
+    public Menu getItem(int position) {
+        return menuListCopy.get(position);
     }
 
     /**
@@ -139,17 +139,17 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
 
             FilterResults results = new FilterResults();
 
-            final List<Meal> list = mealList;
+            final List<Menu> list = menuList;
 
             int count = list.size();
-            final ArrayList<Meal> newList = new ArrayList<>(count);
+            final ArrayList<Menu> newList = new ArrayList<>(count);
 
-            Meal filterableMeal;
+            Menu filterableMenu;
 
             for (int i = 0; i < count; i++) {
-                filterableMeal = list.get(i);
-                if (filterableMeal.getMealName().toLowerCase().contains(filterString.toLowerCase())) {
-                    newList.add(filterableMeal);
+                filterableMenu = list.get(i);
+                if (filterableMenu.getMenuName().toLowerCase().contains(filterString.toLowerCase())) {
+                    newList.add(filterableMenu);
                 }
             }
 
@@ -168,7 +168,7 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mealListCopy = (ArrayList<Meal>) results.values;
+            menuListCopy = (ArrayList<Menu>) results.values;
             notifyDataSetChanged();
         }
 
