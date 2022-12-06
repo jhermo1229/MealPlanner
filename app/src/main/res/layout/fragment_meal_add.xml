@@ -30,7 +30,7 @@
             </de.hdodenhof.circleimageview.CircleImageView>
 
             <Button
-                android:id="@+id/addMealImage"
+                android:id="@+id/mealAddImageButton"
                 android:layout_width="70dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center"
