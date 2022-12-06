@@ -3,7 +3,6 @@ package com.foodies.mealplanner.fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,25 +18,23 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.adapter.MenuListViewAdapter;
 import com.foodies.mealplanner.model.Menu;
 import com.foodies.mealplanner.repository.MenuRepository;
-import com.foodies.mealplanner.viewmodel.MealViewModel;
 import com.foodies.mealplanner.viewmodel.MenuViewModel;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 /**
  * Fragment for menu list
+ *
+ * @author herje
+ * @version 1
  */
 public class MenuListFragment extends Fragment {
 
     public static final String TAG = MenuListFragment.class.getName();
+    private final MenuRepository menuRepository = new MenuRepository();
     private View menuListFragmentView;
     private Button addMenuButton;
-    private final MenuRepository db = new MenuRepository();
-    private ArrayList<String> menuNameList = new ArrayList<>();
     private Spinner sortSpinner;
     private ListView menuListView;
     private EditText searchFilter;
@@ -48,7 +45,6 @@ public class MenuListFragment extends Fragment {
         // Required empty public constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -58,6 +54,7 @@ public class MenuListFragment extends Fragment {
         sortSpinner = menuListFragmentView.findViewById(R.id.sortingSpinnerMenu);
         menuListView = menuListFragmentView.findViewById(R.id.menuListView);
         searchFilter = menuListFragmentView.findViewById(R.id.searchFilterMenus);
+        searchFilter.getText().clear();
         sortArray = getResources().getStringArray(R.array.sort);
 
         //Set viewmodel
@@ -80,36 +77,21 @@ public class MenuListFragment extends Fragment {
         });
 
         //Create view of the menu list
-        db.getAllMenus(menuList -> {
-            Log.d("MENU LIST FRAG", "SIZE: " + menuList.size());
-            menuNameList = new ArrayList();
-            for (Menu menu : menuList) {
-                menuNameList.add(menu.getMenuName());
+        menuRepository.getAllMenus(menuList -> {
 
-            }
-
+            //Spinner sorter (A-Z, Z-A)
+            //Sorting will be done inside the custom adapter of listview
+            //Image is loaded in the custom adapter of listview
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if (i == 1) {
-                        Collections.sort(menuNameList, Comparator.comparing(String::toLowerCase));
-                        Collections.sort(menuList, Comparator.comparing(o -> o.getMenuName().toLowerCase()));
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.menu_listview, R.id.menuView, menuNameList);
-                        menuListView.setAdapter(adapter);
-                        textChangeListener(adapter);
-                        sortSpinner.setSelection(0);
-                    } else if (i == 2) {
-                        Collections.sort(menuNameList, (o1, o2) -> o2.toLowerCase()
-                                .compareTo(o1.toLowerCase()));
-                        Collections.sort(menuList, (o1, o2) -> o2.getMenuName().toLowerCase()
-                                .compareTo(o1.getMenuName().toLowerCase()));
 
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.menu_listview, R.id.menuView, menuNameList);
-                        menuListView.setAdapter(adapter);
-                        textChangeListener(adapter);
-                        sortSpinner.setSelection(0);
-                    }
+                    searchFilter.getText().clear();
+                    MenuListViewAdapter adapter = new MenuListViewAdapter(getContext(), menuList, i);
+                    menuListView.setAdapter(adapter);
+                    textChangeListener(adapter);
+                    sortSpinner.setSelection(0);
                 }
 
                 public void onNothingSelected(AdapterView<?> adapterView) {
@@ -119,7 +101,7 @@ public class MenuListFragment extends Fragment {
 
             });
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.menu_listview, R.id.menuView, menuNameList);
+            MenuListViewAdapter adapter = new MenuListViewAdapter(getContext(), menuList, 0);
             menuListView.setAdapter(adapter);
             textChangeListener(adapter);
 
@@ -127,7 +109,7 @@ public class MenuListFragment extends Fragment {
             menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Menu menu = menuList.get(i);
+                    Menu menu = (Menu) adapterView.getAdapter().getItem(i);
                     mViewModel.setSelectedItem(menu);
                     MenuViewUpdateFragment menuViewUpdateFragment = new MenuViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -145,9 +127,10 @@ public class MenuListFragment extends Fragment {
 
     /**
      * Listener for text change in search filter
+     *
      * @param adapter
      */
-    private void textChangeListener(ArrayAdapter<String> adapter) {
+    private void textChangeListener(MenuListViewAdapter adapter) {
         searchFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -156,7 +139,7 @@ public class MenuListFragment extends Fragment {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                adapter.getFilter().filter(charSequence);
+                adapter.getFilter().filter(charSequence.toString());
 
             }
 

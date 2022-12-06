@@ -1,6 +1,5 @@
 package com.foodies.mealplanner.fragment;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -23,10 +22,6 @@ import com.foodies.mealplanner.adapter.MealListViewAdapter;
 import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.repository.MealRepository;
 import com.foodies.mealplanner.viewmodel.MealViewModel;
-import com.google.firebase.storage.FirebaseStorage;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Meal list fragment
@@ -37,7 +32,7 @@ import java.util.List;
 public class MealListFragment extends Fragment {
 
     public static final String TAG = MealListFragment.class.getName();
-    private final MealRepository db = new MealRepository();
+    private final MealRepository mealRepository = new MealRepository();
     private View mealListFragmentView;
     private EditText searchFilter;
     private Button addMealButton;
@@ -89,7 +84,7 @@ public class MealListFragment extends Fragment {
             transaction.commit();
         });
 
-        db.getAllMeals(mealList -> {
+        mealRepository.getAllMeals(mealList -> {
 
             //Spinner sorter (A-Z, Z-A)
             //Sorting will be done inside the custom adapter of listview
@@ -100,17 +95,10 @@ public class MealListFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
                     searchFilter.getText().clear();
-                    if (i == 1) {
-                        MealListViewAdapter adapter = new MealListViewAdapter(getActivity(), mealList, i);
-                        mealListView.setAdapter(adapter);
-                        textChangeListener(adapter);
-                        sortSpinner.setSelection(0);
-                    } else if (i == 2) {
-                        MealListViewAdapter adapter = new MealListViewAdapter(getActivity(), mealList, i);
-                        mealListView.setAdapter(adapter);
-                        textChangeListener(adapter);
-                        sortSpinner.setSelection(0);
-                    }
+                    MealListViewAdapter adapter = new MealListViewAdapter(getActivity(), mealList, i);
+                    mealListView.setAdapter(adapter);
+                    textChangeListener(adapter);
+                    sortSpinner.setSelection(0);
                 }
 
                 public void onNothingSelected(AdapterView<?> adapterView) {
@@ -130,9 +118,7 @@ public class MealListFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                    Object obj = adapterView.getAdapter().getItem(i);
-                    Meal meal = (Meal) obj;
-
+                    Meal meal = (Meal) adapterView.getAdapter().getItem(i);
                     mViewModel.setSelectedItem(meal);
                     MealViewUpdateFragment mealViewUpdateFragment = new MealViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

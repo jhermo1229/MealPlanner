@@ -71,8 +71,7 @@ public class MenuListViewAdapter extends ArrayAdapter<Menu> implements Filterabl
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.meal_listview, parent, false);
-
+            convertView = mInflater.inflate(R.layout.menu_listview, parent, false);
 
             mViewHolder.imageView = (ImageView) convertView.findViewById(R.id.menuLogo);
             mViewHolder.menuName = (TextView) convertView.findViewById(R.id.menuView);
