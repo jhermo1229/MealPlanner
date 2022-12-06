@@ -3,8 +3,6 @@ package com.foodies.mealplanner.fragment;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -44,16 +42,22 @@ import java.text.NumberFormat;
 
 /**
  * Meal view of details and update fragment.
+ *
+ * @author herje
+ * @version 1
  */
 public class MealViewUpdateFragment extends Fragment {
 
+    public static final String ACTIVE = "Active";
+    public static final String NO_FIELD_WAS_UPDATED = "No field was updated";
+    public static final int TWO = 2;
     private static final String REQUIRED_ERROR = "Required";
     private final MealRepository mealRepository = new MealRepository();
-    private Meal meal = new Meal();
     private final FieldValidator fieldValidator = new FieldValidator();
     // instance for firebase storage and StorageReference
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
+    private Meal meal = new Meal();
     private View mealUpdateFragmentView;
     private MealViewModel mealViewModel;
     private EditText mealNameTxt, mealDescriptionTxt, mealIngredientTxt, mealPriceTxt;
@@ -68,6 +72,11 @@ public class MealViewUpdateFragment extends Fragment {
         // Required empty public constructor
     }
 
+    /**
+     * On create, set activity for image.
+     *
+     * @param savedInstanceState - current instance of fragment
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +93,6 @@ public class MealViewUpdateFragment extends Fragment {
                         if (data != null
                                 && data.getData() != null) {
                             Uri selectedImageUri = data.getData();
-                            Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
 
                             uploadImage(selectedImageUri);
 
@@ -119,19 +127,17 @@ public class MealViewUpdateFragment extends Fragment {
 
         if (meal.getImageUrl() != null) {
             loadImage();
-        } else {
-            Bitmap myLogo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.fui_ic_twitter_bird_white_24dp);
-            mealImageView.setImageBitmap(myLogo);
         }
 
+        //choose image in root
         mealImageButton.setOnClickListener((mealUpdateFragmentView) -> {
             imageChooser();
         });
 
-
-
+        //Disable fields on initialize
         setFieldDisabled();
 
+        //On click of update button, enables all the field.
         updateMealButton.setOnClickListener(mealUpdateFragmentView -> {
 
             okButton.setVisibility(View.VISIBLE);
@@ -155,22 +161,24 @@ public class MealViewUpdateFragment extends Fragment {
             getParentFragmentManager().popBackStackImmediate();
         });
 
+        //Applies all changes
         okButton.setOnClickListener((mealUpdateFragmentView) -> {
 
             //Check first if any field has changed
             if (!isFieldChanged) {
-                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), NO_FIELD_WAS_UPDATED, Toast.LENGTH_SHORT);
                 toast.show();
                 //check field validation
             } else if (checkAllFields()) {
+
                 meal.setMealName(mealNameTxt.getText().toString());
-                meal.setMealStatus("Active");
+                meal.setMealStatus(ACTIVE);
                 meal.setMealDescription(mealDescriptionTxt.getText().toString());
                 meal.setMealIngredients(mealIngredientTxt.getText().toString());
 
                 //Set number currency and price
                 NumberFormat format = NumberFormat.getCurrencyInstance();
-                format.setMaximumFractionDigits(2);
+                format.setMaximumFractionDigits(TWO);
                 meal.setMealPrice(format.format(Double.valueOf(mealPriceTxt.getText().toString())));
                 meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
 
@@ -185,13 +193,20 @@ public class MealViewUpdateFragment extends Fragment {
         return mealUpdateFragmentView;
     }
 
-    private int setValuesOnField(ArrayAdapter<String> adapterMealType, Meal liveMeal) {
-        mealNameTxt.setText(liveMeal.getMealName());
-        mealDescriptionTxt.setText(liveMeal.getMealDescription());
-        mealIngredientTxt.setText(liveMeal.getMealIngredients());
-        mealPriceTxt.setText(String.valueOf(liveMeal.getMealPrice()));
+    /**
+     * Set initial values on load
+     *
+     * @param adapterMealType - Spinner adapter with current list.
+     * @param meal            - current object
+     * @returns the current position of the spinner.
+     */
+    private int setValuesOnField(ArrayAdapter<String> adapterMealType, Meal meal) {
+        mealNameTxt.setText(meal.getMealName());
+        mealDescriptionTxt.setText(meal.getMealDescription());
+        mealIngredientTxt.setText(meal.getMealIngredients());
+        mealPriceTxt.setText(String.valueOf(meal.getMealPrice()));
         mealTypeList = getResources().getStringArray(R.array.mealTypeList);
-        int spinnerPos = adapterMealType.getPosition(liveMeal.getMealType());
+        int spinnerPos = adapterMealType.getPosition(meal.getMealType());
         mealTypeSpinner.setSelection(spinnerPos);
 
         return spinnerPos;
@@ -288,6 +303,9 @@ public class MealViewUpdateFragment extends Fragment {
         mealPriceTxt.setError(null);
     }
 
+    /**
+     * Sets all the field disabled.
+     */
     private void setFieldDisabled() {
         mealNameTxt.setEnabled(false);
         mealDescriptionTxt.setEnabled(false);
@@ -297,6 +315,9 @@ public class MealViewUpdateFragment extends Fragment {
         mealImageButton.setEnabled(false);
     }
 
+    /**
+     * Sets all the fields enabled.
+     */
     private void setFieldEnabled() {
         mealDescriptionTxt.setEnabled(true);
         mealIngredientTxt.setEnabled(true);
@@ -305,6 +326,11 @@ public class MealViewUpdateFragment extends Fragment {
         mealImageButton.setEnabled(true);
     }
 
+    /**
+     * uploads the image in the cloud.
+     *
+     * @param filePath - current location of the file in the device.
+     */
     private void uploadImage(Uri filePath) {
         if (filePath != null) {
 
@@ -314,7 +340,7 @@ public class MealViewUpdateFragment extends Fragment {
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
 
-            // Defining the child of storageReference
+            // Defining the child of storageReference of meals in the cloud.
             StorageReference ref
                     = storageReference
                     .child(
@@ -334,14 +360,17 @@ public class MealViewUpdateFragment extends Fragment {
                                         @Override
                                         public void onSuccess(Uri uri) {
                                             // Image uploaded successfully
-                                            // Dismiss dialog
                                             meal.setImageUrl(uri.toString());
+
+                                            //updates database on location of the image. We used access token on cloud.
                                             mealRepository.updateMeal(meal, getActivity());
+
+                                            //loads image in the view
                                             loadImage();
                                         }
                                     });
 
-
+                                    // Dismiss dialog
                                     progressDialog.dismiss();
 
                                     Toast
@@ -401,6 +430,7 @@ public class MealViewUpdateFragment extends Fragment {
      */
     private void loadImage() {
 
+        //open source Picasso
         Picasso.get().load(meal.getImageUrl())
                 .into(mealImageView);
     }
