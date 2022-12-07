@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import java.text.NumberFormat;
  */
 public class MealAddFragment extends Fragment {
 
+    public static final String TAG = MealAddFragment.class.getName();
     public static final String ACTIVE = "Active";
     private static final String REQUIRED_ERROR = "Required";
     private final FieldValidator fieldValidator = new FieldValidator();
@@ -139,6 +141,12 @@ public class MealAddFragment extends Fragment {
 
         //cancels the adding of meal
         cancelButton.setOnClickListener((mealProfileFragmentView) -> {
+
+            //delete uploaded image
+            if(!meal.getImageUrl().isEmpty()){
+                deleteImage();
+            }
+
             getParentFragmentManager().popBackStackImmediate();
         });
 
@@ -291,6 +299,26 @@ public class MealAddFragment extends Fragment {
         //open source Picasso
         Picasso.get().load(uri)
                 .into(imageView);
+    }
+
+    /**
+     * If object was not saved, delete the uploaded image in cloud.
+     */
+    private void deleteImage() {
+        StorageReference photoRef = storage.getReferenceFromUrl(meal.getImageUrl());
+        photoRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+                Log.d(TAG, "onSuccess: deleted file");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+                Log.d(TAG, "onFailure: did not delete file");
+            }
+        });
     }
 
 }
