@@ -27,6 +27,9 @@ import java.util.List;
 /**
  * User repository for meal planner.
  * Uses firebase cloud firestore
+ *
+ * @author herje
+ * @version 1
  */
 public class MealRepository {
 
@@ -38,8 +41,8 @@ public class MealRepository {
     /**
      * Add customer in firebase database
      *
-     * @param meal
-     * @param activity
+     * @param meal - meal object to be saved.
+     * @param activity - current activity in the view.
      */
     public void addMeal(Meal meal, Activity activity) {
 
@@ -47,10 +50,7 @@ public class MealRepository {
         dbCollection.document(meal.getMealName()).set(meal).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
-                Log.i("MEAL DATABASE", "Successful adding meal");
-
-                Toast toast=Toast.makeText(activity.getApplicationContext(), "Successfully created meal",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(activity.getApplicationContext(), "Successfully created meal", Toast.LENGTH_SHORT);
                 toast.show();
 
             }
@@ -62,43 +62,13 @@ public class MealRepository {
         });
     }
 
-
-    /**
-     * Callback function to return query.
-     * Uses Callback interface as firestore cloud is asynchronous
-     * @param mealNameCallBack - will callback together with the object queried
-     * @param mealParam - contains meal name
-     */
-    public void getMealName(MealNameCallBack mealNameCallBack, String mealParam){
-
-        DocumentReference docRef = dbCollection.document(mealParam);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Meal meal = document.toObject(Meal.class);
-                        mealNameCallBack.onCallBack(meal);
-                        Log.d("MEAL DATABASE", "DocumentSnapshot data: " + document.getData());
-                    } else {
-                        Log.d("MEAL DATABASE", "No such document");
-                        mealNameCallBack.onCallBack(null);
-                    }
-                } else {
-                    Log.d("DATABASE", "get failed with ", task.getException());
-                }
-            }
-        });
-
-    }
-
     /**
      * Get all meals depending on type
-     * @param mealListCallBack
-     * @param mealType
+     *
+     * @param mealListCallBack - meal callback for the list. Waits for all the list to load and then back to view.
+     * @param mealType - parameter on what type of meal (meat, vegetable, or both)
      */
-    public void getAllMealType(MealListCallBack mealListCallBack, String mealType){
+    public void getAllMealType(MealListCallBack mealListCallBack, String mealType) {
 
         List<Meal> mealList = new ArrayList<>();
 
@@ -107,13 +77,13 @@ public class MealRepository {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()){
-                            for(QueryDocumentSnapshot document : task.getResult()){
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 mealList.add(document.toObject(Meal.class));
                             }
                             Log.d("MEAL DATABASE", "Successfully retrieved all");
                             mealListCallBack.onCallBack(mealList);
-                        }else{
+                        } else {
                             Log.d("MEAL DATABASE", "Error retrieving all meals");
                         }
                     }
@@ -122,21 +92,22 @@ public class MealRepository {
 
     /**
      * Gets all the meal available
+     *
      * @param mealListCallBack - will return all the meals queried
      */
-    public void getAllMeals(MealListCallBack mealListCallBack){
+    public void getAllMeals(MealListCallBack mealListCallBack) {
 
         List<Meal> mealList = new ArrayList<>();
         dbCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()){
-                    for(QueryDocumentSnapshot document : task.getResult()){
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
                         mealList.add(document.toObject(Meal.class));
                     }
                     Log.d("MEAL DATABASE", "Successfully retrieved all");
                     mealListCallBack.onCallBack(mealList);
-                }else{
+                } else {
                     Log.d("MEAL DATABASE", "Error retrieving all meals");
                 }
             }
@@ -145,10 +116,11 @@ public class MealRepository {
 
     /**
      * Update meals by batch process in firestore
-     * @param meal - meal to be updated
+     *
+     * @param meal     - meal to be updated
      * @param activity - get current activity
      */
-    public void updateMeal(Meal meal, Activity activity){
+    public void updateMeal(Meal meal, Activity activity) {
         // Get a new write batch
         WriteBatch batch = db.batch();
 
@@ -166,7 +138,7 @@ public class MealRepository {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 Log.i("MEAL DATABASE UPDATE", "Successfully updated");
-                Toast toast=Toast.makeText(activity.getApplicationContext(), "Successfully updated meal",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(activity.getApplicationContext(), "Successfully updated meal", Toast.LENGTH_SHORT);
                 toast.show();
             }
         });

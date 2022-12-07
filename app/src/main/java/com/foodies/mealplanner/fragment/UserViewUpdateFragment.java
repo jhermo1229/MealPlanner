@@ -30,6 +30,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Fragment for updating users profile by the admin
+ * @author herje
+ * @version 1
  */
 public class UserViewUpdateFragment extends Fragment {
 

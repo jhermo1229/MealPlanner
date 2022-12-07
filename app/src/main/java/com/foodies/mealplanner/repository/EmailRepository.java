@@ -7,10 +7,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.foodies.mealplanner.Interface.EmailCallBack;
-import com.foodies.mealplanner.Interface.UserCallBack;
 import com.foodies.mealplanner.model.Email;
-import com.foodies.mealplanner.model.Menu;
-import com.foodies.mealplanner.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -23,6 +20,7 @@ import com.google.firebase.firestore.WriteBatch;
 
 /**
  * This is the repository for email transactions
+ *
  * @author herje
  * @version 1
  */
@@ -35,7 +33,7 @@ public class EmailRepository {
     /**
      * Save composed email in firebase database to be sent on a later date.
      *
-     * @param email - model containing the email parts
+     * @param email    - model containing the email parts
      * @param activity - current activity of the application
      */
     public void saveEmail(Email email, Activity activity) {
@@ -47,7 +45,7 @@ public class EmailRepository {
 
                 Log.i("EMAIL DATABASE", "Successful saved email");
 
-                Toast toast=Toast.makeText(activity.getApplicationContext(), "Successfully saved email",Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(activity.getApplicationContext(), "Successfully saved email", Toast.LENGTH_SHORT);
                 toast.show();
 
             }
@@ -62,10 +60,11 @@ public class EmailRepository {
     /**
      * Callback function to return query.
      * Uses Callback interface as firestore cloud is asynchronous
-     * @param emailCallBack
-     * @param emailDate
+     *
+     * @param emailCallBack - callback to be used for sending the email back to the view
+     * @param emailDate - document name to be used.
      */
-    public void getEmail(EmailCallBack emailCallBack, String emailDate){
+    public void getEmail(EmailCallBack emailCallBack, String emailDate) {
 
         DocumentReference docRef = db.collection("emails").document(emailDate);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
@@ -76,9 +75,9 @@ public class EmailRepository {
                     if (document.exists()) {
                         Email email = document.toObject(Email.class);
 
-                        if(!email.getSent()) {
+                        if (!email.getSent()) {
                             emailCallBack.onCallBack(email);
-                        }else{
+                        } else {
                             emailCallBack.onCallBack(null);
                         }
                         Log.d("DATABASE", "DocumentSnapshot data: " + document.getData());
@@ -96,10 +95,11 @@ public class EmailRepository {
 
     /**
      * Update user profile by batch process in firestore
-     * @param
-     * @param
+     *
+     * @param deliveryDate - this will be used for the document name
+     * @param isSent - sets if the email is already sent or not.
      */
-    public void updateEmail(String deliveryDate, Boolean isSent){
+    public void updateEmail(String deliveryDate, Boolean isSent) {
         // Get a new write batch
         WriteBatch batch = db.batch();
 

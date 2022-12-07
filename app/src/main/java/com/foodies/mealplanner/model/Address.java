@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 /**
  * Model class for address of user.
+ * @author herje
+ * @version 1
  */
 public class Address implements Serializable {
 

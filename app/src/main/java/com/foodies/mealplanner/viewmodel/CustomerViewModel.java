@@ -8,6 +8,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.foodies.mealplanner.model.User;
 
+/**
+ * View model for Customer - customer focused view model.
+ * @author herje
+ * @version 1
+ */
 public class CustomerViewModel extends ViewModel {
 
     //Create a live mutable data

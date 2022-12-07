@@ -2,6 +2,9 @@ package com.foodies.mealplanner.model;
 
 /**
  * Model for menu
+ *
+ *  @author herje
+ *  @version 1
  */
 public class Menu {
 

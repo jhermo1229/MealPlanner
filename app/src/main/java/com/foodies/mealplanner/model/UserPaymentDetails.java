@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 /**
  * Model class for payment details of user.
+ *
+ * @author herje
+ * @version 1
  */
 public class UserPaymentDetails implements Serializable {
 

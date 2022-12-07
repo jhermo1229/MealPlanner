@@ -4,8 +4,11 @@ import java.io.Serializable;
 
 /**
  * Main model for the user.
+ *
+ * @author herje
+ * @version 1
  */
-public class User implements  Comparable<User>, Serializable {
+public class User implements Comparable<User>, Serializable {
 
     private String email;
     private String password;

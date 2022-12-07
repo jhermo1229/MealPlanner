@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 /**
  * Model class for user meals chosen by the user.
+ *
+ * @author herje
+ * @version 1
  */
 public class UserMealDetails implements Serializable {
 

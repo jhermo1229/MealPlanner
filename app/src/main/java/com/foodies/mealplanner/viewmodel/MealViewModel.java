@@ -8,6 +8,11 @@ import androidx.lifecycle.ViewModel;
 
 import com.foodies.mealplanner.model.Meal;
 
+/**
+ * View model for meal - meal focused.
+ * @author herje
+ * @version 1
+ */
 public class MealViewModel extends ViewModel {
 
     //Create a live mutable data

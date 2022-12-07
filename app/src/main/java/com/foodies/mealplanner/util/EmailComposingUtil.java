@@ -21,18 +21,22 @@ import java.util.List;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 
-public class EmailUtil {
+/**
+ * Email utility for composing the message.
+ * @author herje
+ * @version 1
+ */
+public class EmailComposingUtil {
 
     public static final String MEAL_PLANNER_PLAN_OF_THE_WEEK = "Meal Planner plan of the week";
     private String mondayDate, wednesdayDate, fridayDate;
     private AppUtils appUtils = new AppUtils();
-    private EmailRepository emailRepository = new EmailRepository();
 
     /**
      * Sends the email
      *
-     * @param context
-     * @param mealPlan
+     * @param context - current context of the view.
+     * @param mealPlan - meal plan for the week.
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void sendEmail(Context context, MealPlanWeek mealPlan) {
@@ -67,6 +71,11 @@ public class EmailUtil {
     }
 
 
+    /**
+     * Composing the email body
+     * @param mealPlan - meal plan for the week
+     * @return the composed message
+     */
     @RequiresApi(api = Build.VERSION_CODES.O)
     @NonNull
     public String composeEmailBody(MealPlanWeek mealPlan) {
@@ -85,10 +94,9 @@ public class EmailUtil {
 
 
     /**
-     * Compose message html style
-     *
-     * @param mealPLan
-     * @return
+     * Composing the email body
+     * @param mealPLan - meal plan for the week
+     * @return the composed message
      */
     private String composeMessageHTML(MealPlanWeek mealPLan) {
         StringBuilder messageFormat = new StringBuilder();
@@ -103,12 +111,11 @@ public class EmailUtil {
     }
 
     /**
-     * Compose meals of message body
-     *
-     * @param menu
-     * @param day
-     * @param date
-     * @return
+     * Composing the email body
+     * @param menu - menu chosen.
+     * @param day - day of the menu.
+     * @param date - date of the current day (Month day, Year) format
+     * @return the composed message
      */
     private StringBuilder buildMealMessage(Menu menu, String day, String date) {
         StringBuilder messageFormat = new StringBuilder();
@@ -123,10 +130,9 @@ public class EmailUtil {
     }
 
     /**
-     * Compose menu details of message body
-     *
-     * @param meal
-     * @return
+     * Composing the email body
+     * @param meal - meal inside the menu.
+     * @return the composed message
      */
     private StringBuilder buildMenuMessage(Meal meal) {
 

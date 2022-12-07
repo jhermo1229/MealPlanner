@@ -24,18 +24,25 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Menu repository for meal planner
+ * Uses firebase cloud firestore
+ *
+ * @author herje
+ * @version 1
+ */
 public class MenuRepository {
 
     public static final String COLLECTION_NAME = "menus";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
-    CollectionReference dbCollection = db.collection(COLLECTION_NAME);
+    private CollectionReference dbCollection = db.collection(COLLECTION_NAME);
 
 
     /**
      * Add menu in firebase database
      *
-     * @param menu
-     * @param activity
+     * @param menu - menu object to be save.
+     * @param activity - current activity in the menu.
      */
     public void addMenu(Menu menu, Activity activity) {
 

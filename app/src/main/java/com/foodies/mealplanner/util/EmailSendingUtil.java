@@ -3,22 +3,9 @@ package com.foodies.mealplanner.util;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
-import com.foodies.mealplanner.model.Meal;
-import com.foodies.mealplanner.model.MealPlanWeek;
-import com.foodies.mealplanner.model.Menu;
-
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -26,10 +13,14 @@ import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
-import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+/**
+ * Utility for sending email.
+ * @author herje
+ * @version 1
+ */
 public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
 
     private Context context;
@@ -47,6 +38,10 @@ public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
         this.message = message;
     }
 
+    /**
+     * Setting up session for email.
+     *
+     */
     @Override
     protected Void doInBackground(Void... voids) {
         Properties props = new Properties();
@@ -59,16 +54,14 @@ public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
         Log.d("EMAIL UTIL", "PROPS SET");
         session = Session.getDefaultInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication(Config.EMAIL, Config.PASSWORD);
+                return new PasswordAuthentication(EmailConfigForGoogle.EMAIL, EmailConfigForGoogle.PASSWORD);
             }
         });
         try {
             MimeMessage mm = new MimeMessage(session);
-            mm.setFrom(new InternetAddress(Config.EMAIL));
-//            mm.addRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            mm.setFrom(new InternetAddress(EmailConfigForGoogle.EMAIL));
             mm.setRecipients(Message.RecipientType.TO, email);
             mm.setSubject(subject);
-//            mm.setText(message);
             mm.setContent(message, "text/html");
             Log.d("EMAIL UTIL", "BEFORE SEND");
             Transport.send(mm);
@@ -79,6 +72,9 @@ public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
         return null;
     }
 
+    /**
+     * Progress dialog before sending message.
+     */
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
@@ -86,7 +82,9 @@ public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
         progressDialog = ProgressDialog.show(context,"Sending message","Please wait...",false,false);
     }
 
-
+    /**
+     * After sending the email.
+     */
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         progressDialog.dismiss();

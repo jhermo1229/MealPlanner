@@ -22,6 +22,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Fragment class for payment details of user
+ * @author herje
+ * @version 1
  */
 public class PaymentDetailsFragment extends Fragment {
 

@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -45,18 +43,17 @@ import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.CustomerViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
-import java.io.IOException;
-
 /**
  * User profile fragment
+ *
+ * @author herje
+ * @version 1
  */
 public class CustomerProfileFragment extends Fragment {
 
@@ -65,6 +62,14 @@ public class CustomerProfileFragment extends Fragment {
     public static final int TEN = 10;
     public static final String REQUIRED_ERROR = "Required";
     public static final String INVALID_LENGTH = "Invalid length";
+    public static final String ARE_YOU_SURE_YOU_WANT_TO_END_SUBSCRIPTION = "Are you sure you want to end subscription?";
+    public static final String CANCEL_SUBSCRIPTION = "Cancel Subscription";
+    public static final String INACTIVE = "Inactive";
+    public static final String NO_FIELD_WAS_UPDATED = "No field was updated";
+    public static final String IMAGES_USERS = "images/users/";
+    public static final String INCORRECT_PASSWORD = "Incorrect password";
+    public static final String PASSWORD_DOES_NOT_MATCH = "Password does not match";
+    public static final String PASSWORD_DOES_NOT_MATCH1 = "Password does not match";
     private final FieldValidator fieldValidator = new FieldValidator();
     private final UserRepository userDb = new UserRepository();
     // instance for firebase storage and StorageReference
@@ -98,12 +103,10 @@ public class CustomerProfileFragment extends Fragment {
                     if (result.getResultCode()
                             == Activity.RESULT_OK) {
                         Intent data = result.getData();
-                        // do your operation from here....
+
                         if (data != null
                                 && data.getData() != null) {
                             Uri selectedImageUri = data.getData();
-                            Log.d("IMAGE TEST", "TEST: " + selectedImageUri.toString());
-
                             uploadImage(selectedImageUri);
 
                         }
@@ -119,7 +122,6 @@ public class CustomerProfileFragment extends Fragment {
         View userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
         customerViewModel = new ViewModelProvider(requireActivity()).get(CustomerViewModel.class);
         user = customerViewModel.getSelectedItem().getValue();
-        Log.d("<><><><><>2", "Card Number: " + user.getUserPaymentDetails().getCardNumber().toString());
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
         updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
@@ -141,13 +143,11 @@ public class CustomerProfileFragment extends Fragment {
     public void onViewCreated(View view,
                               Bundle savedInstanceState) {
 
-        Log.i("CUSTOMER VIEW", "USER: " + user.getEmail());
-        if(user.getImageUrl()!= null) {
+        //If image is available, load it!
+        if (user.getImageUrl() != null) {
             loadImage();
-        }else{
-            Bitmap myLogo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.fui_ic_twitter_bird_white_24dp);
-            imageView.setImageBitmap(myLogo);
         }
+
         setFieldValue();
 
         imageBtn.setOnClickListener((userProfileView) -> {
@@ -155,31 +155,28 @@ public class CustomerProfileFragment extends Fragment {
         });
 
         updatePersonalBtn.setOnClickListener((userProfileView) -> {
-
             updatePersonalDetailsProcess();
         });
 
         updateLoginBtn.setOnClickListener((userProfileView) -> {
-
             updateLoginDetailsProcess();
         });
 
         updatePaymentBtn.setOnClickListener((userProfileView) -> {
-
             updatePaymentDetailsProcess();
         });
 
         cancelSubscriptionBtn.setOnClickListener((userProfileView -> {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setMessage("Are you sure you want to end subscription?").setTitle("Cancel Subscription");
+            builder.setMessage(ARE_YOU_SURE_YOU_WANT_TO_END_SUBSCRIPTION).setTitle(CANCEL_SUBSCRIPTION);
 
             builder.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //Will cancel the subscription. Make status of the user to Inactive.
 
-                    user.setStatus("Inactive");
+                    user.setStatus(INACTIVE);
                     userDb.updateUser(user, getActivity());
                     getActivity().finishAffinity();
                     startActivity(new Intent(getActivity(), MainActivity.class));
@@ -198,6 +195,9 @@ public class CustomerProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Method for updating the payment details
+     */
     private void updatePaymentDetailsProcess() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -210,7 +210,7 @@ public class CustomerProfileFragment extends Fragment {
         cardNumberDialog = dialogView.findViewById(R.id.cardNumberUpdate);
         expiryDateDialog = dialogView.findViewById(R.id.expiryDateUpdate);
         cvcDialog = dialogView.findViewById(R.id.cvcUpdate);
-        cardNumberDialog.setText(user.getUserPaymentDetails().getCardNumber().toString());
+        cardNumberDialog.setText(user.getUserPaymentDetails().getCardNumber());
         cardNameDialog.setText(user.getUserPaymentDetails().getNameOnCard());
         expiryDateDialog.setText(user.getUserPaymentDetails().getExpiryDate().toString());
         cvcDialog.setText(user.getUserPaymentDetails().getSecurityCode());
@@ -245,7 +245,7 @@ public class CustomerProfileFragment extends Fragment {
                     user.setUserPaymentDetails(userPaymentDetails);
 
                     userDb.updateUser(user, getActivity());
-
+                    //update the viewmodel
                     customerViewModel.setSelectedItem(user);
 
                     setFieldValue();
@@ -258,6 +258,9 @@ public class CustomerProfileFragment extends Fragment {
 
     }
 
+    /**
+     * Update the login details
+     */
     private void updateLoginDetailsProcess() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -301,6 +304,7 @@ public class CustomerProfileFragment extends Fragment {
                         // Do not use this place as we are overriding this button.
                     }
                 });
+
         AlertDialog alert = builder.create();
         alert.show();
         alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -317,8 +321,6 @@ public class CustomerProfileFragment extends Fragment {
 
             }
         });
-
-
     }
 
     /**
@@ -417,7 +419,7 @@ public class CustomerProfileFragment extends Fragment {
 
                         alert.dismiss();
                     } else {
-                        Toast toast = Toast.makeText(alert.getContext(), "No field was updated", Toast.LENGTH_SHORT);
+                        Toast toast = Toast.makeText(alert.getContext(), NO_FIELD_WAS_UPDATED, Toast.LENGTH_SHORT);
                         toast.show();
                     }
                 }
@@ -436,8 +438,7 @@ public class CustomerProfileFragment extends Fragment {
         phoneView.setText(user.getUserDetails().getPhoneNumber());
         emailView.setText(user.getEmail());
         cardNameView.setText(user.getUserPaymentDetails().getNameOnCard());
-        Log.d("<>><<><><>", "Card number: " + user.getUserPaymentDetails().getCardNumber().toString());
-        cardNumberView.setText(user.getUserPaymentDetails().getCardNumber().toString());
+        cardNumberView.setText(user.getUserPaymentDetails().getCardNumber());
         expiryDateView.setText(user.getUserPaymentDetails().getExpiryDate().toString());
 
         //update image view for card type
@@ -459,6 +460,9 @@ public class CustomerProfileFragment extends Fragment {
                 .into(imageView);
     }
 
+    /**
+     * Choose image form the device
+     */
     private void imageChooser() {
         Intent i = new Intent();
         i.setType("image/*");
@@ -467,7 +471,10 @@ public class CustomerProfileFragment extends Fragment {
         launchSomeActivity.launch(i);
     }
 
-    // UploadImage method
+    /**
+     * Upload image to firebase cloud
+     * @param filePath - uri path of the image
+     */
     private void uploadImage(Uri filePath) {
         if (filePath != null) {
 
@@ -481,7 +488,7 @@ public class CustomerProfileFragment extends Fragment {
             StorageReference ref
                     = storageReference
                     .child(
-                            "images/users/"
+                            IMAGES_USERS
                                     + user.getEmail());
 
             // adding listeners on upload
@@ -503,7 +510,6 @@ public class CustomerProfileFragment extends Fragment {
                                             loadImage();
                                         }
                                     });
-
 
                                     progressDialog.dismiss();
 
@@ -583,7 +589,6 @@ public class CustomerProfileFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (spinnerPosition != i) {
-                    Log.i("SPINNER POS", "T/F: " + isFieldChanged);
                     isFieldChanged = true;
                 }
             }
@@ -678,14 +683,14 @@ public class CustomerProfileFragment extends Fragment {
 
         String oldPasswordDecode = appUtils.decodeBase64(user.getPassword());
         if (allValid && (!oldPasswordDecode.equals(oldPasswordDialog.getText().toString()))) {
-            oldPasswordDialog.setError("Incorrect password");
+            oldPasswordDialog.setError(INCORRECT_PASSWORD);
             allValid = false;
         }
 
         if (allValid && (!newPasswordDialog.getText().toString()
                 .equals(confirmNewPasswordDialog.getText().toString()))) {
-            confirmNewPasswordDialog.setError("Password does not match");
-            newPasswordDialog.setError("Password does not match");
+            confirmNewPasswordDialog.setError(PASSWORD_DOES_NOT_MATCH);
+            newPasswordDialog.setError(PASSWORD_DOES_NOT_MATCH1);
             allValid = false;
         }
 
@@ -739,12 +744,18 @@ public class CustomerProfileFragment extends Fragment {
         phoneNumberDialog.setError(null);
     }
 
+    /**
+     * Resets error on login details
+     */
     private void errorResetLogin() {
         oldPasswordDialog.setError(null);
         newPasswordDialog.setError(null);
         confirmNewPasswordDialog.setError(null);
     }
 
+    /**
+     * Resets error in payment details
+     */
     private void errorResetPayment() {
         cardNameDialog.setError(null);
         cardNumberDialog.setError(null);

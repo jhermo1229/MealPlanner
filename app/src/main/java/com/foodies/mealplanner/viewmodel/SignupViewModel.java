@@ -10,6 +10,8 @@ import com.foodies.mealplanner.model.User;
 
 /**
  * View Model class to share User model to different fragments at SignupActivity
+ * @author herje
+ * @version 1
  */
 public class SignupViewModel extends ViewModel {
 

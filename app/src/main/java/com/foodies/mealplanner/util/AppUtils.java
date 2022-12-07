@@ -9,6 +9,11 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 
+/**
+ * Utility for base 64 and date
+ * @author herje
+ * @version 1
+ */
 public class AppUtils {
 
     public String encodeBase64(String data) {

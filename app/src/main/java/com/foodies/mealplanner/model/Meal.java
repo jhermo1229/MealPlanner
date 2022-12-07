@@ -1,10 +1,10 @@
 package com.foodies.mealplanner.model;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-
 /**
  * Model class for meals
+ *
+ * * @author herje
+ * * @version 1
  */
 public class Meal {
 

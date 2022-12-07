@@ -93,25 +93,20 @@ public class LoginHomeFragment extends Fragment {
 
                 db.getUser(user -> {
 
-
                     if (user != null) {
                         String passwordDecode = appUtils.decodeBase64(user.getPassword());
                         if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
                             if (user.getUserType().equals("C")) {
-                                Log.d("<><><><><>00", "Card Number: " + user.getUserPaymentDetails().getCardNumber().toString());
                                 Intent intent = new Intent(getActivity(), CustomerActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
 
 
                             } else if (user.getUserType().equals("A")) {
-
                                 Intent intent = new Intent(getActivity(), AdminActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
-
-
                             }
                         } else {
                             password.setError(PLEASE_CHECK_PASSWORD);

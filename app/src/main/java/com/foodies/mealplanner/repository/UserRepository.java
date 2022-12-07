@@ -34,26 +34,28 @@ import java.util.List;
 /**
  * User repository for meal planner.
  * Uses firebase cloud firestore
+ *
+ * @author herje
+ * @version 1
  */
 public class UserRepository {
 
     public static final String USER_CREDENTIALS = "userCredentials";
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference dbCollection = db.collection(USER_CREDENTIALS);
 
 
     /**
      * Add customer in firebase database
      *
-     * @param user
-     * @param activity
+     * @param user - user object to be saved.
+     * @param activity - current activity in the view.
      */
     public void addCustomerUser(User user, Activity activity) {
 
-        CollectionReference dbCourses = db.collection(USER_CREDENTIALS);
-        dbCourses.document(user.getEmail()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+        dbCollection.document(user.getEmail()).set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
             @Override
             public void onSuccess(Void aVoid) {
-
                 Log.i("Database", "Successful adding user");
 
             }
@@ -69,12 +71,12 @@ public class UserRepository {
     /**
      * Callback function to return query.
      * Uses Callback interface as firestore cloud is asynchronous
-     * @param userCallBack
-     * @param user
+     * @param userCallBack - will return users on retrieve to the view.
+     * @param user - user parameter for fetching user object.
      */
     public void getUser(UserCallBack userCallBack, User user){
 
-        DocumentReference docRef = db.collection("userCredentials").document(user.getEmail());
+        DocumentReference docRef = dbCollection.document(user.getEmail());
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -98,13 +100,16 @@ public class UserRepository {
                 }
             }
         });
-
     }
 
+    /**
+     * Gets all the users
+     * @param userListCallBack - call back for returning all the users.
+     */
     public void getAllUsers(UserListCallBack userListCallBack){
 
         List<User> userList = new ArrayList<>();
-        db.collection("userCredentials").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        dbCollection.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()){
@@ -121,13 +126,13 @@ public class UserRepository {
 
     /**
      * Get all meals depending on type
-     * @param userListCallBack
+     * @param userListCallBack - callback for all the users that is active
      */
     public void getAllUserCustomerActive(UserListCallBack userListCallBack){
 
         List<User> userList = new ArrayList<>();
 
-        db.collection("userCredentials").whereEqualTo("status", "Active")
+        dbCollection.whereEqualTo("status", "Active")
                 .whereEqualTo("userType", "C")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -148,14 +153,14 @@ public class UserRepository {
 
     /**
      * Update user profile by batch process in firestore
-     * @param user
-     * @param activity
+     * @param user - object to be updated.
+     * @param activity - current activity for the view.
      */
     public void updateUser(User user, Activity activity){
         // Get a new write batch
         WriteBatch batch = db.batch();
 
-        DocumentReference ref = db.collection("userCredentials").document(user.getEmail());
+        DocumentReference ref = dbCollection.document(user.getEmail());
         batch.update(ref, "email", user.getEmail());
         Log.d("DATABASE", user.getPassword());
         batch.update(ref, "password", user.getPassword());

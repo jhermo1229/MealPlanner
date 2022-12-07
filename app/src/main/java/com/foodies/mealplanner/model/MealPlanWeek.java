@@ -4,6 +4,10 @@ import java.util.List;
 
 /**
  * Model for the final meal plan to be sent to the customers
+ *
+ *
+ * @author herje
+ * @version 1
  */
 public class MealPlanWeek {
 

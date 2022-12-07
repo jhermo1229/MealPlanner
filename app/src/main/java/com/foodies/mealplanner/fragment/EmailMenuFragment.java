@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +25,7 @@ import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
-import com.foodies.mealplanner.util.EmailUtil;
+import com.foodies.mealplanner.util.EmailComposingUtil;
 import com.foodies.mealplanner.validations.FieldValidator;
 
 import java.time.LocalDate;
@@ -36,17 +35,20 @@ import java.util.List;
 
 /**
  * Fragment for sending email.
+ * @author herje
+ * @version 1
  */
 public class EmailMenuFragment extends Fragment {
 
     public static final String PICK_A_MENU = "Pick a menu";
     private static final String REQUIRED_ERROR = "Required";
+    public static final String NO_EMAILS_AVAILABLE = "No emails available";
     private final AppUtils appUtils = new AppUtils();
     private final UserRepository userDb = new UserRepository();
     private final MenuRepository menuDb = new MenuRepository();
     private final HashMap<String, Menu> menuMap = new HashMap<>();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private final EmailUtil emailUtil = new EmailUtil();
+    private final EmailComposingUtil emailComposingUtil = new EmailComposingUtil();
     private View emailMenuFragment;
     private TextView mondayTxt, wednesdayTxt, fridayTxt;
     private EditText emailEditTxt, mondayMenuTxt, wednesdayMenuTxt, fridayMenuTxt, notesTxt;
@@ -88,11 +90,10 @@ public class EmailMenuFragment extends Fragment {
                 emailAddressList.add(user.getEmail());
 
             }
-            Log.d("USERS EMAIL", "SIZE: " + emailAddressList.size());
 
             //Lock the edit text but scrollable
             if (emailAddressList.size() == 0) {
-                emailEditTxt.setText("No emails available");
+                emailEditTxt.setText(NO_EMAILS_AVAILABLE);
             } else {
                 emailEditTxt.setText(emailAddressList.toString().replaceAll("[\\[\\]]", ""));
             }
@@ -107,7 +108,6 @@ public class EmailMenuFragment extends Fragment {
         //get all menus
         menuDb.getAllMenus(menuList -> {
 
-            Log.d("MENU LIST FRAG", "SIZE: " + menuList.size());
             menuNameList = new ArrayList();
 
             for (Menu menu : menuList) {
@@ -128,19 +128,21 @@ public class EmailMenuFragment extends Fragment {
             });
         });
 
+        //Sends email
         sendBtn.setOnClickListener((emailMenuFragment) -> {
             if (checkAllFields()) {
 
                 MealPlanWeek mealPlanWeek = getMealPlanWeek(emailAddressList);
 
                 //Build Email and send
-                emailUtil.sendEmail(getContext(), mealPlanWeek);
+                emailComposingUtil.sendEmail(getContext(), mealPlanWeek);
                 saveEmail(mealPlanWeek, true);
 
                 getParentFragmentManager().popBackStackImmediate();
             }
         });
 
+        //Saves email to be sent on a later time
         saveBtn.setOnClickListener((emailMenuFragment) -> {
             if (checkAllFields()) {
                 saveEmail(getMealPlanWeek(emailAddressList), false);
@@ -174,7 +176,7 @@ public class EmailMenuFragment extends Fragment {
     /**
      * Set alert dialog to show the menu to choose from
      *
-     * @param editText
+     * @param editText - Edit text to put the menu chosen
      */
     private void alertDialog(EditText editText) {
 
@@ -202,9 +204,6 @@ public class EmailMenuFragment extends Fragment {
      */
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void saveEmail(MealPlanWeek mealPlan, Boolean isSent) {
-//
-//        LocalDate saturday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.SATURDAY));
-//        String saturdayDate = appUtils.dateFormatter(saturday);
 
         LocalDate saturday = LocalDate.now();
         String saturdayDate = appUtils.dateFormatter(saturday);

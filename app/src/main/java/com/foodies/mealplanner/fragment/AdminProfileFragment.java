@@ -18,7 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.util.AppUtils;
-import com.foodies.mealplanner.util.EmailUtil;
+import com.foodies.mealplanner.util.EmailComposingUtil;
 
 import java.time.LocalDate;
 
@@ -35,7 +35,7 @@ public class AdminProfileFragment extends Fragment {
     public static final String DELIMITER = ";";
     private final EmailRepository emailRepo = new EmailRepository();
     private final AppUtils appUtils = new AppUtils();
-    private final EmailUtil emailUtil = new EmailUtil();
+    private final EmailComposingUtil emailComposingUtil = new EmailComposingUtil();
     private View adminProfileFragmentView;
     private Button usersButton, mealsButton, menusButton, emailButton;
 
@@ -75,7 +75,7 @@ public class AdminProfileFragment extends Fragment {
                 builder.setPositiveButton(R.string.sendEmail, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        emailUtil.sendEmail(getContext(), email.getMealPlanWeek());
+                        emailComposingUtil.sendEmail(getContext(), email.getMealPlanWeek());
                         emailRepo.updateEmail(email.getDeliveryDate(), true);
                         dialog.dismiss();
                     }

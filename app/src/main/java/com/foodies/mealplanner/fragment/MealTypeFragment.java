@@ -19,6 +19,8 @@ import com.foodies.mealplanner.model.UserMealDetails;
 
 /**
  * Fragment for meal type
+ * @author herje
+ * @version 1
  */
 public class MealTypeFragment extends Fragment {
 

@@ -4,6 +4,9 @@ import java.io.Serializable;
 
 /**
  * Model for user details.
+ *
+ * @author herje
+ * @version 1
  */
 public class UserDetails implements Serializable {
 

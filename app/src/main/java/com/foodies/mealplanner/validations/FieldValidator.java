@@ -2,6 +2,11 @@ package com.foodies.mealplanner.validations;
 
 import java.util.regex.Pattern;
 
+/**
+ * Validator for checking for correct email format
+ * @author herje
+ * @version 1
+ */
 public class FieldValidator {
 
     /**
