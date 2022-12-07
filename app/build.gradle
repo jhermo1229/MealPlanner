@@ -70,12 +70,13 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$androidx_test"
     androidTestImplementation "androidx.test:core:$androidx_test"
     androidTestImplementation "androidx.fragment:fragment-testing:$androidx_test"
-    //androidTestImplementation "androidx.test.ext:junit-ktx:$androidx_test"
 
     //circular image
     implementation 'de.hdodenhof:circleimageview:3.1.0'
 
     //Generating javadocs as tool>generate javadocs command is having a problem seeing SDKs
+    //How to run: choose Javadoc in run dropdown and press play button.
+    //Default Location C:\{project}\app\build\docs\javadoc
     task javadoc(type: Javadoc) {
         source = android.sourceSets.main.java.srcDirs
         classpath += project.files(android.getBootClasspath().join(File.pathSeparator))

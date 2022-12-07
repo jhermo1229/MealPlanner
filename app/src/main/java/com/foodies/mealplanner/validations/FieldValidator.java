@@ -12,7 +12,7 @@ public class FieldValidator {
     /**
      * Checker for email format
      *
-     * @param email
+     * @param email - email to be checked.
      * @return true if matches
      */
     public boolean isValidEmail(String email) {
@@ -26,7 +26,7 @@ public class FieldValidator {
 
     /**
      * Check all required fields if value is present
-     *
+     * @param inputLength - 0 if there is no input.
      * @return boolean, true if all valid
      */
     public boolean validateFieldIfEmpty(Integer inputLength) {
