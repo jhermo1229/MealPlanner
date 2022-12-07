@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
+import com.foodies.mealplanner.adapter.UserListViewAdapter;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.viewmodel.UserUpdateViewModel;
@@ -27,21 +28,24 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.List;
 
-
+/**
+ * Fragment for users
+ * @author herje
+ * @version 1
+ */
 public class UsersListFragment extends Fragment {
 
     public static final String TAG = UsersListFragment.class.getName();
-    private final UserRepository db = new UserRepository();
+    private final UserRepository userRepository = new UserRepository();
     private View usersListFragmentView;
     private UserUpdateViewModel userUpdateViewModel;
     private String[] sortArray;
-    EditText searchFilter;
-    TextView userCount;
-    Spinner sortSpinner;
-    ListView userListView;
+    private EditText searchFilter;
+    private TextView userCount;
+    private Spinner sortSpinner;
+    private ListView userListView;
 
     public UsersListFragment() {
         // Required empty public constructor
@@ -64,8 +68,6 @@ public class UsersListFragment extends Fragment {
         userCount = usersListFragmentView.findViewById(R.id.userCount);
 
         searchFilter = usersListFragmentView.findViewById(R.id.searchFilter);
-//        List<User> users = new ArrayList<>();
-        ArrayList<String> fullName = new ArrayList<>();
         sortSpinner = usersListFragmentView.findViewById(R.id.sortingSpinner);
         sortArray = getResources().getStringArray(R.array.sort);
 
@@ -75,37 +77,17 @@ public class UsersListFragment extends Fragment {
         sortSpinner.setAdapter(sortAdapter);
 
         userListView = usersListFragmentView.findViewById(R.id.userListView);
-        db.getAllUsers(userList -> {
-//            users.addAll(userList);
-            for (User user : userList) {
-
-                fullName.add(user.getUserDetails().getFirstName() + " " + user.getUserDetails().getLastName());
-                Log.d("USERS", user.getUserDetails().getFirstName() + " " + user.getUserDetails().getLastName());
-            }
+        userRepository.getAllUsers(userList -> {
 
             userCount.setText("Users(" + userList.size() + ")");
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    if(i == 1){
-                        Collections.sort(fullName, Comparator.comparing(String::toLowerCase));
-                        Collections.sort(userList, Comparator.comparing(o -> o.getUserDetails().getFirstName().toLowerCase()));
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
+                        UserListViewAdapter adapter = new UserListViewAdapter(getContext(), userList, i);
                         userListView.setAdapter(adapter);
                         textChangeListener(adapter);
                         sortSpinner.setSelection(0);
-                    }else if(i == 2){
-                        Collections.sort(fullName, (o1, o2) -> o2.toLowerCase()
-                                .compareTo(o1.toLowerCase()));
-                        Collections.sort(userList, (o1, o2) -> o2.getUserDetails().getFirstName().toLowerCase()
-                                .compareTo(o1.getUserDetails().getFirstName().toLowerCase()));
-
-                        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
-                        userListView.setAdapter(adapter);
-                        textChangeListener(adapter);
-                        sortSpinner.setSelection(0);
-                    }
                 }
 
                 public void onNothingSelected(AdapterView<?> adapterView) {
@@ -115,7 +97,7 @@ public class UsersListFragment extends Fragment {
 
             });
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.users_listview, R.id.userView, fullName);
+            UserListViewAdapter adapter = new UserListViewAdapter(getContext(), userList, 0);
             userListView.setAdapter(adapter);
             textChangeListener(adapter);
 
@@ -139,9 +121,10 @@ public class UsersListFragment extends Fragment {
     }
 
     /**
-     * @param adapter
+     * Listener for any changes in the field.
+     * @param adapter - custom adapter specific for user.
      */
-    private void textChangeListener(ArrayAdapter<String> adapter) {
+    private void textChangeListener(UserListViewAdapter adapter) {
         searchFilter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -163,9 +146,5 @@ public class UsersListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        Log.d("ONVIEWCREATED", "CALLED HERE");
-
-
     }
 }

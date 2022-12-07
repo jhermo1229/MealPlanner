@@ -13,8 +13,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.R;
-import com.foodies.mealplanner.model.Meal;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -23,25 +23,24 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Custom adapter for the listview of meal.
- *
+ * Custom adapter for the listview of user
  * @author herje
  * @version 1
  */
-public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterable {
+public class UserListViewAdapter extends ArrayAdapter<User> implements Filterable {
 
     private final Context context;
     private final ItemFilter itemFilter = new ItemFilter();
-    private List<Meal> mealList = new ArrayList<>();
-    private List<Meal> mealListCopy = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
+    private List<User> userListCopy = new ArrayList<>();
     private Integer sortOrder = 0;
     private final ViewHolder viewHolder = new ViewHolder();
 
-    public MealListViewAdapter(@NonNull Context context, List<Meal> mealList, Integer sortOrder) {
-        super(context, R.layout.meal_listview);
+    public UserListViewAdapter(@NonNull Context context, List<User> userList, Integer sortOrder) {
+        super(context, R.layout.users_listview);
         this.context = context;
-        this.mealListCopy = mealList;
-        this.mealList = mealList;
+        this.userList = userList;
+        this.userListCopy = userList;
         this.sortOrder = sortOrder;
     }
 
@@ -52,7 +51,7 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
      */
     @Override
     public int getCount() {
-        return mealListCopy.size();
+        return userListCopy.size();
     }
 
     /**
@@ -70,27 +69,34 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
         if (convertView == null) {
             LayoutInflater mInflater = (LayoutInflater) context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = mInflater.inflate(R.layout.meal_listview, parent, false);
+            convertView = mInflater.inflate(R.layout.users_listview, parent, false);
 
 
-            mViewHolder.imageView = (ImageView) convertView.findViewById(R.id.mealLogo);
-            mViewHolder.mealName = (TextView) convertView.findViewById(R.id.mealView);
+            mViewHolder.imageView = (ImageView) convertView.findViewById(R.id.userLogo);
+            mViewHolder.name = (TextView) convertView.findViewById(R.id.userView);
             convertView.setTag(mViewHolder);
         } else {
             mViewHolder = (ViewHolder) convertView.getTag();
         }
 
         if (sortOrder == 1) {
-            Collections.sort(mealListCopy, Comparator.comparing(o -> o.getMealName().toLowerCase()));
+            Collections.sort(userListCopy, Comparator.comparing(o -> o.getUserDetails().getFirstName().toLowerCase()));
         } else if (sortOrder == 2) {
-            Collections.sort(mealListCopy, (o1, o2) -> o2.getMealName().toLowerCase()
-                    .compareTo(o1.getMealName().toLowerCase()));
+            Collections.sort(userListCopy, (o1, o2) -> o2.getUserDetails().getFirstName().toLowerCase()
+                    .compareTo(o1.getUserDetails().getFirstName().toLowerCase()));
         }
 
-        Meal meal = mealListCopy.get(position);
-        mViewHolder.mealName.setText(meal.getMealName());
-        Picasso.get().load(meal.getImageUrl())
+        User user = userListCopy.get(position);
+        mViewHolder.name.setText(user.getUserDetails().getFirstName() + " " + user.getUserDetails().getLastName());
+        if(user.getUserType().equals("C")){
+        Picasso.get().load(user.getImageUrl())
                 .into(mViewHolder.imageView);
+
+        }else{
+            //Royalty free image - default admin picture
+           Picasso.get().load("https://thumbs.dreamstime.com/z/admin-computer-keys-9565077.jpg")
+              .into(mViewHolder.imageView);
+        }
 
         return convertView;
     }
@@ -103,7 +109,10 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
         return super.getDropDownView(position, convertView, parent);
     }
 
-    //returns the filtered list.
+    /**
+     * Returns the filtered list
+     * @return itemFilter - filters the list by the searchbar.
+     */
     public Filter getFilter() {
         return itemFilter;
     }
@@ -115,8 +124,8 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
      * @return object that was clicked.
      */
     @Override
-    public Meal getItem(int position) {
-        return mealListCopy.get(position);
+    public User getItem(int position) {
+        return userListCopy.get(position);
     }
 
     /**
@@ -124,7 +133,7 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
      */
     private static class ViewHolder {
         private ImageView imageView;
-        private TextView mealName;
+        private TextView name;
     }
 
     /**
@@ -138,17 +147,17 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
 
             FilterResults results = new FilterResults();
 
-            final List<Meal> list = mealList;
+            final List<User> list = userList;
 
             int count = list.size();
-            final ArrayList<Meal> newList = new ArrayList<>(count);
+            final ArrayList<User> newList = new ArrayList<>(count);
 
-            Meal filterableMeal;
+            User filterableUser;
 
             for (int i = 0; i < count; i++) {
-                filterableMeal = list.get(i);
-                if (filterableMeal.getMealName().toLowerCase().contains(filterString.toLowerCase())) {
-                    newList.add(filterableMeal);
+                filterableUser = list.get(i);
+                if (filterableUser.getUserDetails().getFirstName().toLowerCase().contains(filterString.toLowerCase())) {
+                    newList.add(filterableUser);
                 }
             }
 
@@ -167,7 +176,7 @@ public class MealListViewAdapter extends ArrayAdapter<Meal> implements Filterabl
         @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
-            mealListCopy = (ArrayList<Meal>) results.values;
+            userListCopy = (ArrayList<User>) results.values;
             notifyDataSetChanged();
         }
 
