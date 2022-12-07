@@ -45,7 +45,6 @@ public class CustomerActivity extends AppCompatActivity {
         }
         CustomerViewModel customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
         customerViewModel.setSelectedItem(user);
-        Log.d("<><><><><>1", "Card Number: " + user.getUserPaymentDetails().getCardNumber().toString());
 
         //Create menu item for logout
         addMenuProvider(new MenuProvider() {

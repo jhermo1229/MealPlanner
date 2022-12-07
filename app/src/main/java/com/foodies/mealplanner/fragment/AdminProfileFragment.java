@@ -1,46 +1,43 @@
 package com.foodies.mealplanner.fragment;
 
-import androidx.annotation.RequiresApi;
-import androidx.core.view.MenuProvider;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Lifecycle;
-
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.util.EmailUtil;
-import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 
+/**
+ * Admin Profile fragment
+ *
+ * @author herje
+ * @version 1
+ */
 public class AdminProfileFragment extends Fragment {
 
     public static final String TAG = AdminProfileFragment.class.getName();
+    public static final String EMAIL_ALERT = "Email Alert";
+    public static final String DELIMITER = ";";
+    private final EmailRepository emailRepo = new EmailRepository();
+    private final AppUtils appUtils = new AppUtils();
+    private final EmailUtil emailUtil = new EmailUtil();
     private View adminProfileFragmentView;
     private Button usersButton, mealsButton, menusButton, emailButton;
-    private EmailRepository emailRepo = new EmailRepository();
-    private AppUtils appUtils = new AppUtils();
-    private EmailUtil emailUtil = new EmailUtil();
 
     public static AdminProfileFragment newInstance() {
         return new AdminProfileFragment();
@@ -53,68 +50,62 @@ public class AdminProfileFragment extends Fragment {
 
         adminProfileFragmentView = inflater.inflate(R.layout.fragment_admin_profile, container, false);
 
-        LocalDate friday = LocalDate.now();
+        //Current config to send the email (date today) for demo purposes.
+        LocalDate localDate = LocalDate.now();
+        String paramDate = appUtils.dateFormatter(localDate);
 
-        String date = appUtils.dateFormatter(friday);
-
-        Log.i("DATE", "" + date);
-
+        //Will check in the system if there is a pending email to be sent.
         emailRepo.getEmail(email -> {
 
-        if(email != null){
+            if (email != null) {
 
-            AlertDialog.Builder builder =  new AlertDialog.Builder(getActivity());
-            builder.setTitle("Email Alert");
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(EMAIL_ALERT);
 
-            StringBuilder recipients = new StringBuilder();
-            for(String emailAdd : email.getMealPlanWeek().getEmailAddressList()){
-                recipients.append(emailAdd + ";");
+                StringBuilder recipients = new StringBuilder();
+                for (String emailAdd : email.getMealPlanWeek().getEmailAddressList()) {
+                    recipients.append(emailAdd + DELIMITER);
+                }
+
+                builder.setMessage("Recipients: " + recipients.toString() +
+                        "\n\nMonday Menu: " + email.getMealPlanWeek().getMondayMenu().getMenuName() +
+                        "\nWednesday Menu: " + email.getMealPlanWeek().getWednesdayMenu().getMenuName() +
+                        "\nFriday Menu: " + email.getMealPlanWeek().getFridayMenu().getMenuName());
+
+                builder.setPositiveButton(R.string.sendEmail, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        emailUtil.sendEmail(getContext(), email.getMealPlanWeek());
+                        emailRepo.updateEmail(email.getDeliveryDate(), true);
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+                builder.create().show();
             }
+        }, paramDate);
 
-            builder.setMessage("Recipients: " + recipients.toString() +
-                    "\n\nMonday Menu: " + email.getMealPlanWeek().getMondayMenu().getMenuName() +
-                    "\nWednesday Menu: " + email.getMealPlanWeek().getWednesdayMenu().getMenuName() +
-                    "\nFriday Menu: " + email.getMealPlanWeek().getFridayMenu().getMenuName());
-
-
-
-            builder.setPositiveButton(R.string.sendEmail, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //Will cancel the subscription. Make status of the user to Inactive.
-
-//                    user.setStatus("Inactive");
-//                    userDb.updateUser(user,getActivity());
-                    emailUtil.sendEmail(getContext(), email.getMealPlanWeek());
-                    emailRepo.updateEmail(email.getDeliveryDate(), true);
-                    dialog.dismiss();
-                }
-            });
-
-            builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-
-            builder.create().show();
-        }
-
-        }, date);
-
+        //User fragments
         usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
-        usersButton.setOnClickListener((adminProfileFragmentView)->{
+        usersButton.setOnClickListener((adminProfileFragmentView) -> {
             UsersListFragment userListFrag = new UsersListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(UsersListFragment.TAG);
             transaction.replace(R.id.adminProfileFrame, userListFrag);
 
             transaction.commit();
-            });
+        });
 
+        //Meals fragments
         mealsButton = adminProfileFragmentView.findViewById(R.id.mealsBtn);
-        mealsButton.setOnClickListener((adminProfileFragmentView)->{
+        mealsButton.setOnClickListener((adminProfileFragmentView) -> {
             MealListFragment mealListFragment = new MealListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.addToBackStack(AdminProfileFragment.TAG);
@@ -124,8 +115,9 @@ public class AdminProfileFragment extends Fragment {
 
         });
 
+        //Menus fragments
         menusButton = adminProfileFragmentView.findViewById(R.id.menuBtn);
-        menusButton.setOnClickListener((adminProfileFragmentView) ->{
+        menusButton.setOnClickListener((adminProfileFragmentView) -> {
 
             MenuListFragment menuListFragment = new MenuListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -135,8 +127,9 @@ public class AdminProfileFragment extends Fragment {
             transaction.commit();
         });
 
+        //Emails fragments
         emailButton = adminProfileFragmentView.findViewById(R.id.emailBtn);
-        emailButton.setOnClickListener((adminProfileFragmentView) ->{
+        emailButton.setOnClickListener((adminProfileFragmentView) -> {
 
             EmailMenuFragment emailMenuFragment = new EmailMenuFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -146,33 +139,7 @@ public class AdminProfileFragment extends Fragment {
             transaction.commit();
         });
 
-        extracted();
-
-
         return adminProfileFragmentView;
     }
-
-    private void extracted() {
-        requireActivity().addMenuProvider(new MenuProvider() {
-            @Override
-            public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
-
-                // Add option Menu Here
-                MenuItem item = menu.findItem(R.id.action_logout);
-                item.setVisible(true);
-
-
-
-            }
-
-            @Override
-            public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
-
-                return false;
-
-            }
-        }, getViewLifecycleOwner(), Lifecycle.State.RESUMED);
-    }
-
 
 }

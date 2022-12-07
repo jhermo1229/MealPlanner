@@ -1,22 +1,26 @@
 package com.foodies.mealplanner.activity;
 
+import android.os.Bundle;
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProvider;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.widget.FrameLayout;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.fragment.PersonalDetailsFragment;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
 
+/**
+ * Signup Activity for new customers
+ * @author herje
+ * @version 1
+ */
 public class SignupActivity extends AppCompatActivity {
 
     private SignupViewModel signupViewModel;
-    private User user = new User();
+    private final User user = new User();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +29,6 @@ public class SignupActivity extends AppCompatActivity {
 
         //Initialize view model once
         signupViewModel = new ViewModelProvider(this).get(SignupViewModel.class);
-        Log.i("Signup Activity", "Signup View Model Initialized");
         signupViewModel.setSelectedItem(user);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
