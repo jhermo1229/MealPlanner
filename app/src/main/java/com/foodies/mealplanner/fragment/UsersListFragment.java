@@ -3,7 +3,6 @@ package com.foodies.mealplanner.fragment;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,13 +21,10 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.adapter.UserListViewAdapter;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.viewmodel.UserUpdateViewModel;
+import com.foodies.mealplanner.viewmodel.AdminUserViewModel;
 
 import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Fragment for users
@@ -40,7 +36,7 @@ public class UsersListFragment extends Fragment {
     public static final String TAG = UsersListFragment.class.getName();
     private final UserRepository userRepository = new UserRepository();
     private View usersListFragmentView;
-    private UserUpdateViewModel userUpdateViewModel;
+    private AdminUserViewModel adminUserViewModel;
     private String[] sortArray;
     private EditText searchFilter;
     private TextView userCount;
@@ -64,7 +60,7 @@ public class UsersListFragment extends Fragment {
 
         usersListFragmentView = inflater.inflate(R.layout.fragment_users_list, container, false);
         //Set sharemodel to share User data to different fragments
-        userUpdateViewModel = new ViewModelProvider(requireActivity()).get(UserUpdateViewModel.class);
+        adminUserViewModel = new ViewModelProvider(requireActivity()).get(AdminUserViewModel.class);
         userCount = usersListFragmentView.findViewById(R.id.userCount);
 
         searchFilter = usersListFragmentView.findViewById(R.id.searchFilter);
@@ -107,7 +103,7 @@ public class UsersListFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                     User user = userList.get(i);
-                    userUpdateViewModel.setSelectedItem(user);
+                    adminUserViewModel.setSelectedItem(user);
 
                     UserViewUpdateFragment userUpdateProfileFragment = new UserViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

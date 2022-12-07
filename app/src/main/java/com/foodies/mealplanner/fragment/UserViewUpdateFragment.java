@@ -25,8 +25,7 @@ import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.UserUpdateViewModel;
-import com.google.android.material.textfield.TextInputLayout;
+import com.foodies.mealplanner.viewmodel.AdminUserViewModel;
 
 /**
  * Fragment for updating users profile by the admin
@@ -41,7 +40,7 @@ public class UserViewUpdateFragment extends Fragment {
     private final UserRepository db = new UserRepository();
     private final User user = new User();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private UserUpdateViewModel userUpdateViewModel;
+    private AdminUserViewModel adminUserViewModel;
     private View userProfileUpdateView;
     private EditText firstName, lastName, houseNumber, street, city, postalCode,
             phoneNumber;
@@ -60,7 +59,7 @@ public class UserViewUpdateFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         userProfileUpdateView = inflater.inflate(R.layout.fragment_user_view_update, container, false);
-        userUpdateViewModel = new ViewModelProvider(requireActivity()).get(UserUpdateViewModel.class);
+        adminUserViewModel = new ViewModelProvider(requireActivity()).get(AdminUserViewModel.class);
 
         //Get fields
         firstName = userProfileUpdateView.findViewById(R.id.firstNameAdminUpdate);
@@ -78,7 +77,7 @@ public class UserViewUpdateFragment extends Fragment {
         updateButton = userProfileUpdateView.findViewById(R.id.updateUserButton);
 
         //get user set in view model
-        User liveUser = userUpdateViewModel.getSelectedItem().getValue();
+        User liveUser = adminUserViewModel.getSelectedItem().getValue();
 
         //Add user to the fields
         firstName.setText(liveUser.getUserDetails().getFirstName());
@@ -144,10 +143,10 @@ public class UserViewUpdateFragment extends Fragment {
 
                         //set User details
                         UserDetails userDetails = new UserDetails();
-                        user.setEmail(userUpdateViewModel.getSelectedItem().getValue().getEmail());
-                        user.setPassword(userUpdateViewModel.getSelectedItem().getValue().getPassword());
-                        user.setUserType(userUpdateViewModel.getSelectedItem().getValue().getUserType());
-                        user.setUserPaymentDetails(userUpdateViewModel.getSelectedItem().getValue().getUserPaymentDetails());
+                        user.setEmail(adminUserViewModel.getSelectedItem().getValue().getEmail());
+                        user.setPassword(adminUserViewModel.getSelectedItem().getValue().getPassword());
+                        user.setUserType(adminUserViewModel.getSelectedItem().getValue().getUserType());
+                        user.setUserPaymentDetails(adminUserViewModel.getSelectedItem().getValue().getUserPaymentDetails());
                         userDetails.setFirstName(firstName.getText().toString());
                         userDetails.setLastName(lastName.getText().toString());
                         userDetails.setPhoneNumber(phoneNumber.getText().toString());

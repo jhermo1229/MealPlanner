@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.SpannableString;
 import android.text.style.AbsoluteSizeSpan;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -22,7 +21,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.fragment.CustomerProfileFragment;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.viewmodel.CustomerViewModel;
+import com.foodies.mealplanner.viewmodel.CustomerUserViewModel;
 
 /**
  * Main activity for customer.
@@ -43,8 +42,8 @@ public class CustomerActivity extends AppCompatActivity {
         if (extras != null) {
             user = (User) extras.getSerializable("user");
         }
-        CustomerViewModel customerViewModel = new ViewModelProvider(this).get(CustomerViewModel.class);
-        customerViewModel.setSelectedItem(user);
+        CustomerUserViewModel customerUserViewModel = new ViewModelProvider(this).get(CustomerUserViewModel.class);
+        customerUserViewModel.setSelectedItem(user);
 
         //Create menu item for logout
         addMenuProvider(new MenuProvider() {

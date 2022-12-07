@@ -9,17 +9,17 @@ import androidx.lifecycle.ViewModel;
 import com.foodies.mealplanner.model.User;
 
 /**
- * View model for Admin - Admin process focused.
+ * View model for admin - admin focused.
  * @author herje
  * @version 1
  */
-public class AdminProfileViewModel extends ViewModel {
+public class AdminUserViewModel extends ViewModel {
 
     //Create a live mutable data
     private final MutableLiveData<User> selectedItem = new MutableLiveData<>();
 
-    public AdminProfileViewModel() {
-        Log.i("AdminProfileViewModel", "AdminProfileViewModel is created");
+    public AdminUserViewModel() {
+        Log.i("AdminUserViewModel", "AdminUserViewModel is created");
     }
 
     public LiveData<User> getSelectedItem() {

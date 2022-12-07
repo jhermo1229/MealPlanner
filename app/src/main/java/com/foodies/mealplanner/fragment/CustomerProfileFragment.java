@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +39,7 @@ import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.CustomerViewModel;
+import com.foodies.mealplanner.viewmodel.CustomerUserViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
@@ -76,7 +75,7 @@ public class CustomerProfileFragment extends Fragment {
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
     private final AppUtils appUtils = new AppUtils();
-    private CustomerViewModel customerViewModel;
+    private CustomerUserViewModel customerUserViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog,
             cityDialog, postalCodeDialog, phoneNumberDialog, oldPasswordDialog, newPasswordDialog,
@@ -120,8 +119,8 @@ public class CustomerProfileFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View userProfileView = inflater.inflate(R.layout.fragment_customer_profile, container, false);
-        customerViewModel = new ViewModelProvider(requireActivity()).get(CustomerViewModel.class);
-        user = customerViewModel.getSelectedItem().getValue();
+        customerUserViewModel = new ViewModelProvider(requireActivity()).get(CustomerUserViewModel.class);
+        user = customerUserViewModel.getSelectedItem().getValue();
         imageBtn = userProfileView.findViewById(R.id.changePhoto);
         updatePersonalBtn = userProfileView.findViewById(R.id.updatePersonal);
         updateLoginBtn = userProfileView.findViewById(R.id.updateLoginDetails);
@@ -246,7 +245,7 @@ public class CustomerProfileFragment extends Fragment {
 
                     userDb.updateUser(user, getActivity());
                     //update the viewmodel
-                    customerViewModel.setSelectedItem(user);
+                    customerUserViewModel.setSelectedItem(user);
 
                     setFieldValue();
 
@@ -413,7 +412,7 @@ public class CustomerProfileFragment extends Fragment {
 
                         userDb.updateUser(user, getActivity());
 
-                        customerViewModel.setSelectedItem(user);
+                        customerUserViewModel.setSelectedItem(user);
 
                         setFieldValue();
 

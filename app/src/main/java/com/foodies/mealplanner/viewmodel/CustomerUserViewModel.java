@@ -13,12 +13,12 @@ import com.foodies.mealplanner.model.User;
  * @author herje
  * @version 1
  */
-public class CustomerViewModel extends ViewModel {
+public class CustomerUserViewModel extends ViewModel {
 
     //Create a live mutable data
     private final MutableLiveData<User> selectedItem = new MutableLiveData<>();
 
-    public CustomerViewModel() {
+    public CustomerUserViewModel() {
         Log.i("CustomerViewModel", "CustomerViewModel is created");
     }
 

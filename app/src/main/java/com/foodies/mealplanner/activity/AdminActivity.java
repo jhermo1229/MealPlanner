@@ -19,9 +19,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.fragment.AdminProfileFragment;
-import com.foodies.mealplanner.fragment.LoginHomeFragment;
 import com.foodies.mealplanner.model.User;
-import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
 
 /**
  * Main activity of admin
@@ -31,7 +29,6 @@ import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
  */
 public class AdminActivity extends AppCompatActivity {
 
-    private AdminProfileViewModel adminProfileViewModel;
     private User user = new User();
 
     @Override

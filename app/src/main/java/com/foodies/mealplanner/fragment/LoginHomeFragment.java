@@ -2,36 +2,23 @@ package com.foodies.mealplanner.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.text.method.PasswordTransformationMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
-import androidx.annotation.NonNull;
-import androidx.core.view.MenuProvider;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.ViewModelProvider;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.activity.AdminActivity;
 import com.foodies.mealplanner.activity.CustomerActivity;
-import com.foodies.mealplanner.activity.SignupActivity;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
 import com.foodies.mealplanner.util.AppUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.foodies.mealplanner.viewmodel.AdminProfileViewModel;
-import com.foodies.mealplanner.viewmodel.SignupViewModel;
 import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
