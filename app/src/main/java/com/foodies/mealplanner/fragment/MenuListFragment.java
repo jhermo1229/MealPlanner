@@ -110,6 +110,7 @@ public class MenuListFragment extends Fragment {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     Menu menu = (Menu) adapterView.getAdapter().getItem(i);
+                    searchFilter.getText().clear();
                     mViewModel.setSelectedItem(menu);
                     MenuViewUpdateFragment menuViewUpdateFragment = new MenuViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

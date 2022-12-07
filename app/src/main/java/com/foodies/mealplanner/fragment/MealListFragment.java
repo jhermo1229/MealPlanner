@@ -119,6 +119,7 @@ public class MealListFragment extends Fragment {
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
                     Meal meal = (Meal) adapterView.getAdapter().getItem(i);
+                    searchFilter.getText().clear();
                     mViewModel.setSelectedItem(meal);
                     MealViewUpdateFragment mealViewUpdateFragment = new MealViewUpdateFragment();
                     FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();

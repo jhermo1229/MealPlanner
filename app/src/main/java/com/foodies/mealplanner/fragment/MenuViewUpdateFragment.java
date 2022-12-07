@@ -43,9 +43,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Fragment for viewing and updating menu
  *
@@ -54,11 +51,15 @@ import java.util.List;
  */
 public class MenuViewUpdateFragment extends Fragment {
 
+    public static final String MEAT_LIST = "Meat List";
+    public static final String NO_FIELD_WAS_UPDATED = "No field was updated";
+    public static final String MEAT_AND_VEGETABLE_LIST = "Meat And Vegetable List";
+    public static final String VEGETABLE_LIST = "Vegetable List";
+    public static final String MEAT = "Meat";
     private static final String REQUIRED_ERROR = "Required";
+    public static final String VEGETABLE = "Vegetable";
+    public static final String BOTH = "Both";
     private final FieldValidator fieldValidator = new FieldValidator();
-    private final List meatNameList = new ArrayList<>();
-    private final List vegetableNameList = new ArrayList<>();
-    private final List bothNameList = new ArrayList<>();
     private final MealRepository mealRepository = new MealRepository();
     private final MenuRepository menuRepository = new MenuRepository();
     // instance for firebase storage and StorageReference
@@ -158,17 +159,15 @@ public class MenuViewUpdateFragment extends Fragment {
             bothMenuTxt.addTextChangedListener(textWatcher());
 
             mealRepository.getAllMealType(mealList -> {
-                for (Meal meal : mealList) {
-                    meatNameList.add(meal.getMealName());
-                }
 
+                //use custom adapter to show image
                 MealListViewAdapter adapter = new MealListViewAdapter(getContext(), mealList, 0);
                 meatListView.setAdapter(adapter);
 
                 //Set header of list
                 TextView textView = new TextView(getContext());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setText("Meat List");
+                textView.setText(MEAT_LIST);
 
                 meatListView.addHeaderView(textView, null, false);
 
@@ -195,23 +194,25 @@ public class MenuViewUpdateFragment extends Fragment {
                                         MenuViewUpdateFragment.this.menu.setMeatMeal(meal);
                                     }
                                 })
+
                                 .show();
 
                     }
                 });
 
-            }, "Meat");
+            }, MEAT);
 
             //Vegetable
             mealRepository.getAllMealType(vegetableMealList -> {
 
+                //use custom adapter to show image
                 MealListViewAdapter adapter = new MealListViewAdapter(getContext(), vegetableMealList, 0);
                 vegetableListView.setAdapter(adapter);
 
                 //Set header of list
                 TextView textView = new TextView(getContext());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setText("Vegetable List");
+                textView.setText(VEGETABLE_LIST);
 
                 vegetableListView.addHeaderView(textView, null, false);
 
@@ -244,19 +245,20 @@ public class MenuViewUpdateFragment extends Fragment {
                     }
                 });
 
-            }, "Vegetable");
+            }, VEGETABLE);
 
 
             //Both Meat and Vegetable
             mealRepository.getAllMealType(bothMealList -> {
 
+                //use custom adapter to show image
                 MealListViewAdapter adapter = new MealListViewAdapter(getContext(), bothMealList, 0);
                 bothListView.setAdapter(adapter);
 
                 //Set header of list
                 TextView textView = new TextView(getContext());
                 textView.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                textView.setText("Meat And Vegetable List");
+                textView.setText(MEAT_AND_VEGETABLE_LIST);
 
                 bothListView.addHeaderView(textView, null, false);
 
@@ -288,18 +290,18 @@ public class MenuViewUpdateFragment extends Fragment {
                     }
                 });
 
-            }, "Both");
+            }, BOTH);
 
             okButton.setOnClickListener((menuAddFragmentView) -> {
 
                 if (isFieldChanged || isImageChanged) {
                     if (checkAllFields()) {
                         menu.setMenuName(menuNameTxt.getText().toString());
-                        menuRepository.addMenu(menu, getActivity());
+                        menuRepository.updateMenu(menu, getActivity());
                         getParentFragmentManager().popBackStackImmediate();
                     }
                 } else {
-                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), "No field was updated", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getActivity().getApplicationContext(), NO_FIELD_WAS_UPDATED, Toast.LENGTH_SHORT);
                     toast.show();
                 }
             });
@@ -338,7 +340,6 @@ public class MenuViewUpdateFragment extends Fragment {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 isFieldChanged = true;
-                Log.d("TEXT LISTENER", ":::::" + isFieldChanged);
             }
 
             @Override
@@ -392,6 +393,9 @@ public class MenuViewUpdateFragment extends Fragment {
         bothMenuTxt.setError(null);
     }
 
+    /**
+     * Sets all fields disabled on load.
+     */
     private void setFieldDisabled() {
         menuNameTxt.setEnabled(false);
         meatMenuTxt.setEnabled(false);
@@ -403,6 +407,9 @@ public class MenuViewUpdateFragment extends Fragment {
         menuImageButton.setEnabled(false);
     }
 
+    /**
+     * Sets all field enabled.
+     */
     private void setFieldEnabled() {
         menuNameTxt.setEnabled(true);
         meatMenuTxt.setEnabled(true);

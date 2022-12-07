@@ -67,6 +67,7 @@ public class MealViewUpdateFragment extends Fragment {
     private boolean isFieldChanged = false;
     private ActivityResultLauncher<Intent> launchSomeActivity;
     private ImageView mealImageView;
+    private Boolean isImageChanged = false;
 
     public MealViewUpdateFragment() {
         // Required empty public constructor
@@ -165,27 +166,29 @@ public class MealViewUpdateFragment extends Fragment {
         okButton.setOnClickListener((mealUpdateFragmentView) -> {
 
             //Check first if any field has changed
-            if (!isFieldChanged) {
+            if (isFieldChanged || isImageChanged) {
+                if (checkAllFields()) {
+                    meal.setMealName(mealNameTxt.getText().toString());
+                    meal.setMealStatus(ACTIVE);
+                    meal.setMealDescription(mealDescriptionTxt.getText().toString());
+                    meal.setMealIngredients(mealIngredientTxt.getText().toString());
+
+                    //Set number currency and price
+                    NumberFormat format = NumberFormat.getCurrencyInstance();
+                    format.setMaximumFractionDigits(TWO);
+                    meal.setMealPrice(mealPriceTxt.getText().toString());
+                    meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
+
+
+                    //update meal
+                    mealRepository.updateMeal(meal, getActivity());
+                    getParentFragmentManager().popBackStackImmediate();
+                }
+                //check field validation
+            } else {
                 Toast toast = Toast.makeText(getActivity().getApplicationContext(), NO_FIELD_WAS_UPDATED, Toast.LENGTH_SHORT);
                 toast.show();
-                //check field validation
-            } else if (checkAllFields()) {
 
-                meal.setMealName(mealNameTxt.getText().toString());
-                meal.setMealStatus(ACTIVE);
-                meal.setMealDescription(mealDescriptionTxt.getText().toString());
-                meal.setMealIngredients(mealIngredientTxt.getText().toString());
-
-                //Set number currency and price
-                NumberFormat format = NumberFormat.getCurrencyInstance();
-                format.setMaximumFractionDigits(TWO);
-                meal.setMealPrice(format.format(Double.valueOf(mealPriceTxt.getText().toString())));
-                meal.setMealType(mealTypeSpinner.getSelectedItem().toString());
-
-
-                //update meal
-                mealRepository.updateMeal(meal, getActivity());
-                getParentFragmentManager().popBackStackImmediate();
             }
 
         });
@@ -362,9 +365,7 @@ public class MealViewUpdateFragment extends Fragment {
                                             // Image uploaded successfully
                                             meal.setImageUrl(uri.toString());
 
-                                            //updates database on location of the image. We used access token on cloud.
-                                            mealRepository.updateMeal(meal, getActivity());
-
+                                            isImageChanged = true;
                                             //loads image in the view
                                             loadImage();
                                         }
