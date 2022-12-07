@@ -6,8 +6,8 @@
     tools:context=".fragment.PaymentDetailsFragment">
 
     <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
         android:orientation="vertical">
 
@@ -22,65 +22,53 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
             android:text="@string/paymentInfo"
             android:textColor="@color/white"
             android:textSize="20dp"
-            android:textStyle="bold"
-            android:layout_gravity="center"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:orientation="vertical"
-        android:layout_marginRight="30dp"
-        android:layout_marginTop="20dp">
-
-        <TextView
-            android:layout_width="150dp"
-            android:layout_height="20dp"
-            android:text="@string/nameOnCard"
-            android:textColor="@color/purple_500"
             android:textStyle="bold" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/nameOnCard"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Name on card"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:layout_height="100dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            android:gravity="center">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="300dp"
-                android:layout_height="55dp"
-                android:inputType="text" />
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Name on card"
+                android:gravity="center">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/nameOnCard"
+                    android:layout_width="300dp"
+                    android:layout_height="55dp"
+                    android:inputType="text" />
 
-    </LinearLayout>
+            </com.google.android.material.textfield.TextInputLayout>
 
+        </LinearLayout>
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:orientation="vertical"
-            android:layout_marginRight="30dp">
-
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="20dp"
-                android:text="@string/cardNumber"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold" />
+            android:gravity="center">
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cardNumber"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+                android:hint="Card number"
+                android:gravity="center">
 
                 <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/cardNumber"
                     android:layout_width="300dp"
                     android:layout_height="55dp"
                     android:inputType="number" />
@@ -89,67 +77,60 @@
 
         </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="vertical"
-            android:layout_marginRight="30dp">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
 
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="20dp"
-                android:text="@string/expiryDate"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold" />
+            android:gravity="center">
 
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/expiryDate"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:orientation="vertical"
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="100dp"
-                    android:layout_height="55dp"
-                    android:inputType="number" />
+                android:gravity="center">
 
-            </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Expiry date">
 
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="120dp"
+                        android:layout_height="55dp"
+                        android:inputType="number"
+                        android:id="@+id/expiryDate"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_marginLeft="30dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="CVC">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="100dp"
+                        android:layout_height="55dp"
+                        android:inputType="number"
+                        android:id="@+id/securityCode"/>
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
-            android:orientation="vertical"
-            android:layout_marginRight="30dp">
-
-            <TextView
-                android:layout_width="150dp"
-                android:layout_height="20dp"
-                android:text="@string/securityCode"
-                android:textColor="@color/purple_500"
-                android:textStyle="bold" />
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/securityCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:layout_width="100dp"
-                    android:layout_height="55dp"
-                    android:inputType="number" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-    </LinearLayout>
 
         <Button
             android:id="@+id/saveButton"

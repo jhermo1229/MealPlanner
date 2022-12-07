@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -39,7 +40,7 @@ public class PaymentDetailsFragment extends Fragment {
     private final FieldValidator fieldValidator = new FieldValidator();
     private SignupViewModel signupViewModel;
     private View paymentDetailsView;
-    private TextInputLayout nameOnCard, cardNumber, expiryDate, securityCode;
+    private EditText nameOnCard, cardNumber, expiryDate, securityCode;
     private Button saveButton;
     private boolean isFieldChecked = false;
 
@@ -54,11 +55,11 @@ public class PaymentDetailsFragment extends Fragment {
         paymentDetailsView = inflater.inflate(R.layout.fragment_payment, container, false);
         nameOnCard = paymentDetailsView.findViewById(R.id.nameOnCard);
         cardNumber = paymentDetailsView.findViewById(R.id.cardNumber);
-        cardNumber.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
+        cardNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(16)});
         expiryDate = paymentDetailsView.findViewById(R.id.expiryDate);
-        expiryDate.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
+        expiryDate.setFilters(new InputFilter[]{new InputFilter.LengthFilter(4)});
         securityCode = paymentDetailsView.findViewById(R.id.securityCode);
-        securityCode.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
+        securityCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         saveButton = paymentDetailsView.findViewById(R.id.saveButton);
 
         saveButton.setOnClickListener((paymentDetailsView) -> {
@@ -67,10 +68,10 @@ public class PaymentDetailsFragment extends Fragment {
             isFieldChecked = checkAllFields();
 
             if (isFieldChecked) {
-                userPaymentDetails.setNameOnCard(nameOnCard.getEditText().getText().toString());
-                userPaymentDetails.setCardNumber(cardNumber.getEditText().getText().toString());
-                userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDate.getEditText().getText().toString()));
-                String securityCodeEncrypt = appUtils.encodeBase64(securityCode.getEditText().getText().toString());
+                userPaymentDetails.setNameOnCard(nameOnCard.getText().toString());
+                userPaymentDetails.setCardNumber(cardNumber.getText().toString());
+                userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDate.getText().toString()));
+                String securityCodeEncrypt = appUtils.encodeBase64(securityCode.getText().toString());
                 userPaymentDetails.setSecurityCode(securityCodeEncrypt);
 
                 //Get all values from view model and add payment details
@@ -107,39 +108,39 @@ public class PaymentDetailsFragment extends Fragment {
         boolean isAllValid = true;
         errorReset();
 
-        if (fieldValidator.validateFieldIfEmpty(nameOnCard.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(nameOnCard.length())) {
             nameOnCard.setError(REQUIRED);
             isAllValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(cardNumber.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(cardNumber.length())) {
             cardNumber.setError(REQUIRED);
             isAllValid = false;
         }
 
 
-        if (isAllValid && fieldValidator.validateIfInputIsLess(16, cardNumber.getEditText().length())) {
+        if (isAllValid && fieldValidator.validateIfInputIsLess(16, cardNumber.length())) {
             cardNumber.setError(INVALID_LENGTH);
             isAllValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(expiryDate.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(expiryDate.length())) {
             expiryDate.setError(REQUIRED);
             isAllValid = false;
         }
 
 
-        if (isAllValid && fieldValidator.validateIfInputIsLess(4, expiryDate.getEditText().length())) {
+        if (isAllValid && fieldValidator.validateIfInputIsLess(4, expiryDate.length())) {
             expiryDate.setError(INVALID_LENGTH);
             isAllValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(securityCode.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(securityCode.length())) {
             securityCode.setError(REQUIRED);
             isAllValid = false;
         }
 
-        if (isAllValid && fieldValidator.validateIfInputIsLess(3, securityCode.getEditText().length())) {
+        if (isAllValid && fieldValidator.validateIfInputIsLess(3, securityCode.length())) {
             securityCode.setError(INVALID_LENGTH);
             isAllValid = false;
         }
