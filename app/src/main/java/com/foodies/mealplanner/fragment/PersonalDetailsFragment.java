@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import androidx.fragment.app.Fragment;
@@ -47,7 +48,7 @@ public class PersonalDetailsFragment extends Fragment {
     private final Address address = new Address();
     private final FieldValidator fieldValidator = new FieldValidator();
     private final UserRepository db = new UserRepository();
-    private TextInputLayout firstName, lastName, houseNumber, street, city, postalCode,
+    private EditText  firstName, lastName, houseNumber, street, city, postalCode,
             phoneNumber, email, password;
     private CheckBox passwordChk;
     private View personalDetailsView;
@@ -89,7 +90,7 @@ public class PersonalDetailsFragment extends Fragment {
         city = personalDetailsView.findViewById(R.id.city);
         postalCode = personalDetailsView.findViewById(R.id.postalCode);
         phoneNumber = personalDetailsView.findViewById(R.id.phoneNumber);
-        phoneNumber.getEditText().setFilters(new InputFilter[]{new InputFilter.LengthFilter(TEN)});
+        phoneNumber.setFilters(new InputFilter[]{new InputFilter.LengthFilter(TEN)});
         email = personalDetailsView.findViewById(R.id.email);
         password = personalDetailsView.findViewById(R.id.password);
         passwordChk = personalDetailsView.findViewById(R.id.passwordCheckbox);
@@ -99,9 +100,9 @@ public class PersonalDetailsFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (!isChecked) {
-                    password.getEditText().setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
-                    password.getEditText().setTransformationMethod(null);
+                    password.setTransformationMethod(null);
                 }
             }
         });
@@ -113,21 +114,21 @@ public class PersonalDetailsFragment extends Fragment {
                 //Set sharemodel to share User data to different fragments
                 signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
-                userDetails.setFirstName(firstName.getEditText().getText().toString());
-                userDetails.setLastName(lastName.getEditText().getText().toString());
-                userDetails.setPhoneNumber(phoneNumber.getEditText().getText().toString());
-                address.setHouseNumber(houseNumber.getEditText().getText().toString());
-                address.setStreet(street.getEditText().getText().toString());
-                address.setCity(city.getEditText().getText().toString());
+                userDetails.setFirstName(firstName.getText().toString());
+                userDetails.setLastName(lastName.getText().toString());
+                userDetails.setPhoneNumber(phoneNumber.getText().toString());
+                address.setHouseNumber(houseNumber.getText().toString());
+                address.setStreet(street.getText().toString());
+                address.setCity(city.getText().toString());
                 String province = provinceSpinner.getSelectedItem().toString();
                 address.setProvince(province);
-                address.setPostalCode(postalCode.getEditText().getText().toString());
+                address.setPostalCode(postalCode.getText().toString());
                 userDetails.setAddress(address);
                 user.setUserDetails(userDetails);
-                user.setEmail(email.getEditText().getText().toString());
+                user.setEmail(email.getText().toString());
 
                 //Encrypt password
-                String passwordCodeEncrypt = appUtils.encodeBase64(password.getEditText().getText().toString());
+                String passwordCodeEncrypt = appUtils.encodeBase64(password.getText().toString());
                 user.setPassword(passwordCodeEncrypt);;
 
                 //Check if email is already existing in database. Since firebase is asynchronous,
@@ -167,60 +168,60 @@ public class PersonalDetailsFragment extends Fragment {
         boolean allValid = true;
         errorReset();
 
-        if (fieldValidator.validateFieldIfEmpty(firstName.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(firstName.length())) {
             firstName.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(lastName.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(lastName.length())) {
             lastName.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(houseNumber.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(houseNumber.length())) {
             houseNumber.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(street.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(street.length())) {
             street.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(city.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(city.length())) {
             city.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(postalCode.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(postalCode.length())) {
             postalCode.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(phoneNumber.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(phoneNumber.length())) {
             phoneNumber.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
         //Check first if it has a value then check the length. So that error message wont overlap
-        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumber.getEditText().length())) {
+        if (allValid && fieldValidator.validateIfInputIsLess(TEN, phoneNumber.length())) {
             phoneNumber.setError(INVALID_LENGTH);
             allValid = false;
         }
 
 
-        if (fieldValidator.validateFieldIfEmpty(email.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(email.length())) {
             email.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
-        if (fieldValidator.validateFieldIfEmpty(password.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(password.length())) {
             password.setError(REQUIRED_ERROR);
             allValid = false;
         }
 
         //Check first if it has a value then check the format. So that error message wont overlap
-        if (allValid && !fieldValidator.isValidEmail(email.getEditText().getText().toString())) {
+        if (allValid && !fieldValidator.isValidEmail(email.getText().toString())) {
             email.setError(INCORRECT_EMAIL_FORMAT);
             allValid = false;
         }
