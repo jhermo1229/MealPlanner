@@ -137,13 +137,13 @@ public class EmailComposingUtil {
     private StringBuilder buildMenuMessage(Meal meal) {
 
         StringBuilder messageFormat = new StringBuilder();
-        messageFormat.append("<b>&nbsp&nbsp&nbsp&nbsp" + meal.getMealType() + ": "
+        messageFormat.append("<b>&nbsp;&nbsp;&nbsp;&nbsp;" + meal.getMealType() + ": "
                 + meal.getMealName() + "</b>");
-        messageFormat.append("<br><p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp Ingredients: "
+        messageFormat.append("<br><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Ingredients: "
                 + meal.getMealIngredients() + "</p>");
-        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Description: "
+        messageFormat.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;  Description: "
                 + meal.getMealDescription() + "</p>");
-        messageFormat.append("<p>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp  Price: CAD "
+        messageFormat.append("<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Price: CAD "
                 + meal.getMealPrice() + "</p>" + "<br>");
 
         return messageFormat;
