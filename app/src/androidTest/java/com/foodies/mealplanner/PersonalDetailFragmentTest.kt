@@ -11,7 +11,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 /**
- * Espresso testing for the personal fragment
+ * UI automated testing for the personal fragment
  * @author herje
  * @version 1
  */
@@ -223,4 +223,6 @@ class PersonalDetailFragmentTest {
         )
         onView(withId(R.id.email)).check(matches(hasErrorText("Incorrect Email Format")))
     }
+
+
 }

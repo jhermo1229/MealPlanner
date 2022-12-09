@@ -24,7 +24,7 @@
         android:id="@+id/txtRegisterDoneMessage"
         android:textSize="25dp"
         android:inputType="textMultiLine"
-        android:layout_gravity="center"/>
+        android:gravity="center"/>
 
         <Button
             android:id="@+id/backToLoginBtn"

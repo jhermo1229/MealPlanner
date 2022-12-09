@@ -143,7 +143,7 @@ public class MealAddFragment extends Fragment {
         cancelButton.setOnClickListener((mealProfileFragmentView) -> {
 
             //delete uploaded image
-            if(!meal.getImageUrl().isEmpty()){
+            if(meal.getImageUrl() != null){
                 deleteImage();
             }
 

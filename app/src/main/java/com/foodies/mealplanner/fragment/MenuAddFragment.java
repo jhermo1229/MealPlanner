@@ -265,7 +265,7 @@ public class MenuAddFragment extends Fragment {
 
         cancelButton.setOnClickListener((menuAddFragmentView)->{
 
-            if(!menu.getImageUrl().isEmpty()){
+            if(menu.getImageUrl() != null){
                 deleteImage();
             }
 
