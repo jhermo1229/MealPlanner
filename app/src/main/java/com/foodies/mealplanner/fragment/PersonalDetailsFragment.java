@@ -145,7 +145,7 @@ public class PersonalDetailsFragment extends Fragment {
                         PaymentDetailsFragment paymentDetailsFragment = new PaymentDetailsFragment();
                         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
                         transaction.addToBackStack(null);
-                        transaction.replace(R.id.personalDetailsFrag, paymentDetailsFragment);
+                        transaction.replace(R.id.signupHomeFrame, paymentDetailsFragment);
                         transaction.commit();
                     } else {
                         email.setError(EMAIL_ALREADY_EXISTING);
