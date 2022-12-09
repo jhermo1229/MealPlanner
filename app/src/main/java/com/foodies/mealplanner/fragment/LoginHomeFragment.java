@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
@@ -42,7 +43,7 @@ public class LoginHomeFragment extends Fragment {
     private Button loginBtn;
     private View homeLoginView;
     private CheckBox passwordChk;
-    private TextInputLayout email, password;
+    private EditText email, password;
 
 
     public LoginHomeFragment() {
@@ -64,9 +65,9 @@ public class LoginHomeFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
                 if (!isChecked) {
-                    password.getEditText().setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    password.setTransformationMethod(PasswordTransformationMethod.getInstance());
                 } else {
-                    password.getEditText().setTransformationMethod(null);
+                    password.setTransformationMethod(null);
                 }
             }
         });
@@ -75,8 +76,8 @@ public class LoginHomeFragment extends Fragment {
 
             if (checkAllFields()) {
                 User userParam = new User();
-                userParam.setEmail(Objects.requireNonNull(email.getEditText()).getText().toString());
-                userParam.setPassword(Objects.requireNonNull(password.getEditText()).getText().toString());
+                userParam.setEmail(Objects.requireNonNull(email).getText().toString());
+                userParam.setPassword(Objects.requireNonNull(password).getText().toString());
 
                 db.getUser(user -> {
 
@@ -120,16 +121,16 @@ public class LoginHomeFragment extends Fragment {
         boolean allValid = true;
         errorReset();
 
-        if (fieldValidator.validateFieldIfEmpty(email.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(email.length())) {
             email.setError(REQUIRED);
             allValid = false;
         }
-        if (fieldValidator.validateFieldIfEmpty(password.getEditText().length())) {
+        if (fieldValidator.validateFieldIfEmpty(password.length())) {
             password.setError(REQUIRED);
             allValid = false;
         }
 
-        if (!fieldValidator.isValidEmail(email.getEditText().getText().toString())) {
+        if (!fieldValidator.isValidEmail(email.getText().toString())) {
             email.setError(INCORRECT_EMAIL_FORMAT);
             allValid = false;
         }
