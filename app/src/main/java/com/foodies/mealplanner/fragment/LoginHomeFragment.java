@@ -18,9 +18,8 @@ import com.foodies.mealplanner.activity.AdminActivity;
 import com.foodies.mealplanner.activity.CustomerActivity;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.Objects;
 
@@ -36,10 +35,12 @@ public class LoginHomeFragment extends Fragment {
     public static final String PLEASE_CHECK_PASSWORD = "Please check password";
     public static final String EMAIL_DOES_NOT_EXIST = "Email does not exist";
     public static final String INCORRECT_EMAIL_FORMAT = "Incorrect Email Format";
+    public static final String CUSTOMER = "C";
+    public static final String ADMIN = "A";
     public static String TAG = LoginHomeFragment.class.getName();
     private final UserRepository db = new UserRepository();
     private final FieldValidator fieldValidator = new FieldValidator();
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
     private Button loginBtn;
     private View homeLoginView;
     private CheckBox passwordChk;
@@ -61,6 +62,7 @@ public class LoginHomeFragment extends Fragment {
         passwordChk = homeLoginView.findViewById(R.id.passwordLoginCheckbox);
 
         //Show password if checked
+        //Observer Design Pattern
         passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -72,6 +74,7 @@ public class LoginHomeFragment extends Fragment {
             }
         });
 
+        //Observer Design Pattern
         loginBtn.setOnClickListener((personalDetailView) -> {
 
             if (checkAllFields()) {
@@ -82,16 +85,16 @@ public class LoginHomeFragment extends Fragment {
                 db.getUser(user -> {
 
                     if (user != null) {
-                        String passwordDecode = appUtils.decodeBase64(user.getPassword());
+                        String passwordDecode = commonUtils.decodeBase64(user.getPassword());
                         if (checkEmailAndPasswordMatch(passwordDecode, userParam.getPassword())) {
 
-                            if (user.getUserType().equals("C")) {
+                            if (user.getUserType().equals(CUSTOMER)) {
                                 Intent intent = new Intent(getActivity(), CustomerActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);
 
 
-                            } else if (user.getUserType().equals("A")) {
+                            } else if (user.getUserType().equals(ADMIN)) {
                                 Intent intent = new Intent(getActivity(), AdminActivity.class);
                                 intent.putExtra("user", user);
                                 startActivity(intent);

@@ -22,10 +22,9 @@ import com.foodies.mealplanner.model.Address;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
-import com.google.android.material.textfield.TextInputLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,7 +54,7 @@ public class PersonalDetailsFragment extends Fragment {
     private String[] provinceList;
     private Button nextBtn;
     private SignupViewModel signupViewModel;
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
 
     public PersonalDetailsFragment() {
         // Required empty public constructor
@@ -96,6 +95,7 @@ public class PersonalDetailsFragment extends Fragment {
         passwordChk = personalDetailsView.findViewById(R.id.passwordCheckbox);
 
         //Show password or not show
+        //Observer Design Pattern
         passwordChk.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
@@ -107,6 +107,7 @@ public class PersonalDetailsFragment extends Fragment {
             }
         });
 
+        //Observer Design Pattern
         nextBtn.setOnClickListener((personalDetailView) -> {
             //check first all required fields
 
@@ -128,7 +129,7 @@ public class PersonalDetailsFragment extends Fragment {
                 user.setEmail(email.getText().toString());
 
                 //Encrypt password
-                String passwordCodeEncrypt = appUtils.encodeBase64(password.getText().toString());
+                String passwordCodeEncrypt = commonUtils.encodeBase64(password.getText().toString());
                 user.setPassword(passwordCodeEncrypt);;
 
                 //Check if email is already existing in database. Since firebase is asynchronous,

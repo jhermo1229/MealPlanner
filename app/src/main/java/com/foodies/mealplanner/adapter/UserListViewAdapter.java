@@ -24,6 +24,8 @@ import java.util.List;
 
 /**
  * Custom adapter for the listview of user
+ * Adapter design pattern.
+ *
  * @author herje
  * @version 1
  */

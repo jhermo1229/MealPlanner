@@ -34,6 +34,8 @@ import java.util.List;
 public class MealRepository {
 
     public static final String COLLECTION_NAME = "meals";
+
+    //Singleton
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference dbCollection = db.collection(COLLECTION_NAME);
 

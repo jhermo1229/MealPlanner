@@ -24,7 +24,7 @@ import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.repository.EmailRepository;
 import com.foodies.mealplanner.repository.MenuRepository;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.util.EmailComposingUtil;
 import com.foodies.mealplanner.validations.FieldValidator;
 
@@ -43,7 +43,7 @@ public class EmailMenuFragment extends Fragment {
     public static final String PICK_A_MENU = "Pick a menu";
     private static final String REQUIRED_ERROR = "Required";
     public static final String NO_EMAILS_AVAILABLE = "No emails available";
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
     private final UserRepository userDb = new UserRepository();
     private final MenuRepository menuDb = new MenuRepository();
     private final HashMap<String, Menu> menuMap = new HashMap<>();
@@ -115,19 +115,23 @@ public class EmailMenuFragment extends Fragment {
                 menuMap.put(menu.getMenuName(), menu);
             }
 
+            //Observer Design Pattern
             mondayBtn.setOnClickListener((emailMenuFragmentMon) -> {
                 alertDialog(mondayMenuTxt);
             });
 
+            //Observer Design Pattern
             wednesdayBtn.setOnClickListener((emailMenuFragmentWed) -> {
                 alertDialog(wednesdayMenuTxt);
             });
 
+            //Observer Design Pattern
             fridayBtn.setOnClickListener((emailMenuFragmentFri) -> {
                 alertDialog(fridayMenuTxt);
             });
         });
 
+        //Observer Design Pattern
         //Sends email
         sendBtn.setOnClickListener((emailMenuFragment) -> {
             if (checkAllFields()) {
@@ -142,6 +146,7 @@ public class EmailMenuFragment extends Fragment {
             }
         });
 
+        //Observer Design Pattern
         //Saves email to be sent on a later time
         saveBtn.setOnClickListener((emailMenuFragment) -> {
             if (checkAllFields()) {
@@ -155,6 +160,7 @@ public class EmailMenuFragment extends Fragment {
 
     /**
      * Compose the meal plan for the week
+     * Builder Design Pattern
      *
      * @param emailAddressList - email address to be sent.
      * @return mealPlanWeek - composed meal plan
@@ -175,7 +181,7 @@ public class EmailMenuFragment extends Fragment {
 
     /**
      * Set alert dialog to show the menu to choose from
-     *
+     * Builder Design Pattern
      * @param editText - Edit text to put the menu chosen
      */
     private void alertDialog(EditText editText) {
@@ -206,7 +212,7 @@ public class EmailMenuFragment extends Fragment {
     private void saveEmail(MealPlanWeek mealPlan, Boolean isSent) {
 
         LocalDate saturday = LocalDate.now();
-        String saturdayDate = appUtils.dateFormatter(saturday);
+        String saturdayDate = commonUtils.dateFormatter(saturday);
 
         Email email = new Email();
         email.setMealPlanWeek(mealPlan);

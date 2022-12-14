@@ -73,6 +73,7 @@ public class MealListFragment extends Fragment {
                 R.layout.spinner_item, sortArray);
         sortSpinner.setAdapter(sortAdapter);
 
+        //Observer Design Pattern
         //if button is clicked, go to add new meal fragment
         addMealButton.setOnClickListener((mealListFragmentView) -> {
 
@@ -86,6 +87,7 @@ public class MealListFragment extends Fragment {
 
         mealRepository.getAllMeals(mealList -> {
 
+            //Observer Design Pattern
             //Spinner sorter (A-Z, Z-A)
             //Sorting will be done inside the custom adapter of listview
             //Image is loaded in the custom adapter of listview
@@ -107,12 +109,15 @@ public class MealListFragment extends Fragment {
                 }
 
             });
+
+            //Adapter Design Pattern
             MealListViewAdapter customAdapter = new MealListViewAdapter(getActivity(), mealList, 0);
             mealListView.setAdapter(customAdapter);
             textChangeListener(customAdapter);
 
             mealListView.setClickable(true);
 
+            //Observer Design Pattern
             //Listview click listener
             mealListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -136,7 +141,7 @@ public class MealListFragment extends Fragment {
 
     /**
      * Listener for text change in search filter
-     *
+     * Observer Design Pattern
      * @param adapter
      */
     private void textChangeListener(MealListViewAdapter adapter) {

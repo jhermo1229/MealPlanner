@@ -61,10 +61,12 @@ public class MenuListFragment extends Fragment {
         mViewModel = new ViewModelProvider(requireActivity()).get(MenuViewModel.class);
 
         //Set adapter of spinner
+        //Adapter Design Pattern
         ArrayAdapter<String> sortAdapter = new ArrayAdapter<String>(getActivity(),
                 R.layout.spinner_item, sortArray);
         sortSpinner.setAdapter(sortAdapter);
 
+        //Observer Design Pattern
         //Go to adding of menu
         addMenuButton.setOnClickListener((fragmentMenuListView) -> {
 
@@ -79,6 +81,7 @@ public class MenuListFragment extends Fragment {
         //Create view of the menu list
         menuRepository.getAllMenus(menuList -> {
 
+            //Observer Design Pattern
             //Spinner sorter (A-Z, Z-A)
             //Sorting will be done inside the custom adapter of listview
             //Image is loaded in the custom adapter of listview
@@ -101,11 +104,14 @@ public class MenuListFragment extends Fragment {
 
             });
 
+            //Adapter Design Pattern
             MenuListViewAdapter adapter = new MenuListViewAdapter(getContext(), menuList, 0);
             menuListView.setAdapter(adapter);
             textChangeListener(adapter);
 
             menuListView.setClickable(true);
+
+            //Observer Design Pattern
             menuListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -128,7 +134,7 @@ public class MenuListFragment extends Fragment {
 
     /**
      * Listener for text change in search filter
-     *
+     * Observer Design Pattern
      * @param adapter
      */
     private void textChangeListener(MenuListViewAdapter adapter) {

@@ -117,6 +117,8 @@ public class MealViewUpdateFragment extends Fragment {
         mealTypeSpinner = mealUpdateFragmentView.findViewById(R.id.mealTypeUpdate);
         mealPriceTxt = mealUpdateFragmentView.findViewById(R.id.mealPriceUpdateEditText);
         mealTypeList = getResources().getStringArray(R.array.mealTypeList);
+
+        //Adapter Design Pattern
         ArrayAdapter<String> adapterMealType = new ArrayAdapter<String>(getActivity(),
                 R.layout.spinner_item, mealTypeList);
         mealTypeSpinner.setAdapter(adapterMealType);
@@ -130,6 +132,7 @@ public class MealViewUpdateFragment extends Fragment {
             loadImage();
         }
 
+        //Observer Design Pattern
         //choose image in root
         mealImageButton.setOnClickListener((mealUpdateFragmentView) -> {
             imageChooser();
@@ -138,6 +141,7 @@ public class MealViewUpdateFragment extends Fragment {
         //Disable fields on initialize
         setFieldDisabled();
 
+        //Observer Design Pattern
         //On click of update button, enables all the field.
         updateMealButton.setOnClickListener(mealUpdateFragmentView -> {
 
@@ -158,10 +162,12 @@ public class MealViewUpdateFragment extends Fragment {
         mealPriceTxt.addTextChangedListener(textWatcher());
         mealTypeSpinner.setOnItemSelectedListener(spinnerWatcher(spinnerPos));
 
+        //Observer Design Pattern
         cancelButton.setOnClickListener((mealUpdateFragmentView) -> {
             getParentFragmentManager().popBackStackImmediate();
         });
 
+        //Observer Design Pattern
         //Applies all changes
         okButton.setOnClickListener((mealUpdateFragmentView) -> {
 
@@ -198,6 +204,7 @@ public class MealViewUpdateFragment extends Fragment {
 
     /**
      * Set initial values on load
+     * Builder Design Pattern
      *
      * @param adapterMealType - Spinner adapter with current list.
      * @param meal            - current object
@@ -217,8 +224,8 @@ public class MealViewUpdateFragment extends Fragment {
 
     /**
      * Check if a change is done on a spinner.
-     *
-     * @return
+     * Adapter Design Pattern
+     * @return Triggers if spinner is changed
      */
     @NonNull
     private AdapterView.OnItemSelectedListener spinnerWatcher(int spinnerPosition) {
@@ -239,6 +246,7 @@ public class MealViewUpdateFragment extends Fragment {
 
     /**
      * Check if a change is done on the text fields.
+     * Observer Design Pattern
      */
     @NonNull
     private TextWatcher textWatcher() {

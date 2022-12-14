@@ -119,6 +119,7 @@ public class UserViewUpdateFragment extends Fragment {
 
         setFieldsDisabled();
 
+        //Observer design pattern
         updateButton.setOnClickListener((userProfileUpdateView) -> {
             setFieldsEnabled();
             updateButton.setVisibility(View.INVISIBLE);
@@ -127,11 +128,13 @@ public class UserViewUpdateFragment extends Fragment {
         });
 
         //if cancel button is clicked, go back to previous fragment
+        //Observer design pattern
         cancelButton.setOnClickListener((userProfileUpdateView) -> {
             getParentFragmentManager().popBackStackImmediate();
         });
 
         //If ok button, update selected user
+        //Observer design pattern
         okButton.setOnClickListener((userProfileUpdateView) -> {
 
                     //Check first if any field has changed
@@ -175,7 +178,7 @@ public class UserViewUpdateFragment extends Fragment {
 
     /**
      * Check if a change is done on a spinner.
-     *
+     * Observer Design Pattern
      * @return
      */
     @NonNull
@@ -197,6 +200,7 @@ public class UserViewUpdateFragment extends Fragment {
 
     /**
      * Check if a change is done on the text fields.
+     * Observer Design Pattern
      */
     @NonNull
     private TextWatcher textWatcher() {

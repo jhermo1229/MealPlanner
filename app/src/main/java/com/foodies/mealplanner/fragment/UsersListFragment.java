@@ -76,6 +76,8 @@ public class UsersListFragment extends Fragment {
         userRepository.getAllUsers(userList -> {
 
             userCount.setText("Users(" + userList.size() + ")");
+
+            //Observer design pattern
             sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
                 @Override
@@ -118,6 +120,7 @@ public class UsersListFragment extends Fragment {
 
     /**
      * Listener for any changes in the field.
+     * Observer Design Pattern
      * @param adapter - custom adapter specific for user.
      */
     private void textChangeListener(UserListViewAdapter adapter) {

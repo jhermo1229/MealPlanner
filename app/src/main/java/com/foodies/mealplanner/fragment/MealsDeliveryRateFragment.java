@@ -58,6 +58,7 @@ public class MealsDeliveryRateFragment extends Fragment {
 
         signupViewModel = new ViewModelProvider(requireActivity()).get(SignupViewModel.class);
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set delivery frequency to button number
         oneBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -67,6 +68,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set delivery frequency to button number
         twoBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -77,6 +79,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             threeBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set delivery frequency to button number
         threeBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -90,6 +93,7 @@ public class MealsDeliveryRateFragment extends Fragment {
         onePersonBtn.setBackgroundColor(Color.RED);
         userMealDetails.setMealQuantity(ONE);
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal quantity to button number
         onePersonBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -100,6 +104,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal quantity to button number
         twoPersonBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -110,6 +115,7 @@ public class MealsDeliveryRateFragment extends Fragment {
             threePersonBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal quantity to button number
         threePersonBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -122,6 +128,7 @@ public class MealsDeliveryRateFragment extends Fragment {
 
         nextBtn = mealsDeliveryView.findViewById(R.id.personalNextButton);
 
+        //Observer Design Pattern
         nextBtn.setOnClickListener((mealsDeliveryView) -> {
             MealTypeFragment mealTypeFrag = new MealTypeFragment();
 

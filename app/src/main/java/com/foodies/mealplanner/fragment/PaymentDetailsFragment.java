@@ -16,10 +16,9 @@ import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.SignupViewModel;
-import com.google.android.material.textfield.TextInputLayout;
 
 /**
  * Fragment class for payment details of user
@@ -34,7 +33,7 @@ public class PaymentDetailsFragment extends Fragment {
     public static final String CUSTOMER = "C";
     public static final String ACTIVE = "Active";
     private final UserRepository db = new UserRepository();
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
     private final UserPaymentDetails userPaymentDetails = new UserPaymentDetails();
     private final User user = new User();
     private final FieldValidator fieldValidator = new FieldValidator();
@@ -62,6 +61,7 @@ public class PaymentDetailsFragment extends Fragment {
         securityCode.setFilters(new InputFilter[]{new InputFilter.LengthFilter(3)});
         saveButton = paymentDetailsView.findViewById(R.id.saveButton);
 
+        //Observer Design Pattern
         saveButton.setOnClickListener((paymentDetailsView) -> {
 
             //check first all required fields
@@ -71,7 +71,7 @@ public class PaymentDetailsFragment extends Fragment {
                 userPaymentDetails.setNameOnCard(nameOnCard.getText().toString());
                 userPaymentDetails.setCardNumber(cardNumber.getText().toString());
                 userPaymentDetails.setExpiryDate(Integer.valueOf(expiryDate.getText().toString()));
-                String securityCodeEncrypt = appUtils.encodeBase64(securityCode.getText().toString());
+                String securityCodeEncrypt = commonUtils.encodeBase64(securityCode.getText().toString());
                 userPaymentDetails.setSecurityCode(securityCodeEncrypt);
 
                 //Get all values from view model and add payment details

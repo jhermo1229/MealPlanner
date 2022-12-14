@@ -25,6 +25,7 @@ import java.util.List;
 
 /**
  * Custom adapter for the listview of menu.
+ * Adapter design pattern.
  *
  * @author herje
  * @version 1

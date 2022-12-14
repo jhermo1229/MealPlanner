@@ -42,6 +42,8 @@ public class CustomerActivity extends AppCompatActivity {
         if (extras != null) {
             user = (User) extras.getSerializable("user");
         }
+
+        //Singleton Design Pattern
         CustomerUserViewModel customerUserViewModel = new ViewModelProvider(this).get(CustomerUserViewModel.class);
         customerUserViewModel.setSelectedItem(user);
 

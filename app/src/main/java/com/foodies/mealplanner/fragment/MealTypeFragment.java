@@ -49,6 +49,7 @@ public class MealTypeFragment extends Fragment {
         userMealDetails.setMealType(BOTH);
         bothBtn.setBackgroundColor(Color.RED);
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal to VEGETABLE
         vegetableBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -59,6 +60,7 @@ public class MealTypeFragment extends Fragment {
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal to MEAT
         meatBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -69,6 +71,7 @@ public class MealTypeFragment extends Fragment {
             bothBtn.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.blue_logo));
         });
 
+        //Observer Design Pattern
         //if button is clicked set button to red and set other button to default color
         //set meal to BOTH (MEAT AND VEGETABLE)
         bothBtn.setOnClickListener((mealsDeliveryView) -> {
@@ -81,6 +84,7 @@ public class MealTypeFragment extends Fragment {
 
         nextBtn = mealTypeView.findViewById(R.id.personalNextButton);
 
+        //Observer Design Pattern
         nextBtn.setOnClickListener((mealTypeView) -> {
             PaymentDetailsFragment paymentDetailsFrag = new PaymentDetailsFragment();
 

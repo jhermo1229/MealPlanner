@@ -48,6 +48,7 @@ public class MealAddFragment extends Fragment {
     private static final String REQUIRED_ERROR = "Required";
     private final FieldValidator fieldValidator = new FieldValidator();
     // instance for firebase storage and StorageReference
+    //Singleton
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
     private View mealProfileFragmentView;
@@ -113,11 +114,13 @@ public class MealAddFragment extends Fragment {
         mealImageAddButton = mealProfileFragmentView.findViewById(R.id.mealAddImageButton);
         imageView = mealProfileFragmentView.findViewById(R.id.mealImageAdd);
 
+        //Observer Design Pattern
         //Add image and load on image view
         mealImageAddButton.setOnClickListener((mealProfileFragmentView) -> {
             imageChooser();
         });
 
+        //Observer Design Pattern
         //Saves the new meal in the database
         okButton.setOnClickListener((mealProfileFragmentView) -> {
 
@@ -139,6 +142,7 @@ public class MealAddFragment extends Fragment {
             }
         });
 
+        //Observer Design Pattern
         //cancels the adding of meal
         cancelButton.setOnClickListener((mealProfileFragmentView) -> {
 

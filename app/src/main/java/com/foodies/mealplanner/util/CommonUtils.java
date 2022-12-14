@@ -14,7 +14,7 @@ import java.time.format.FormatStyle;
  * @author herje
  * @version 1
  */
-public class AppUtils {
+public class CommonUtils {
 
     public String encodeBase64(String data) {
         String encodeData = android.util.Base64.encodeToString(data.getBytes(), android.util.Base64.DEFAULT);

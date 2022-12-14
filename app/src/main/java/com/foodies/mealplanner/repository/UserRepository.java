@@ -41,6 +41,8 @@ import java.util.List;
 public class UserRepository {
 
     public static final String USER_CREDENTIALS = "userCredentials";
+
+    //Singleton
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference dbCollection = db.collection(USER_CREDENTIALS);
 

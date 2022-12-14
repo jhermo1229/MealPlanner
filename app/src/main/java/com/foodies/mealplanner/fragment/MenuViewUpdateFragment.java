@@ -137,6 +137,7 @@ public class MenuViewUpdateFragment extends Fragment {
         }
 
         //choose image in root
+        //Observer Design Pattern
         menuImageButton.setOnClickListener(menuViewUpdateFragment -> {
             imageChooser();
         });
@@ -145,6 +146,7 @@ public class MenuViewUpdateFragment extends Fragment {
         setFieldDisabled();
 
         //On click of update button, enables all the field.
+        //Observer Design Pattern
         updateMenuButton.setOnClickListener(menuViewUpdateFragment -> {
 
             okButton.setVisibility(View.VISIBLE);
@@ -173,6 +175,8 @@ public class MenuViewUpdateFragment extends Fragment {
 
                 meatListView.setClickable(true);
                 meatListView.setNestedScrollingEnabled(true);
+
+                //Observer Design Pattern
                 meatListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -180,6 +184,7 @@ public class MenuViewUpdateFragment extends Fragment {
                         //Need to subtract since we added a header
                         Meal meal = mealList.get(i - 1);
 
+                        //Builder Design Pattern
                         new AlertDialog.Builder(getContext())
                                 .setTitle(meal.getMealName())
                                 .setMessage("Description: " + meal.getMealDescription() +
@@ -218,6 +223,8 @@ public class MenuViewUpdateFragment extends Fragment {
 
                 vegetableListView.setClickable(true);
                 vegetableListView.setNestedScrollingEnabled(true);
+
+                //Observer Design Pattern
                 vegetableListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
                     @Override
@@ -226,6 +233,7 @@ public class MenuViewUpdateFragment extends Fragment {
                         //Need to subtract since we added a header
                         Meal meal = vegetableMealList.get(j - 1);
 
+                        //Builder Design Pattern
                         new AlertDialog.Builder(getContext())
                                 .setTitle(meal.getMealName())
                                 .setMessage("Description: " + meal.getMealDescription() +
@@ -264,6 +272,8 @@ public class MenuViewUpdateFragment extends Fragment {
 
                 bothListView.setClickable(true);
                 bothListView.setNestedScrollingEnabled(true);
+
+                //Observer Design Pattern
                 bothListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> adapterView, View view, int k, long l) {
@@ -271,6 +281,8 @@ public class MenuViewUpdateFragment extends Fragment {
                         //Need to subtract since we added a header
                         Meal meal = bothMealList.get(k - 1);
 
+
+                        //Builder Design Pattern
                         new AlertDialog.Builder(getContext())
                                 .setTitle(meal.getMealName())
                                 .setMessage("Description: " + meal.getMealDescription() +
@@ -292,6 +304,7 @@ public class MenuViewUpdateFragment extends Fragment {
 
             }, BOTH);
 
+            //Observer Design Pattern
             okButton.setOnClickListener((menuAddFragmentView) -> {
 
                 if (isFieldChanged || isImageChanged) {
@@ -306,6 +319,7 @@ public class MenuViewUpdateFragment extends Fragment {
                 }
             });
 
+            //Observer Design Pattern
             cancelButton.setOnClickListener((menuAddFragmentView) -> {
 
                 getParentFragmentManager().popBackStackImmediate();
@@ -327,6 +341,7 @@ public class MenuViewUpdateFragment extends Fragment {
 
     /**
      * Check if a change is done on the text fields.
+     * Observer Design Pattern
      */
     @NonNull
     private TextWatcher textWatcher() {

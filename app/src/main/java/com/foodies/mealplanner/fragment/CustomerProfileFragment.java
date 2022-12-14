@@ -37,7 +37,7 @@ import com.foodies.mealplanner.model.User;
 import com.foodies.mealplanner.model.UserDetails;
 import com.foodies.mealplanner.model.UserPaymentDetails;
 import com.foodies.mealplanner.repository.UserRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.validations.FieldValidator;
 import com.foodies.mealplanner.viewmodel.CustomerUserViewModel;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -72,9 +72,10 @@ public class CustomerProfileFragment extends Fragment {
     private final FieldValidator fieldValidator = new FieldValidator();
     private final UserRepository userDb = new UserRepository();
     // instance for firebase storage and StorageReference
+    //Singleton Pattern
     private final FirebaseStorage storage = FirebaseStorage.getInstance();
     private final StorageReference storageReference = storage.getReference();
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
     private CustomerUserViewModel customerUserViewModel;
     private User user = new User();
     private EditText firstNameDialog, lastNameDialog, houseNumberDialog, streetDialog,
@@ -149,24 +150,30 @@ public class CustomerProfileFragment extends Fragment {
 
         setFieldValue();
 
+        //Observer Design Pattern
         imageBtn.setOnClickListener((userProfileView) -> {
             imageChooser();
         });
 
+        //Observer Design Pattern
         updatePersonalBtn.setOnClickListener((userProfileView) -> {
             updatePersonalDetailsProcess();
         });
 
+        //Observer Design Pattern
         updateLoginBtn.setOnClickListener((userProfileView) -> {
             updateLoginDetailsProcess();
         });
 
+        //Observer Design Pattern
         updatePaymentBtn.setOnClickListener((userProfileView) -> {
             updatePaymentDetailsProcess();
         });
 
+        //Observer Design Pattern
         cancelSubscriptionBtn.setOnClickListener((userProfileView -> {
 
+            //Builder Design Pattern
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setMessage(ARE_YOU_SURE_YOU_WANT_TO_END_SUBSCRIPTION).setTitle(CANCEL_SUBSCRIPTION);
 
@@ -199,6 +206,7 @@ public class CustomerProfileFragment extends Fragment {
      */
     private void updatePaymentDetailsProcess() {
 
+        //Builder Design Pattern
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         // Get the layout inflater
         LayoutInflater loginInflater = requireActivity().getLayoutInflater();
@@ -207,8 +215,8 @@ public class CustomerProfileFragment extends Fragment {
         View dialogView = loginInflater.inflate(R.layout.update_payment_dialog, null);
         cardNameDialog = dialogView.findViewById(R.id.nameOnCardUpdate);
         cardNumberDialog = dialogView.findViewById(R.id.cardNumberUpdate);
-        expiryDateDialog = dialogView.findViewById(R.id.expiryDateUpdate);
         cvcDialog = dialogView.findViewById(R.id.cvcUpdate);
+        expiryDateDialog = dialogView.findViewById(R.id.expiryDateUpdate);
         cardNumberDialog.setText(user.getUserPaymentDetails().getCardNumber());
         cardNameDialog.setText(user.getUserPaymentDetails().getNameOnCard());
         expiryDateDialog.setText(user.getUserPaymentDetails().getExpiryDate().toString());
@@ -227,6 +235,8 @@ public class CustomerProfileFragment extends Fragment {
                         // Do not use this place as we are overriding this button.
                     }
                 });
+
+        //Builder Design Pattern
         AlertDialog alert = builder.create();
         alert.show();
         alert.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
@@ -259,6 +269,7 @@ public class CustomerProfileFragment extends Fragment {
 
     /**
      * Update the login details
+     * Builder Design Pattern
      */
     private void updateLoginDetailsProcess() {
 
@@ -311,7 +322,7 @@ public class CustomerProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if (checkAllFieldsLogin()) {
-                    user.setPassword(appUtils.encodeBase64(newPasswordDialog.getText().toString()));
+                    user.setPassword(commonUtils.encodeBase64(newPasswordDialog.getText().toString()));
 
                     userDb.updateUser(user, getActivity());
 
@@ -324,6 +335,7 @@ public class CustomerProfileFragment extends Fragment {
 
     /**
      * Process for updating personal details
+     * Builder Design Pattern
      */
     private void updatePersonalDetailsProcess() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -428,6 +440,7 @@ public class CustomerProfileFragment extends Fragment {
 
     /**
      * Setting field value to reset value
+     * Builder Design Pattern
      */
     private void setFieldValue() {
         fullNameView.setText(user.getUserDetails().getFirstName() + BLANK + user.getUserDetails().getLastName());
@@ -555,6 +568,7 @@ public class CustomerProfileFragment extends Fragment {
 
     /**
      * Check if a change is done on the text fields.
+     * Observer Design Pattern
      */
     @NonNull
     private TextWatcher textWatcher() {
@@ -579,7 +593,7 @@ public class CustomerProfileFragment extends Fragment {
 
     /**
      * Check if a change is done on a spinner.
-     *
+     * Observer Design Pattern
      * @return adapter - spinner adapt to be used.
      */
     @NonNull
@@ -680,7 +694,7 @@ public class CustomerProfileFragment extends Fragment {
             allValid = false;
         }
 
-        String oldPasswordDecode = appUtils.decodeBase64(user.getPassword());
+        String oldPasswordDecode = commonUtils.decodeBase64(user.getPassword());
         if (allValid && (!oldPasswordDecode.equals(oldPasswordDialog.getText().toString()))) {
             oldPasswordDialog.setError(INCORRECT_PASSWORD);
             allValid = false;

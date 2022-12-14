@@ -34,6 +34,8 @@ import java.util.List;
 public class MenuRepository {
 
     public static final String COLLECTION_NAME = "menus";
+
+    //Singleton
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference dbCollection = db.collection(COLLECTION_NAME);
 

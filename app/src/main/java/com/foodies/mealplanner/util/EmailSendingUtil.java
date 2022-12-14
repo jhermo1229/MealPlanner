@@ -44,6 +44,8 @@ public class EmailSendingUtil extends AsyncTask<Void, Void, Void>{
      */
     @Override
     protected Void doInBackground(Void... voids) {
+
+        //Builder Design Pattern
         Properties props = new Properties();
         props.put("mail.smtp.host", "smtp.gmail.com");
         props.put("mail.smtp.socketFactory.port", "465");

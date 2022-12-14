@@ -10,7 +10,6 @@ import androidx.annotation.RequiresApi;
 import com.foodies.mealplanner.model.Meal;
 import com.foodies.mealplanner.model.MealPlanWeek;
 import com.foodies.mealplanner.model.Menu;
-import com.foodies.mealplanner.repository.EmailRepository;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -30,7 +29,7 @@ public class EmailComposingUtil {
 
     public static final String MEAL_PLANNER_PLAN_OF_THE_WEEK = "Meal Planner plan of the week";
     private String mondayDate, wednesdayDate, fridayDate;
-    private AppUtils appUtils = new AppUtils();
+    private CommonUtils commonUtils = new CommonUtils();
 
     /**
      * Sends the email
@@ -73,6 +72,7 @@ public class EmailComposingUtil {
 
     /**
      * Composing the email body
+     * Builder Design Pattern
      * @param mealPlan - meal plan for the week
      * @return the composed message
      */
@@ -85,9 +85,9 @@ public class EmailComposingUtil {
         LocalDate wednesday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.WEDNESDAY));
         LocalDate friday = LocalDate.now().with(TemporalAdjusters.next(DayOfWeek.FRIDAY));
 
-        mondayDate = appUtils.dateFormatter(monday);
-        wednesdayDate = appUtils.dateFormatter(wednesday);
-        fridayDate = appUtils.dateFormatter(friday);
+        mondayDate = commonUtils.dateFormatter(monday);
+        wednesdayDate = commonUtils.dateFormatter(wednesday);
+        fridayDate = commonUtils.dateFormatter(friday);
         String composedMessage = composeMessageHTML(mealPlan);
         return composedMessage;
     }
@@ -95,6 +95,7 @@ public class EmailComposingUtil {
 
     /**
      * Composing the email body
+     * Builder Design Pattern
      * @param mealPLan - meal plan for the week
      * @return the composed message
      */
@@ -112,6 +113,7 @@ public class EmailComposingUtil {
 
     /**
      * Composing the email body
+     * Builder Design Pattern
      * @param menu - menu chosen.
      * @param day - day of the menu.
      * @param date - date of the current day (Month day, Year) format
@@ -131,6 +133,7 @@ public class EmailComposingUtil {
 
     /**
      * Composing the email body
+     * Builder Design Pattern
      * @param meal - meal inside the menu.
      * @return the composed message
      */

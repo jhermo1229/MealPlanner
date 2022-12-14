@@ -17,13 +17,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.foodies.mealplanner.R;
 import com.foodies.mealplanner.repository.EmailRepository;
-import com.foodies.mealplanner.util.AppUtils;
+import com.foodies.mealplanner.util.CommonUtils;
 import com.foodies.mealplanner.util.EmailComposingUtil;
 
 import java.time.LocalDate;
 
 /**
  * Admin Profile fragment
+ *
  *
  * @author herje
  * @version 1
@@ -34,7 +35,7 @@ public class AdminProfileFragment extends Fragment {
     public static final String EMAIL_ALERT = "Email Alert";
     public static final String DELIMITER = ";";
     private final EmailRepository emailRepo = new EmailRepository();
-    private final AppUtils appUtils = new AppUtils();
+    private final CommonUtils commonUtils = new CommonUtils();
     private final EmailComposingUtil emailComposingUtil = new EmailComposingUtil();
     private View adminProfileFragmentView;
     private Button usersButton, mealsButton, menusButton, emailButton;
@@ -52,13 +53,14 @@ public class AdminProfileFragment extends Fragment {
 
         //Current config to send the email (date today) for demo purposes.
         LocalDate localDate = LocalDate.now();
-        String paramDate = appUtils.dateFormatter(localDate);
+        String paramDate = commonUtils.dateFormatter(localDate);
 
         //Will check in the system if there is a pending email to be sent.
         emailRepo.getEmail(email -> {
 
             if (email != null) {
 
+                //Builder design pattern
                 AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                 builder.setTitle(EMAIL_ALERT);
 
@@ -94,6 +96,8 @@ public class AdminProfileFragment extends Fragment {
 
         //User fragments
         usersButton = adminProfileFragmentView.findViewById(R.id.usersBtn);
+
+        //Observer Design Pattern
         usersButton.setOnClickListener((adminProfileFragmentView) -> {
             UsersListFragment userListFrag = new UsersListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -105,6 +109,8 @@ public class AdminProfileFragment extends Fragment {
 
         //Meals fragments
         mealsButton = adminProfileFragmentView.findViewById(R.id.mealsBtn);
+
+        //Observer Design Pattern
         mealsButton.setOnClickListener((adminProfileFragmentView) -> {
             MealListFragment mealListFragment = new MealListFragment();
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
@@ -117,6 +123,8 @@ public class AdminProfileFragment extends Fragment {
 
         //Menus fragments
         menusButton = adminProfileFragmentView.findViewById(R.id.menuBtn);
+
+        //Observer Design Pattern
         menusButton.setOnClickListener((adminProfileFragmentView) -> {
 
             MenuListFragment menuListFragment = new MenuListFragment();
@@ -129,6 +137,8 @@ public class AdminProfileFragment extends Fragment {
 
         //Emails fragments
         emailButton = adminProfileFragmentView.findViewById(R.id.emailBtn);
+
+        //Observer Design Pattern
         emailButton.setOnClickListener((adminProfileFragmentView) -> {
 
             EmailMenuFragment emailMenuFragment = new EmailMenuFragment();

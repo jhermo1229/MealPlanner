@@ -122,12 +122,14 @@ public class MenuAddFragment extends Fragment {
         vegetableListView = menuAddFragmentView.findViewById(R.id.vegetableListView);
         bothListView = menuAddFragmentView.findViewById(R.id.bothListView);
 
+        //Observer Design Pattern
         menuImageAddButton.setOnClickListener(menuAddFragmentView -> {
             imageChooser();
         });
 
         mealDb.getAllMealType(mealList -> {
 
+            //Adapter Design Pattern
             MealListViewAdapter adapter = new MealListViewAdapter(getContext(), mealList, 0);
             meatListView.setAdapter(adapter);
 
@@ -146,6 +148,7 @@ public class MenuAddFragment extends Fragment {
                     //Need to subtract since we added a header
                     Meal meal = mealList.get(i-1);
 
+                    //Builder Design Pattern
                     new AlertDialog.Builder(getContext())
                             .setTitle(meal.getMealName())
                             .setMessage("Description: " + meal.getMealDescription() +
@@ -170,6 +173,7 @@ public class MenuAddFragment extends Fragment {
         //Vegetable
         mealDb.getAllMealType(vegetableMealList -> {
 
+            //Adapter Design Pattern
             MealListViewAdapter adapter = new MealListViewAdapter(getContext(), vegetableMealList, 0);
             vegetableListView.setAdapter(adapter);
 
@@ -189,6 +193,7 @@ public class MenuAddFragment extends Fragment {
                     //Need to subtract since we added a header
                     Meal meal = vegetableMealList.get(j-1);
 
+                    //Builder Design Pattern
                     new AlertDialog.Builder(getContext())
                             .setTitle(meal.getMealName())
                             .setMessage("Description: " + meal.getMealDescription() +
@@ -215,6 +220,7 @@ public class MenuAddFragment extends Fragment {
         //Both Meat and Vegetable
         mealDb.getAllMealType(bothMealList -> {
 
+            //Adapter Design Pattern
             MealListViewAdapter adapter = new MealListViewAdapter(getContext(), bothMealList, 0);
             bothListView.setAdapter(adapter);
 
@@ -234,6 +240,7 @@ public class MenuAddFragment extends Fragment {
                     //Need to subtract since we added a header
                     Meal meal = bothMealList.get(k-1);
 
+                    //Builder Design Pattern
                     new AlertDialog.Builder(getContext())
                             .setTitle(meal.getMealName())
                             .setMessage("Description: " + meal.getMealDescription() +
@@ -255,6 +262,7 @@ public class MenuAddFragment extends Fragment {
 
         }, BOTH);
 
+        //Observer Design Pattern
         okButton.setOnClickListener((menuAddFragmentView) ->{
             if(checkAllFields()) {
                 menu.setMenuName(menuNameTxt.getText().toString());
@@ -263,6 +271,7 @@ public class MenuAddFragment extends Fragment {
             }
         });
 
+        //Observer Design Pattern
         cancelButton.setOnClickListener((menuAddFragmentView)->{
 
             if(menu.getImageUrl() != null){

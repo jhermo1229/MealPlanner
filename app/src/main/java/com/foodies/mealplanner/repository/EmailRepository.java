@@ -27,6 +27,8 @@ import com.google.firebase.firestore.WriteBatch;
 public class EmailRepository {
 
     public static final String COLLECTION_NAME = "emails";
+
+    //Singleton
     private final FirebaseFirestore db = FirebaseFirestore.getInstance();
     CollectionReference dbCollection = db.collection(COLLECTION_NAME);
 
